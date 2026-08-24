@@ -215,8 +215,8 @@ export const LandingPageTemplate = ({
             {/* 4th Custom Card: 360 View Fullscreen */}
             <div 
               ref={fullScreenCardRef}
-              className="relative w-full h-[100svh] flex items-center justify-center group overflow-hidden sticky top-0 z-40"
-              style={{ marginTop: '0', "--index0": stackingCards.length, "--index": stackingCards.length + 1 }}
+              className="relative w-full h-screen flex items-center justify-center group overflow-hidden sticky top-0 z-40"
+              style={{ marginTop: '0', "--index0": stackingCards.length, "--index": stackingCards.length + 1, minHeight: '100svh' }}
             >
                 <img
                   ref={fullScreenImageRef}
