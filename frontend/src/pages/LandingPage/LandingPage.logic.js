@@ -168,13 +168,9 @@ const useLandingPageLogic = () => {
     setIsLightMode(startLight);
 
     const html = document.documentElement;
-    html.style.overflow = '';
     html.style.scrollBehavior = 'smooth';
     document.documentElement.lang = startLang;
     document.title = resolveDict(DICTIONARIES[startLang] || DICTIONARIES.es, "titleHome");
-
-    const oldOverflow = body.style.overflow;
-    body.style.overflow = 'auto';
 
     const cleanupTimers = [];
     const refreshScrollTrigger = () => {
@@ -246,7 +242,6 @@ const useLandingPageLogic = () => {
       ScrollTrigger.getAll().forEach((t) => t.kill());
       timeline.kill();
       cleanupTimers.forEach(id => window.clearTimeout(id));
-      body.style.overflow = oldOverflow;
       html.style.scrollBehavior = '';
       document.documentElement.lang = "es";
       document.title = "COTECMAR";

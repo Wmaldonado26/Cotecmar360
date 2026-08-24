@@ -141,7 +141,7 @@ export const LandingPageTemplate = ({
             <video 
               ref={videoBgRef}
               src={fondoVideo} 
-              className="absolute inset-0 w-full h-full object-cover z-0" 
+              className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
               autoPlay 
               loop 
               muted 
