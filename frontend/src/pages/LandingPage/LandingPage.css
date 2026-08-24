@@ -676,9 +676,11 @@
     padding: 0;
   }
   .landing-stack-card-content {
-    min-height: auto;
+    height: auto !important;
+    min-height: 0 !important;
     display: flex !important;
     flex-direction: column;
+    justify-content: flex-start;
   }
   .landing-stack-card:nth-child(odd) .landing-stack-card-media,
   .landing-stack-card:nth-child(even) .landing-stack-card-media {
@@ -702,6 +704,7 @@
   }
   .landing-stack-card-copy {
     padding: 40px 32px;
+    justify-content: flex-start;
   }
   .landing-stack-card-copy h3 {
     font-family: "Inter Tight", "Inter", system-ui, sans-serif;
@@ -721,7 +724,10 @@
     line-height: 1.6;
   }
   .landing-stack-card-media {
-    min-height: 300px;
+    height: 300px !important;
+    min-height: 300px !important;
+    flex-shrink: 0;
+    flex-basis: 300px;
   }
   .landing-stack-card-media img {
     transform: scale(1.02);
@@ -745,6 +751,7 @@
   }
   .landing-stack-card-copy {
     padding: 24px 20px;
+    justify-content: flex-start;
   }
   .landing-stack-card-copy h3 {
     font-family: "Inter Tight", "Inter", system-ui, sans-serif;
@@ -765,7 +772,10 @@
     line-height: 1.55;
   }
   .landing-stack-card-media {
-    min-height: 220px;
+    height: 220px !important;
+    min-height: 220px !important;
+    flex-shrink: 0;
+    flex-basis: 220px;
   }
   .landing-brand-logo {
     height: 36px;
