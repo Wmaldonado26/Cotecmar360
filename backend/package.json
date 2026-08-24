@@ -4,10 +4,14 @@
   "description": "Backend para sistema de visualización 360° COTECMAR",
   "main": "src/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "prisma:generate": "prisma generate",
-    "prisma:push": "prisma db push"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "prisma:generate": "prisma generate --schema prisma/schema.prisma",
+    "prisma:push": "prisma db push --schema prisma/schema.prisma",
+    "postinstall": "prisma generate --schema prisma/schema.prisma"
+  },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
   },
   "keywords": [
     "express",

@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: cotecmar360-backend
+    runtime: node
+    rootDir: backend
+    plan: starter
+    buildCommand: npm install && npx prisma generate --schema prisma/schema.prisma
+    startCommand: npx prisma db push --schema prisma/schema.prisma && node src/server.js
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: HOST
+        value: 0.0.0.0
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 8h
+      - key: CORS_ORIGIN
+        sync: false
+        value: https://TU_FRONTEND_VERCEL.vercel.app
+      - key: DATABASE_URL
+        sync: false
+        value: "file:/var/data/cotecmar.db"
+      - key: DATABASE_FILE
+        sync: false
+        value: /var/data/cotecmar.db
+      - key: UPLOADS_DIR
+        sync: false
+        value: /var/data/uploads
+      - key: DEFAULT_ADMIN_NAME
+        value: "Administrador Principal"
+      - key: DEFAULT_ADMIN_EMAIL
+        value: admin@cotecmar.local
+      - key: DEFAULT_ADMIN_PASSWORD
+        generateValue: true
+      - key: DEFAULT_ADMIN_PHONE
+        value: ""
+      - key: CLOUDINARY_URL
+        sync: false
+    disk:
+      name: cotecmar-data
+      mountPath: /var/data
+      sizeGB: 1

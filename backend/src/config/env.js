@@ -15,8 +15,12 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(",").map((value) => value.trim()).filter(Boolean)
   : true;
 
-const UPLOADS_DIR = path.join(backendRoot, "uploads");
-const DATABASE_FILE = path.join(backendRoot, "cotecmar.db");
+const UPLOADS_DIR = process.env.UPLOADS_DIR
+  ? path.resolve(process.env.UPLOADS_DIR)
+  : path.join(backendRoot, "uploads");
+const DATABASE_FILE = process.env.DATABASE_FILE
+  ? path.resolve(process.env.DATABASE_FILE)
+  : path.join(backendRoot, "cotecmar.db");
 
 function normalizeSqliteUrl(url) {
   if (!url || typeof url !== "string") return url;
