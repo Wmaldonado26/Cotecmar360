@@ -2,7 +2,7 @@ import cotecmarLogo from "../../assets/images/logo.png";
 import cotecmarLogoColored from "../../assets/images/cotecmar-logo.png";
 import xrlabLogo from "../../assets/images/cotecmar1.svg";
 import fondoVideo from "../../assets/images/planta.mp4";
-import img360Card from "../../assets/images/CARD.png";
+import img360Card from "../../assets/images/CARD.webp";
 import "./LandingPage.css";
 
 export const LandingPageTemplate = ({
