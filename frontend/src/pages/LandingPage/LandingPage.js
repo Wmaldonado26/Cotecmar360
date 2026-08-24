@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import cotecmarLogo from "../../assets/images/logo.png";
 import useLandingPageLogic from './LandingPage.logic';
 import LandingPageTemplate from './LandingPage.jsx';
 import Preloader from './Preloader';
