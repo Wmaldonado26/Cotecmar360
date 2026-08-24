@@ -22,22 +22,32 @@ const DATABASE_FILE = process.env.DATABASE_FILE
   ? path.resolve(process.env.DATABASE_FILE)
   : path.join(backendRoot, "cotecmar.db");
 
-function normalizeSqliteUrl(url) {
+function normalizeDatabaseUrl(url) {
   if (!url || typeof url !== "string") return url;
-  if (!url.startsWith("file:")) return url;
 
-  const filePath = url.slice("file:".length);
-  if (filePath.startsWith("./") || filePath.startsWith("../")) {
-    const abs = path.resolve(backendRoot, filePath);
-    return `file:${abs.replace(/\\/g, "/")}`;
+  if (url.startsWith("postgresql://") || url.startsWith("postgres://")) {
+    return url;
+  }
+
+  if (url.startsWith("file:")) {
+    const filePath = url.slice("file:".length);
+    if (filePath.startsWith("./") || filePath.startsWith("../")) {
+      const abs = path.resolve(backendRoot, filePath);
+      return `file:${abs.replace(/\\/g, "/")}`;
+    }
   }
 
   return url;
 }
 
-const DATABASE_URL = process.env.DATABASE_URL
-  ? normalizeSqliteUrl(process.env.DATABASE_URL)
-  : `file:${DATABASE_FILE.replace(/\\/g, "/")}`;
+const DEFAULT_POSTGRES_URL =
+  process.env.DATABASE_URL &&
+  (process.env.DATABASE_URL.startsWith("postgresql://") ||
+    process.env.DATABASE_URL.startsWith("postgres://"))
+    ? process.env.DATABASE_URL
+    : process.env.DATABASE_URL || `file:${DATABASE_FILE.replace(/\\/g, "/")}`;
+
+const DATABASE_URL = normalizeDatabaseUrl(DEFAULT_POSTGRES_URL);
 
 const DEFAULT_ADMIN = {
   name: process.env.DEFAULT_ADMIN_NAME || "Administrador Principal",

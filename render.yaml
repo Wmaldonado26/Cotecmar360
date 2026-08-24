@@ -1,9 +1,17 @@
+databases:
+  - name: cotecmar360-db
+    databaseName: cotecmar360
+    user: cotecmar
+    plan: free
+    region: oregon
+    postgresMajorVersion: "16"
+
 services:
   - type: web
     name: cotecmar360-backend
     runtime: node
     rootDir: backend
-    plan: starter
+    plan: free
     buildCommand: npm install && npx prisma generate --schema prisma/schema.prisma
     startCommand: npx prisma db push --schema prisma/schema.prisma && node src/server.js
     autoDeploy: true
@@ -20,14 +28,9 @@ services:
         sync: false
         value: https://TU_FRONTEND_VERCEL.vercel.app
       - key: DATABASE_URL
-        sync: false
-        value: "file:/var/data/cotecmar.db"
-      - key: DATABASE_FILE
-        sync: false
-        value: /var/data/cotecmar.db
-      - key: UPLOADS_DIR
-        sync: false
-        value: /var/data/uploads
+        fromDatabase:
+          name: cotecmar360-db
+          property: connectionString
       - key: DEFAULT_ADMIN_NAME
         value: "Administrador Principal"
       - key: DEFAULT_ADMIN_EMAIL
@@ -38,7 +41,5 @@ services:
         value: ""
       - key: CLOUDINARY_URL
         sync: false
-    disk:
-      name: cotecmar-data
-      mountPath: /var/data
-      sizeGB: 1
+    dependsOn:
+      - type: postgres
