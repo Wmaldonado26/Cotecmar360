@@ -248,6 +248,7 @@ export const LandingPageTemplate = ({
               </div>
             </div>
           </div>
+          <div aria-hidden="true" style={{ height: "60vh", width: "100%" }} className="landing-stack-spacer pointer-events-none bg-transparent"></div>
         </section>
       </main>
     </div>
