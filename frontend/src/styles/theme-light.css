@@ -1,0 +1,442 @@
+
+/* ==========================================================================
+   COTECMAR 360 - LIGHT THEME (theme-light)
+   ========================================================================== */
+
+/* ==========================================================================
+   1. VARIABLES GLOBALES UNIFICADAS
+   ========================================================================== */
+.theme-light {
+  /* Primarios (Marca COTECMAR) */
+  --c-brand-dark: #061433;
+  --c-brand: #040E79;
+  --c-brand-light: #2B5398;
+  --c-brand-soft: #E8EDF9;
+  --c-brand-extra-soft: #F4F7FC;
+
+  /* Neutros (Fondos y superficies) */
+  --c-bg-primary: #F8FAFC;
+  --c-bg-secondary: #F1F5F9;
+  --c-bg-tertiary: #FFFFFF;
+  --c-bg-elevated: #FFFFFF;
+  --c-bg-input: #FFFFFF;
+
+  /* Bordes y divisiones */
+  --c-border: #E2E8F0;
+  --c-border-strong: #CBD5E1;
+  --c-border-brand: #040E79;
+
+  /* Textos */
+  --c-text-primary: #061433;
+  --c-text-secondary: #1E293B;
+  --c-text-muted: #64748B;
+  --c-text-light: #94A3B8;
+  --c-text-inverse: #FFFFFF;
+
+  /* Semánticos */
+  --c-success: #15803D;
+  --c-success-soft: #F0FDF4;
+  --c-success-border: #86EFAC;
+  --c-warning: #C2410C;
+  --c-warning-soft: #FFF7ED;
+  --c-warning-border: #FDBA74;
+  --c-danger: #DC2626;
+  --c-danger-soft: #FEF2F2;
+  --c-danger-border: #FCA5A5;
+  --c-info: #0EA5E9;
+  --c-info-soft: #ECFEFF;
+  --c-info-border: #7DD3FC;
+
+  /* Sombras */
+  --shadow-none: none;
+  --shadow-xs: 0 1px 2px rgba(6, 20, 51, 0.04);
+  --shadow-sm: 0 1px 3px rgba(6, 20, 51, 0.06);
+  --shadow-md: 0 4px 12px rgba(6, 20, 51, 0.08);
+  --shadow-lg: 0 8px 30px rgba(6, 20, 51, 0.10);
+  --shadow-xl: 0 20px 60px rgba(6, 20, 51, 0.12);
+  --shadow-2xl: 0 30px 80px rgba(6, 20, 51, 0.14);
+  --shadow-float: 0 12px 40px rgba(6, 20, 51, 0.10), 0 0 0 1px rgba(6, 20, 51, 0.04);
+
+  /* Espaciado */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* Radios */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Tipografía */
+  --font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 15px;
+  --font-size-lg: 18px;
+  --font-size-xl: 22px;
+  --font-size-2xl: 28px;
+  --font-size-3xl: 36px;
+  --font-size-4xl: 48px;
+
+  /* Transiciones */
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+
+  /* OVERRIDES PARA VARIABLES VIEJAS/QUEMADAS EN EL PROYECTO */
+  --background-color: var(--c-bg-primary);
+  --surface-color: var(--c-bg-secondary);
+  --border-color: var(--c-border);
+  --text-primary: var(--c-text-primary);
+  --text-secondary: var(--c-text-secondary);
+  --text-muted: var(--c-text-muted);
+}
+
+/* ==========================================================================
+   APLICACIÓN GLOBAL (Layouts, Dashboard, App, Body)
+   ========================================================================== */
+.theme-light .main-layout, 
+.theme-light .dashboard-container, 
+.theme-light .project-manager,
+.theme-light .user-management,
+.theme-light .profile-container,
+.theme-light .auth-container,
+.theme-light .app-container {
+  background-color: var(--c-bg-primary) !important;
+  color: var(--c-text-primary) !important;
+}
+
+.theme-light ::selection {
+  background: var(--c-brand);
+  color: var(--c-text-inverse);
+}
+
+.theme-light ::-webkit-scrollbar-track { background: var(--c-bg-secondary) !important; }
+.theme-light ::-webkit-scrollbar-thumb { background: var(--c-border-strong) !important; }
+.theme-light ::-webkit-scrollbar-thumb:hover { background: var(--c-text-light) !important; }
+
+.theme-light h1, .theme-light h2, .theme-light h3, .theme-light .card-title {
+  color: var(--c-text-primary) !important;
+}
+.theme-light p, .theme-light .card-desc {
+  color: var(--c-text-secondary) !important;
+}
+
+/* ==========================================================================
+   4. LAYOUTS (Navbar, Sidebar)
+   ========================================================================== */
+.theme-light .navbar, .theme-light .dynamic-navbar {
+  background: rgba(255,255,255,0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid var(--c-border) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+.theme-light .navbar a, .theme-light .dynamic-navbar .nav-link { color: var(--c-text-secondary) !important; }
+.theme-light .navbar a:hover, .theme-light .dynamic-navbar .nav-link:hover { color: var(--c-brand) !important; }
+.theme-light .navbar a.active, .theme-light .dynamic-navbar .nav-link.active {
+  color: var(--c-brand) !important;
+  border-bottom: 2px solid var(--c-brand) !important;
+}
+.theme-light .sidebar, .theme-light .app-sidebar {
+  background: var(--c-bg-tertiary) !important;
+  border-right: 1px solid var(--c-border) !important;
+}
+
+/* ==========================================================================
+   5. BOTONES Y FORMULARIOS
+   ========================================================================== */
+.theme-light .btn, .theme-light button { transition: all var(--duration-fast) var(--ease-out); }
+.theme-light .btn-primary, .theme-light button.primary {
+  background: var(--c-brand) !important;
+  color: var(--c-text-inverse) !important;
+}
+.theme-light .btn-primary:hover, .theme-light button.primary:hover { background: var(--c-brand-light) !important; }
+.theme-light .btn-secondary, .theme-light button.secondary {
+  background: var(--c-bg-tertiary) !important;
+  border: 1px solid var(--c-border) !important;
+  color: var(--c-text-primary) !important;
+}
+.theme-light .btn-secondary:hover, .theme-light button.secondary:hover { background: var(--c-bg-secondary) !important; }
+.theme-light .btn-outline {
+  background: transparent !important;
+  border: 1px solid var(--c-brand) !important;
+  color: var(--c-brand) !important;
+}
+.theme-light .btn-outline:hover { background: var(--c-brand-soft) !important; }
+.theme-light .btn-ghost {
+  background: transparent !important;
+  color: var(--c-brand) !important;
+}
+.theme-light .btn-ghost:hover { background: var(--c-brand-soft) !important; }
+.theme-light .btn-danger {
+  background: var(--c-danger-soft) !important;
+  border: 1px solid var(--c-danger-border) !important;
+  color: var(--c-danger) !important;
+}
+.theme-light .btn-danger:hover { background: var(--c-danger) !important; }
+.theme-light .btn-success { background: var(--c-success-soft) !important; color: var(--c-success) !important; }
+.theme-light .btn-warning { background: var(--c-warning-soft) !important; color: var(--c-warning) !important; }
+
+.theme-light input, .theme-light select, .theme-light textarea {
+  background: var(--c-bg-input) !important;
+  border: 1px solid var(--c-border) !important;
+  color: var(--c-text-primary) !important;
+}
+.theme-light input::placeholder, .theme-light textarea::placeholder { color: var(--c-text-light) !important; }
+.theme-light input:focus, .theme-light select:focus, .theme-light textarea:focus {
+  border-color: var(--c-brand-light) !important;
+  box-shadow: 0 0 0 3px rgba(43,83,152,0.12) !important;
+}
+.theme-light input:disabled, .theme-light select:disabled, .theme-light textarea:disabled {
+  background: var(--c-bg-secondary) !important;
+  opacity: 0.6 !important;
+}
+.theme-light input.error, .theme-light select.error, .theme-light textarea.error {
+  border-color: var(--c-danger) !important;
+  box-shadow: 0 0 0 3px rgba(220,38,38,0.12) !important;
+}
+
+/* ==========================================================================
+   6. MODALES Y OVERLAYS
+   ========================================================================== */
+.theme-light .modal-overlay, .theme-light .overlay {
+  background: rgba(6, 20, 51, 0.15) !important;
+  backdrop-filter: blur(4px) !important;
+}
+.theme-light .modal-content, .theme-light .modal-container, .theme-light .modal {
+  background: var(--c-bg-tertiary) !important;
+  box-shadow: var(--shadow-xl) !important;
+  border: 1px solid var(--c-border) !important;
+}
+.theme-light .modal-header {
+  background: var(--c-bg-secondary) !important;
+  border-bottom: 1px solid var(--c-border) !important;
+}
+.theme-light .modal-footer {
+  background: var(--c-bg-secondary) !important;
+  border-top: 1px solid var(--c-border) !important;
+}
+
+/* ==========================================================================
+   7. TABLAS, TARJETAS, BADGES
+   ========================================================================== */
+.theme-light table tr {
+  background: var(--c-bg-tertiary) !important;
+  border-bottom: 1px solid var(--c-border) !important;
+}
+.theme-light table tr:hover { background: var(--c-brand-extra-soft) !important; }
+.theme-light table th {
+  background: var(--c-bg-secondary) !important;
+  color: var(--c-text-secondary) !important;
+}
+.theme-light table td { color: var(--c-text-primary) !important; }
+
+.theme-light .card, .theme-light .panel, .theme-light .project-card, .theme-light .premium-card {
+  background: var(--c-bg-tertiary) !important;
+  border: 1px solid var(--c-border) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+.theme-light .card:hover, .theme-light .project-card:hover { box-shadow: var(--shadow-md) !important; }
+
+.theme-light .badge-primary, .theme-light .badge { background: var(--c-brand) !important; color: var(--c-text-inverse) !important; }
+.theme-light .badge-secondary { background: var(--c-bg-secondary) !important; color: var(--c-text-secondary) !important; }
+.theme-light .badge-success { background: var(--c-success-soft) !important; color: var(--c-success) !important; }
+.theme-light .badge-warning { background: var(--c-warning-soft) !important; color: var(--c-warning) !important; }
+.theme-light .badge-danger { background: var(--c-danger-soft) !important; color: var(--c-danger) !important; }
+.theme-light .badge-info { background: var(--c-info-soft) !important; color: var(--c-info) !important; }
+
+/* ==========================================================================
+   8. ESTADOS (SCROLLBARS, TOASTS, EMPTY STATES)
+   ========================================================================== */
+.theme-light .file-uploader, .theme-light .thumbnail-upload {
+  background: var(--c-bg-secondary) !important;
+  border: 2px dashed var(--c-border-strong) !important;
+  color: var(--c-text-muted) !important;
+}
+.theme-light .file-uploader:hover, .theme-light .thumbnail-upload:hover {
+  border-color: var(--c-brand-light) !important;
+  background: var(--c-brand-extra-soft) !important;
+}
+.theme-light .tab { color: var(--c-text-muted) !important; border-bottom: 2px solid transparent !important; }
+.theme-light .tab.active, .theme-light .editor-tabs-modern .active {
+  color: var(--c-brand) !important;
+  border-bottom: 2px solid var(--c-brand) !important;
+}
+.theme-light .tab:hover:not(.active) { color: var(--c-brand-light) !important; }
+
+.theme-light .breadcrumb-item { color: var(--c-text-muted) !important; }
+.theme-light .breadcrumb-item.active { color: var(--c-brand) !important; }
+.theme-light .breadcrumb-separator { color: var(--c-text-light) !important; }
+
+.theme-light .toast-success { background: var(--c-success-soft) !important; border: 1px solid var(--c-success-border) !important; color: var(--c-success) !important; }
+.theme-light .toast-error { background: var(--c-danger-soft) !important; border: 1px solid var(--c-danger-border) !important; color: var(--c-danger) !important; }
+.theme-light .toast-warning { background: var(--c-warning-soft) !important; border: 1px solid var(--c-warning-border) !important; color: var(--c-warning) !important; }
+.theme-light .toast-info { background: var(--c-info-soft) !important; border: 1px solid var(--c-info-border) !important; color: var(--c-info) !important; }
+
+.theme-light .loading-overlay { background: rgba(255,255,255,0.8) !important; }
+.theme-light .spinner { border: 3px solid var(--c-border) !important; border-top-color: var(--c-brand) !important; }
+.theme-light .empty-state, .theme-light .no-data { background: var(--c-bg-secondary) !important; color: var(--c-text-muted) !important; }
+
+/* ==========================================================================
+   9. COMPONENTES ESPECIALES: HOTSPOTS, EDITOR, VISOR
+   ========================================================================== */
+.theme-light .custom-hotspot-nav {
+  background: rgba(255,255,255,0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 2px solid var(--c-brand) !important;
+  color: var(--c-text-primary) !important;
+}
+.theme-light .custom-hotspot-element {
+  background: linear-gradient(145deg, var(--c-brand-light), var(--c-brand)) !important;
+  color: var(--c-text-inverse) !important;
+}
+.theme-light .custom-hotspot-info {
+  background: linear-gradient(145deg, var(--c-info), #0284C7) !important;
+  color: var(--c-text-inverse) !important;
+}
+.theme-light .hotspot-ring-nav { border-color: var(--c-brand) !important; }
+.theme-light .hotspot-ring-element { border-color: var(--c-brand-light) !important; }
+.theme-light .hotspot-ring-info { border-color: var(--c-info) !important; }
+.theme-light .hotspot-label {
+  background: rgba(255,255,255,0.95) !important;
+  color: var(--c-text-primary) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+.theme-light .hotspot-preview {
+  border: 2px solid var(--c-border) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.theme-light .hotspot-modal-pill-info {
+  background: var(--c-brand-soft) !important;
+  border: 1px solid var(--c-border) !important;
+  color: var(--c-brand) !important;
+}
+.theme-light .hotspot-modal-pill-element {
+  background: var(--c-brand-soft) !important;
+  border: 1px solid var(--c-border) !important;
+  color: var(--c-brand-light) !important;
+}
+.theme-light .tree-container { background: var(--c-bg-tertiary) !important; border: 1px solid var(--c-border) !important; }
+.theme-light .tree-folder { background: var(--c-bg-secondary) !important; color: var(--c-text-primary) !important; }
+.theme-light .tree-file { background: var(--c-bg-tertiary) !important; border-bottom: 1px solid var(--c-border) !important; }
+.theme-light .tree-file:hover { background: var(--c-brand-extra-soft) !important; }
+.theme-light .btn-open {
+  background: var(--c-bg-secondary) !important;
+  border: 1px solid var(--c-border) !important;
+  color: var(--c-brand) !important;
+}
+.theme-light .btn-open:hover { background: var(--c-brand) !important; color: var(--c-text-inverse) !important; }
+.theme-light .btn-close {
+  background: var(--c-bg-secondary) !important;
+  border: 1px solid var(--c-border) !important;
+}
+.theme-light .btn-close:hover { border-color: var(--c-border-strong) !important; }
+
+.theme-light .visual-editor-controls { background: var(--c-bg-tertiary) !important; box-shadow: var(--shadow-lg) !important; border: 1px solid var(--c-border) !important; }
+.theme-light .visual-editor-sidebar { background: var(--c-bg-tertiary) !important; box-shadow: var(--shadow-xl) !important; border-left: 1px solid var(--c-border) !important; }
+.theme-light .hotspot-card { background: var(--c-bg-tertiary) !important; border: 1px solid var(--c-border) !important; }
+.theme-light .hotspot-card.selected { border-color: var(--c-brand) !important; box-shadow: var(--shadow-md) !important; }
+.theme-light .inline-editor { background: var(--c-bg-secondary) !important; }
+.theme-light .type-switcher { background: var(--c-bg-tertiary) !important; }
+.theme-light .type-switcher.active { background: var(--c-brand-soft) !important; color: var(--c-brand) !important; }
+.theme-light .visual-marker-label { background: rgba(6,20,51,0.9) !important; }
+.theme-light .placement-mode-overlay { background: rgba(4,14,121,0.05) !important; color: rgba(255,255,255,0.95) !important; }
+
+/* ==========================================================================
+   10. FALLBACKS GLOBALES (Overrides para clases quemadas)
+   ========================================================================== */
+.theme-light :not(.landing-page) > [class*="bg-[#0f172a]"], 
+.theme-light :not(.landing-page) > [class*="bg-[#061433]"], 
+.theme-light :not(.landing-page) > [class*="bg-slate-900"] { background-color: var(--c-bg-primary) !important; }
+
+.theme-light :not(.landing-page) > [class*="bg-[#1e293b]"], 
+.theme-light :not(.landing-page) > [class*="bg-slate-800"] { background-color: var(--c-bg-tertiary) !important; }
+
+.theme-light :not(.landing-page) > [class*="text-[#f1f5f9]"], 
+.theme-light :not(.landing-page) > [class*="text-slate-100"], 
+.theme-light :not(.landing-page) > [class*="text-white"] { color: var(--c-text-primary) !important; }
+
+.theme-light :not(.landing-page) > [class*="text-[#cbd5e1]"], 
+.theme-light :not(.landing-page) > [class*="text-slate-300"] { color: var(--c-text-secondary) !important; }
+
+.theme-light :not(.landing-page) > [class*="text-[#94a3b8]"], 
+.theme-light :not(.landing-page) > [class*="text-slate-400"] { color: var(--c-text-muted) !important; }
+
+.theme-light :not(.landing-page) > [class*="border-[#334155]"], 
+.theme-light :not(.landing-page) > [class*="border-slate-700"] { border-color: var(--c-border) !important; }
+
+/* ==========================================================================
+   11. MAPPING EXACTO A CLASES DEL CÓDIGO FUENTE
+   ========================================================================== */
+
+/* ProjectEditor y Views Internas (ProjectEditor.css) */
+.theme-light .project-editor, 
+.theme-light .modern-editor {
+  background-color: var(--c-bg-primary) !important;
+}
+
+.theme-light .premium-card {
+  background: var(--c-bg-tertiary) !important;
+  border: 1px solid var(--c-border) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+.theme-light .premium-card-header {
+  background: var(--c-bg-secondary) !important;
+  border-bottom: 1px solid var(--c-border) !important;
+  color: var(--c-text-primary) !important;
+}
+.theme-light .premium-card-body {
+  background: var(--c-bg-tertiary) !important;
+}
+
+.theme-light .stats-panel-modern {
+  background: var(--c-bg-secondary) !important;
+  border: 1px solid var(--c-border) !important;
+}
+.theme-light .stat-card-modern {
+  background: var(--c-bg-tertiary) !important;
+  border: 1px solid var(--c-border) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+.theme-light .stat-value {
+  color: var(--c-brand) !important;
+}
+.theme-light .stat-label {
+  color: var(--c-text-muted) !important;
+}
+
+.theme-light .editor-tabs-modern {
+  background: var(--c-bg-secondary) !important;
+  border-bottom: 1px solid var(--c-border) !important;
+}
+.theme-light .tab-label {
+  color: var(--c-text-muted) !important;
+}
+.theme-light .tab-content.active .tab-label {
+  color: var(--c-brand) !important;
+}
+
+.theme-light .assets-grid-modern .asset-card {
+  background: var(--c-bg-tertiary) !important;
+  border: 1px solid var(--c-border) !important;
+}
+.theme-light .asset-subtitle {
+  color: var(--c-text-secondary) !important;
+}

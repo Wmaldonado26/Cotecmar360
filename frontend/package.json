@@ -1,0 +1,67 @@
+{
+  "name": "xr-mamonal-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "dotenv": "^17.2.3",
+    "gsap": "^3.15.0",
+    "jpeg-js": "^0.4.4",
+    "pannellum": "^2.5.7",
+    "pannellum-react": "^1.2.4",
+    "pngjs": "^7.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^7.10.1",
+    "react-scripts": "5.0.1",
+    "three": "^0.177.0",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "set HOST= && set \"HOST=0.0.0.0\" && set \"PORT=3002\" && react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "postinstall": "patch-package",
+    "start:frontend": "react-scripts start",
+    "start:backend": "cd ../backend && npm run prisma:generate && npm start",
+    "dev": "echo Usa 'npm run dev' desde la RAIZ del monorepo. && exit 1",
+    "clean": "npm run clean:cache && npm run clean:build",
+    "clean:cache": "rimraf node_modules/.cache .eslintcache .parcel-cache",
+    "clean:build": "rimraf build dist",
+    "clean:all": "npm run clean:cache && npm run clean:build && npm run clean:deps",
+    "clean:deps": "rimraf node_modules"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0",
+    "ajv-keywords": "^5.1.0",
+    "autoprefixer": "^10.5.4",
+    "concurrently": "^9.2.1",
+    "patch-package": "^8.0.1",
+    "postcss": "^8.5.26",
+    "rimraf": "^6.0.1",
+    "tailwindcss": "3.4.19"
+  }
+}

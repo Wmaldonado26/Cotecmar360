@@ -1,0 +1,103 @@
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#2563eb" />
+    <meta
+      name="description"
+      content="Tour virtual 360° - COTECMAR"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css" />
+    <script>
+    (function () {
+      function sanitizeURLSafe(url) {
+        if (url === null || url === undefined) return "";
+        try { var s = String(url).trim(); return s ? s : ""; } catch (e) { return ""; }
+      }
+      function sanitizeURLForCssSafe(url) {
+        var safe = sanitizeURLSafe(url);
+        return safe ? 'url("' + safe + '")' : "";
+      }
+      function normalizeOptions(o) {
+        if (!o || typeof o !== "object") return {};
+        var copy = Array.isArray(o) ? o.slice() : Object.assign({}, o);
+        var URL_KEYS = ["panorama","preview","image","video","cubemap","cubemapPreview","basePath","previewThumbnail","fallback","scenePreviewImage","title","author"];
+        for (var i = 0; i < URL_KEYS.length; i++) {
+          var k = URL_KEYS[i];
+          if (!Object.prototype.hasOwnProperty.call(copy, k)) continue;
+          if (Array.isArray(copy[k])) {
+            copy[k] = copy[k].map(function (x) { return sanitizeURLSafe(x); }).filter(function (x) { return !!x; });
+            if (copy[k].length === 0 && (k === "cubemap" || k === "cubemapPreview")) delete copy[k];
+          } else if (copy[k] && typeof copy[k] === "object" && k !== "type") {
+            var sub = copy[k];
+            Object.keys(sub).forEach(function (sk) {
+              if (typeof sub[sk] === "string" || sub[sk] === null || sub[sk] === undefined) {
+                var v = sanitizeURLSafe(sub[sk]);
+                if (v) sub[sk] = v; else delete sub[sk];
+              }
+            });
+          } else {
+            var s = sanitizeURLSafe(copy[k]);
+            if (s) copy[k] = s; else delete copy[k];
+          }
+        }
+        if (!copy.preview) {
+          delete copy.preview;
+          delete copy.previewLoad;
+        }
+        return copy;
+      }
+      window.__pannellumSanitize = sanitizeURLSafe;
+      window.__pannellumNormalizeOptions = normalizeOptions;
+
+      function applyPatch() {
+        var p = window.pannellum;
+        if (!p || typeof p.viewer !== "function" || p._sanitizePatchedV2) return false;
+        try {
+          p.sanitizeURL = sanitizeURLSafe;
+          p.sanitizeURLForCss = sanitizeURLForCssSafe;
+          var OriginalViewer = p.viewer;
+          function PatchedViewer(container, opts) {
+            return OriginalViewer.call(p, container, normalizeOptions(opts || {}));
+          }
+          PatchedViewer.prototype = OriginalViewer.prototype;
+          Object.keys(OriginalViewer).forEach(function (k) { PatchedViewer[k] = OriginalViewer[k]; });
+          p.viewer = PatchedViewer;
+          p._sanitizePatchedV2 = true;
+          return true;
+        } catch (e) { return false; }
+      }
+
+      function waitAndPatch() {
+        if (applyPatch()) return;
+        var attempts = 0;
+        var t = setInterval(function () {
+          if (applyPatch() || ++attempts > 200) clearInterval(t);
+        }, 25);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", waitAndPatch, { once: true });
+      } else {
+        waitAndPatch();
+      }
+    })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+    <script src="%PUBLIC_URL%/pannellum-patch.js"></script>
+
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+    <!-- Google Fonts - Inter + Inter Tight para tipografía moderna -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <title>Tour Virtual 360° | COTECMAR</title>
+  </head>
+  <body>
+    <noscript>Necesitas activar JavaScript para ejecutar esta aplicación.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

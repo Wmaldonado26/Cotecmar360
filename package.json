@@ -1,0 +1,21 @@
+{
+  "name": "xr-mamonal-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo coordinador: backend (Prisma SQLite + Express) / frontend (CRA React 18)",
+  "workspaces": [],
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "prisma:generate": "npm --prefix backend run prisma:generate",
+    "prisma:migrate": "npm --prefix backend run prisma:migrate",
+    "prisma:studio": "npm --prefix backend run prisma:studio",
+    "start:backend": "npm --prefix backend start",
+    "start:frontend": "npm --prefix frontend start",
+    "dev": "concurrently \"npm --prefix backend start\" \"npm --prefix frontend start\" --names \"BACKEND,FRONTEND\" --prefix-colors \"bgBlue.bold,bgMagenta.bold\"",
+    "build": "npm --prefix frontend run build",
+    "clean": "npm --prefix frontend run clean"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

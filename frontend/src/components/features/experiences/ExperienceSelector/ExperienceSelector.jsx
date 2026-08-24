@@ -1,0 +1,267 @@
+import React from "react";
+import { FaMapMarkerAlt, FaInfoCircle, FaImage, FaList, FaThLarge, FaSearch, FaFilter, FaArrowRight, FaShip, FaSignOutAlt, FaUserShield, FaChevronRight, FaChevronLeft, FaPlay, FaBars, FaTimes, FaCog, FaLock, FaUsers, FaShieldAlt, FaKey, FaChevronDown, FaUserCircle, FaMoon, FaSun, FaImages, FaArrowLeft, FaAnchor, FaWater, FaLayerGroup, FaFolderOpen } from "react-icons/fa";
+import DynamicNavbar from "../../../layout/Navbar/DynamicNavbar";
+import DynamicBreadcrumbs from "../../../ui/DynamicBreadcrumbs/DynamicBreadcrumbs";
+import cotecmarLogo from "../../../../assets/images/logo.png";
+import "./ExperienceSelector.css";
+import "../../projects/ProjectManager/ProjectManager.css";
+
+const ICONS = { FaShip, FaCog, FaAnchor, FaWater, FaImage, FaMapMarkerAlt };
+
+export const ExperienceSelectorTemplate = ({ logic }) => {
+  const {
+    navigate,
+    currentUser,
+    project,
+    allProjects,
+    showSidebar, setShowSidebar,
+    currentPage, setCurrentPage,
+    searchQuery, setSearchQuery,
+    paginatedExperiences,
+    filteredExperiences,
+    totalPages,
+    handleClick,
+    onBackToManager
+  } = logic;
+
+  return (
+    <>
+      <div 
+        className={`sidebar-overlay ${showSidebar ? "active" : ""}`} 
+        onClick={() => setShowSidebar(false)}
+      ></div>
+      <div className={`sidebar-menu ${showSidebar ? "open" : ""}`}>
+        <div className="sidebar-header">
+          <div className="sidebar-brand-title">
+            <img src={cotecmarLogo} alt="COTECMAR" className="sidebar-logo" />
+            <span>Navegación</span>
+          </div>
+          <button 
+            className="sidebar-close-btn" 
+            onClick={() => setShowSidebar(false)} 
+            title="Cerrar Menú"
+          >
+            <FaTimes />
+          </button>
+        </div>
+        <nav className="sidebar-nav">
+          <button 
+            className="sidebar-item"
+            onClick={() => {
+              navigate("/admin");
+              setShowSidebar(false);
+            }}
+          >
+            <FaFolderOpen className="sidebar-icon" />
+            <span>Mis Proyectos</span>
+          </button>
+          
+          <button 
+            className="sidebar-item" 
+            style={{ display: currentUser?.role === 'admin' ? 'flex' : 'none' }}
+            onClick={() => {
+              navigate("/admin/users");
+              setShowSidebar(false);
+            }}
+          >
+            <FaUsers className="sidebar-icon" />
+            <span>Gestión de Usuarios</span>
+          </button>
+          
+          <button 
+            className="sidebar-item" 
+            style={{ display: currentUser?.role === 'admin' ? 'flex' : 'none' }}
+            onClick={() => {
+              navigate("/admin/permissions");
+              setShowSidebar(false);
+            }}
+          >
+            <FaLock className="sidebar-icon" />
+            <span>Permisos y Roles</span>
+          </button>
+
+          <button 
+            className="sidebar-item" 
+            style={{ display: currentUser?.role === 'admin' ? 'flex' : 'none' }}
+            onClick={() => {
+              navigate("/admin/landing");
+              setShowSidebar(false);
+            }}
+          >
+            <FaLayerGroup className="sidebar-icon" />
+            <span>Tarjetas Landing</span>
+          </button>
+          
+          <button 
+            className="sidebar-item"
+            onClick={() => {
+              navigate("/gallery");
+              setShowSidebar(false);
+            }}
+          >
+            <FaImages className="sidebar-icon" />
+            <span>Galería de Proyecto</span>
+          </button>
+        </nav>
+      </div>
+
+      <DynamicNavbar
+        showBackButton={false}
+        title={null}
+        subtitle={null}
+        middleContent={
+          <DynamicBreadcrumbs
+            customMappings={{
+              project: "Proyectos",
+              [project?.id]: project?.name || "Proyecto",
+              admin: "Gestión de Proyecto"
+            }}
+            customLinks={{
+              project: "/admin"
+            }} 
+            customDropdowns={{
+              project: allProjects.map(p => ({
+                id: p.id,
+                label: p.name,
+                sublabel: p.vesselType || 'Visualización 360°',
+                image: p.thumbnail || p.image || '/images/default_image.png',
+                onClick: () => {
+                  window.location.href = `/project/${p.id}`;
+                }
+              }))
+            }}
+          />
+        }
+        leftActions={
+          <button 
+            className="hamburger-btn" 
+            onClick={() => setShowSidebar(!showSidebar)}
+            title="Abrir Menú"
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: 'none', color: 'inherit', fontSize: '20px', cursor: 'pointer', padding: '8px', marginRight: '8px' }}
+          >
+            <FaBars />
+          </button>
+        }
+      />
+
+      <div className="experience-selector experience-selector-container">
+        <div style={{ width: '100%', marginBottom: '24px', marginTop: '24px', display: 'flex', justifyContent: 'flex-start' }}>
+          <button 
+            onClick={onBackToManager ? onBackToManager : () => navigate(-1)} 
+            className="back-btn-cotecmar"
+          >
+            <FaArrowLeft /> Volver
+          </button>
+        </div>
+
+      {/* Hero Card Container */}
+      <div className="experience-hero-card">
+        <div className="hero-image-container">
+          {project?.thumbnail || project?.image ? (
+            <img 
+              src={project.thumbnail || project.image} 
+              alt={project.name} 
+              className="hero-project-image"
+              onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "/images/default_image.png"; }} 
+            />
+          ) : (
+            <div className="hero-logo-fallback">
+              <FaImage size={64} color="#cbd5e1" />
+            </div>
+          )}
+        </div>
+        <div className="hero-title-container">
+          <h1>{project?.name || "PROYECTO"}</h1>
+        </div>
+      </div>
+
+      {/* Main Content Section */}
+      <div className="experience-content-section">
+        
+        {/* Toolbar */}
+        <div className="experience-toolbar">
+          <h2 className="section-title">Zonas disponibles</h2>
+          
+          <div className="search-container">
+            <FaSearch className="search-icon" />
+            <input 
+              type="text" 
+              placeholder="Buscar zonas..." 
+              className="search-input" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <div className="view-toggle-container">
+            <div className="toggle-wrapper">
+              <button className="view-toggle-btn active" title="Vista cuadrícula">
+                <FaThLarge />
+              </button>
+              <button className="view-toggle-btn" title="Vista lista">
+                <FaList />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Zones Grid */}
+        <div className="experience-grid">
+          {paginatedExperiences.map((exp) => {
+            const IconComponent = ICONS[exp.iconName] || FaMapMarkerAlt;
+
+            return (
+              <div key={exp.id} className="experience-card" onClick={() => handleClick(exp)}>
+                <div className="experience-content">
+                  <div className="experience-icon">
+                    <IconComponent />
+                  </div>
+                  <h3>{exp.title}</h3>
+                </div>
+              </div>
+            );
+          })}
+
+          {project && filteredExperiences.length === 0 && (
+            <div className="empty-state">
+              <p>No se encontraron zonas que coincidan con la búsqueda.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-4 mt-8 mb-4">
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all ${
+                currentPage === 1 
+                  ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
+                  : 'bg-white text-blue-600 shadow-sm border border-slate-200 hover:bg-blue-50 hover:border-blue-300'
+              }`}
+            >
+              <FaChevronLeft /> Anterior
+            </button>
+            <span className="text-sm font-medium text-slate-600 bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100">
+              Página <span className="font-bold text-blue-600">{currentPage}</span> de {totalPages}
+            </span>
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all ${
+                currentPage === totalPages 
+                  ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
+                  : 'bg-white text-blue-600 shadow-sm border border-slate-200 hover:bg-blue-50 hover:border-blue-300'
+              }`}
+            >
+              Siguiente <FaChevronRight />
+            </button>
+          </div>
+        )}
+
+      </div>
+      </div>
+    </>
+  );
+};

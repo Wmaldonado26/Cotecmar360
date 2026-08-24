@@ -1,0 +1,128 @@
+.premium-preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Fondo más oscuro: Color principal en el centro y más oscuro hacia los bordes */
+  background: radial-gradient(circle at center, #061433 0%, #020512 100%);
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: #fff;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.preloader-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.preloader-light-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  /* Azul complementario #040E79 para la línea de luz */
+  background: linear-gradient(90deg, transparent, rgba(4, 14, 121, 0.9), transparent);
+  transform: scaleX(0);
+  opacity: 0;
+  box-shadow: 0 0 20px rgba(4, 14, 121, 0.8);
+}
+
+.preloader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  margin-top: -8vh; /* center visually taking text into account */
+}
+
+.preloader-logo-wrapper {
+  margin-bottom: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* sutil glow azul oscuro #040E79 alrededor del logo */
+  filter: drop-shadow(0 0 25px rgba(4, 14, 121, 0.9));
+}
+
+.preloader-logo {
+  width: 250px; 
+  max-width: 80vw;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (min-width: 768px) {
+  .preloader-logo {
+    width: 320px;
+  }
+}
+
+.preloader-text-container {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.preloader-title {
+  font-size: 1.4rem;
+  font-weight: 300;
+  letter-spacing: 10px;
+  margin: 0 0 0.8rem 0;
+  color: #ffffff;
+}
+
+.preloader-subtitle {
+  font-size: 0.85rem;
+  font-weight: 200;
+  letter-spacing: 5px;
+  margin: 0;
+  color: #8fa9d4;
+  text-transform: uppercase;
+}
+
+.preloader-progress-container {
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.preloader-progress-text {
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 4px;
+  margin-bottom: 1rem;
+  color: #8fa9d4;
+  font-variant-numeric: tabular-nums;
+}
+
+.preloader-progress-bar {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.preloader-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #ffffff;
+  width: 0%;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}

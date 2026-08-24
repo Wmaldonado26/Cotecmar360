@@ -1,0 +1,790 @@
+
+/* ---------------------------------------------
+   Design tokens — Cotecmar Corporate (Dark Edition)
+   Cinematic, Corporate, Precision Engineering
+---------------------------------------------- */
+.landing-page {
+  --c-black: #061433; /* Deep navy blue, replacing pure black */
+  --c-black-rgb: 6, 20, 51;
+  --c-white: #ffffff;
+  --c-card-shadow:
+    0 60px 120px -30px rgba(0, 0, 0, 0.8),
+    0 -30px 60px rgba(0, 0, 0, 0.5),
+    0 0 80px rgba(43, 83, 152, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --c-gray-dark: #0a1120;
+  --c-gray-dark-rgb: 10, 17, 32;
+  --c-gray-mid: #1d293f;
+  --c-gray-light: #8fa7d6;
+  --c-brand: #2B5398;
+  --c-brand-rgb: 43, 83, 152;
+  --c-line: rgba(143, 167, 214, 0.18);
+  --c-glow-soft: rgba(43, 83, 152, 0.35);
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  min-height: 100vh;
+  background-color: var(--c-black);
+  color: var(--c-white);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  letter-spacing: 0.02em;
+  transition: background-color 0.6s var(--ease-soft), color 0.6s var(--ease-soft);
+  position: relative;
+  isolation: isolate;
+}
+
+/* Subtle cinematic grain — adds texture without ever touching legibility */
+.landing-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------------------------------------------
+   Design tokens — Light Theme
+---------------------------------------------- */
+.landing-page.light-theme {
+  --c-black: #f0f4f9;
+  --c-black-rgb: 240, 244, 249;
+  --c-white: #0a1e3c;
+  --c-card-shadow:
+    0 40px 80px -20px rgba(6, 20, 51, 0.12),
+    0 -20px 40px rgba(6, 20, 51, 0.06),
+    0 0 40px rgba(30, 58, 138, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --c-gray-dark: #e6edf5;
+  --c-gray-dark-rgb: 230, 237, 245;
+  --c-gray-mid: #cbd5e1;
+  --c-gray-light: #1e3a8a;
+  --c-brand: #1e3a8a;
+  --c-brand-rgb: 30, 58, 138;
+  --c-line: rgba(30, 58, 138, 0.12);
+  --c-glow-soft: rgba(30, 58, 138, 0.1);
+}
+
+/* Color transition helpers for specific elements */
+.landing-brand-copy span,
+.landing-brand-copy p,
+.landing-scroll-arrow,
+.landing-btn {
+  transition: color 0.3s var(--ease-soft), background-color 0.3s var(--ease-soft), border-color 0.3s var(--ease-soft);
+}
+
+.landing-page h1,
+.landing-page h2,
+.landing-page h3 {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.landing-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--c-gray-light);
+  font-weight: 600;
+  position: relative;
+  padding-left: 28px;
+}
+
+.landing-eyebrow:not(:empty)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 14px;
+  height: 1px;
+  background: var(--c-brand);
+  transform: translateY(-50%);
+}
+
+/* ---------------------------------------------
+   Header
+---------------------------------------------- */
+.landing-header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 50;
+  background: linear-gradient(to bottom, rgba(var(--c-black-rgb), 0.7) 0%, rgba(var(--c-black-rgb), 0) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: background 0.6s var(--ease-soft), border-color 0.6s var(--ease-soft), backdrop-filter 0.6s var(--ease-soft);
+}
+
+.landing-brand-logo {
+  height: 60px;
+  width: auto;
+  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.4));
+}
+
+.landing-brand-copy span {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--c-white);
+}
+
+.landing-brand-copy p {
+  margin: 2px 0 0;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--c-gray-light);
+}
+
+.landing-lang-btn {
+  color: var(--c-white);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(var(--c-black-rgb), 0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  cursor: pointer;
+  min-height: 36px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    border-color 0.4s var(--ease-soft),
+    color 0.4s var(--ease-soft),
+    background-color 0.4s var(--ease-soft),
+    box-shadow 0.4s var(--ease-soft),
+    transform 0.4s var(--ease-soft);
+}
+
+.landing-lang-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--c-brand);
+  transform: scaleX(0);
+  transform-origin: left;
+  opacity: 0.18;
+  transition: transform 0.6s var(--ease-cinematic), opacity 0.6s var(--ease-soft);
+}
+
+.landing-lang-btn:hover {
+  border-color: var(--c-brand);
+  color: var(--c-white);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px -8px rgba(var(--c-brand-rgb), 0.55);
+}
+
+.landing-lang-btn:hover::before {
+  transform: scaleX(1);
+  opacity: 0.22;
+}
+
+.landing-lang-label {
+  font-family: "Inter Tight", "Inter", system-ui, sans-serif;
+  color: inherit;
+  line-height: 1;
+}
+
+.light-theme .landing-lang-btn {
+  color: var(--c-white);
+  border-color: rgba(255, 255, 255, 0.26);
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.light-theme .landing-lang-btn:hover {
+  color: var(--c-white);
+  border-color: var(--c-brand);
+}
+
+.landing-btn {
+  position: relative;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: var(--c-white);
+  padding: 14px 32px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  cursor: pointer;
+  transition: border-color 0.4s var(--ease-soft), color 0.4s var(--ease-soft),
+    box-shadow 0.4s var(--ease-soft), transform 0.4s var(--ease-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Sweep fill on hover — precise, not flashy */
+.landing-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--c-brand);
+  transform: scaleX(0);
+  transform-origin: left;
+  opacity: 0.2;
+  transition: transform 0.6s var(--ease-cinematic), opacity 0.6s var(--ease-soft);
+}
+
+.landing-btn:hover {
+  border-color: var(--c-brand);
+  color: var(--c-white);
+  box-shadow: 0 0 0 2px rgba(var(--c-brand-rgb), 0.2), 0 12px 32px rgba(var(--c-brand-rgb), 0.3);
+  transform: translateY(-2px);
+}
+
+.landing-btn:hover::before {
+  transform: scaleX(1);
+  opacity: 0.25;
+}
+
+.landing-btn:active {
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------
+   Hero / GSAP Elements
+---------------------------------------------- */
+.landing-logo-scroll {
+  height: 150vh;
+  position: relative;
+}
+
+.landing-logo-stage {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background-color: var(--c-black);
+  transition: background-color 0.6s var(--ease-soft);
+  padding-top: 76px;
+  box-sizing: border-box;
+}
+
+/* Cinematic vignette — frames the scene like a lens, never hides content */
+.landing-logo-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.65) 100%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 70%, rgba(var(--c-black-rgb), 0.9) 100%);
+}
+
+/* Minimalist telemetry-style scanline */
+.landing-scanline {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    transparent 0%,
+    rgba(43, 83, 152, 0.05) 48%,
+    rgba(43, 83, 152, 0.2) 50%,
+    rgba(43, 83, 152, 0.05) 52%,
+    transparent 100%
+  );
+  background-size: 100% 200%;
+  animation: landing-scan-sweep 9s linear infinite;
+  mix-blend-mode: screen;
+  opacity: 0.75;
+}
+
+@keyframes landing-scan-sweep {
+  0% { background-position: 0 -100%; }
+  100% { background-position: 0 100%; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 9s ease-in-out infinite;
+}
+
+.landing-logo-layer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: min(44vw, 480px);
+  margin: 0;
+  padding: 0;
+}
+
+.landing-logo-glow {
+  position: absolute;
+  inset: auto;
+  width: min(50vw, 560px);
+  height: min(50vw, 560px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(43, 83, 152, 0.15) 0%, transparent 60%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.landing-logo-frame {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  background: transparent;
+}
+
+/* Ambient glow that sits behind the logo, giving it presence over the video */
+.landing-logo-frame::before {
+  content: "";
+  position: absolute;
+  width: min(44vw, 480px);
+  height: min(44vw, 480px);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--c-glow-soft) 0%, transparent 70%);
+  filter: blur(8px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.landing-logo-showcase {
+  width: 100%;
+  object-fit: contain;
+  display: block;
+  opacity: 0.5;
+  filter: drop-shadow(0 0 60px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 120px rgba(255, 255, 255, 0.1));
+}
+
+.landing-viewer-frame {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.landing-scroll-arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  perspective: 400px;
+}
+
+.landing-arrow-3d {
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 24px rgba(255, 255, 255, 0.3));
+  transform-style: preserve-3d;
+  animation: landing-arrow-float 4s ease-in-out infinite;
+  transition: transform 0.3s var(--ease-soft), filter 0.3s var(--ease-soft);
+}
+
+.landing-arrow-3d:hover {
+  transform: rotateX(30deg) scale(1.1);
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 40px rgba(43, 83, 152, 0.5));
+}
+
+@keyframes landing-arrow-float {
+  0%, 100% { transform: rotateX(35deg) translateY(-20%); }
+  50% { transform: rotateX(5deg) translateY(20%) scale(1.05); }
+}
+
+.landing-arrow-path-1 { animation: landing-arrow-pulse 1.6s infinite 0s; }
+.landing-arrow-path-2 { animation: landing-arrow-pulse 1.6s infinite 0.2s; }
+.landing-arrow-path-3 { animation: landing-arrow-pulse 1.6s infinite 0.4s; }
+
+@keyframes landing-arrow-pulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 1; }
+}
+
+/* ---------------------------------------------
+   Services / Stack Cards (Vertical Stacking — Cinematic Scenes)
+---------------------------------------------- */
+.landing-stack-section {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  background-color: var(--c-black);
+  position: relative;
+}
+
+.landing-stack-cards {
+  --numcards: 4;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 80px;
+  view-timeline-name: --landing-stack-scroll;
+  width: 100%;
+  max-width: 100%;
+}
+
+.landing-stack-card {
+  --index0: calc(var(--index) - 1);
+  --reverse-index: calc(var(--numcards) - var(--index0));
+  --reverse-index0: calc(var(--reverse-index) - 1);
+  position: sticky;
+  top: 120px;
+  padding: 0 40px;
+}
+
+.landing-stack-card-content {
+  --start-range: calc(var(--index0) / var(--numcards) * 100%);
+  --end-range: calc(var(--index) / var(--numcards) * 100%);
+  display: grid;
+  align-items: stretch;
+  gap: 0;
+  min-height: 85vh;
+  padding: 0;
+  background: var(--c-gray-dark);
+  border: 1px solid var(--c-line);
+  box-shadow: var(--c-card-shadow);
+  overflow: hidden;
+  border-radius: 4px;
+  transform-origin: 50% 0%;
+  will-change: transform;
+  transition: box-shadow 0.6s var(--ease-soft), transform 0.6s var(--ease-soft);
+}
+
+/* Fine corner markers — precision-engineering detail, not decoration */
+.landing-stack-card-content::before,
+.landing-stack-card-content::after {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-color: rgba(var(--c-brand-rgb), 0.7);
+  z-index: 5;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.landing-stack-card-content::before {
+  top: 18px;
+  left: 18px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.landing-stack-card-content::after {
+  bottom: 18px;
+  right: 18px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* ---------------------------------------------
+   Alternating Cards (Zig-Zag Layout)
+---------------------------------------------- */
+/* Impar (Card 1, 3): Imagen Izquierda, Texto Derecha */
+.landing-stack-card:nth-child(odd) .landing-stack-card-content {
+  grid-template-columns: 1.2fr 1fr;
+}
+.landing-stack-card:nth-child(odd) .landing-stack-card-media {
+  order: 1;
+}
+.landing-stack-card:nth-child(odd) .landing-stack-card-copy {
+  order: 2;
+}
+.landing-stack-card:nth-child(odd) .landing-stack-card-media::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -2px;
+  width: calc(35% + 4px);
+  height: 100%;
+  background: linear-gradient(to right, rgba(var(--c-gray-dark-rgb), 0) 0%, rgba(var(--c-gray-dark-rgb), 1) 80%, rgba(var(--c-gray-dark-rgb), 1) 100%);
+  pointer-events: none;
+}
+
+/* Par (Card 2, 4): Texto Izquierda, Imagen Derecha */
+.landing-stack-card:nth-child(even) .landing-stack-card-content {
+  grid-template-columns: 1fr 1.2fr;
+}
+.landing-stack-card:nth-child(even) .landing-stack-card-copy {
+  order: 1;
+}
+.landing-stack-card:nth-child(even) .landing-stack-card-media {
+  order: 2;
+}
+.landing-stack-card:nth-child(even) .landing-stack-card-media::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -2px;
+  width: calc(35% + 4px);
+  height: 100%;
+  background: linear-gradient(to left, rgba(var(--c-gray-dark-rgb), 0) 0%, rgba(var(--c-gray-dark-rgb), 1) 80%, rgba(var(--c-gray-dark-rgb), 1) 100%);
+  pointer-events: none;
+}
+
+.landing-stack-card-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 80px 64px;
+  color: var(--c-white);
+  position: relative;
+  z-index: 2;
+}
+
+.landing-stack-card-copy h3 {
+  margin: 0 0 20px;
+  max-width: 480px;
+  font-family: "Inter Tight", "Inter", system-ui, sans-serif;
+  font-size: clamp(1.4rem, 2.1vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--c-white);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  position: relative;
+  padding-bottom: 18px;
+}
+
+/* Small precision underline beneath each capability title */
+.landing-stack-card-copy h3::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 48px;
+  background: var(--c-brand);
+  box-shadow: 0 0 16px rgba(var(--c-brand-rgb), 0.45);
+}
+
+.landing-stack-card-copy p {
+  margin: 0;
+  max-width: 460px;
+  color: var(--c-gray-light);
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
+}
+
+.landing-stack-card-media {
+  position: relative;
+  min-height: 100%;
+  overflow: hidden;
+  background: #000000;
+}
+
+.landing-stack-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.08);
+  transition: transform 0.8s var(--ease-soft), filter 0.8s var(--ease-soft);
+  filter: brightness(1.02);
+}
+
+.landing-stack-card:hover .landing-stack-card-media img {
+  transform: scale(1.15);
+  filter: brightness(1.06);
+}
+
+/* Subtle top sheen so the "screen" reads as a solid, lit surface rather than a flat block */
+.landing-stack-card-media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.25) 100%);
+  pointer-events: none;
+}
+
+/* ---------------------------------------------
+   Light Theme overrides for cards
+---------------------------------------------- */
+.landing-page.light-theme .landing-stack-card-copy h3 {
+  color: var(--c-white);
+}
+
+.landing-page.light-theme .landing-stack-card-content {
+  background: var(--c-gray-dark);
+  border-color: rgba(30, 58, 138, 0.15);
+}
+
+.landing-page.light-theme .landing-btn {
+  border-color: rgba(30, 58, 138, 0.3);
+  color: #1e3a8a;
+}
+
+.landing-page.light-theme .landing-btn:hover {
+  border-color: #1e3a8a;
+  color: #1e3a8a;
+  box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.15), 0 12px 32px rgba(30, 58, 138, 0.15);
+}
+
+.landing-page.light-theme .landing-arrow-3d {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+/* ---------------------------------------------
+   Fullscreen 360 Card
+---------------------------------------------- */
+.text-stroke-360 {
+  font-size: clamp(8rem, 18vw, 20rem);
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.1);
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.3);
+  text-shadow: 0 0 60px rgba(255, 255, 255, 0.05);
+  letter-spacing: 0.05em;
+  transition: all 0.8s var(--ease-soft);
+}
+
+.group:hover .text-stroke-360 {
+  color: rgba(255, 255, 255, 0.2);
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.8);
+  text-shadow: 0 0 80px rgba(255, 255, 255, 0.15);
+}
+
+/* ---------------------------------------------
+   Responsive
+---------------------------------------------- */
+@media (max-width: 980px) {
+  .landing-stack-card {
+    top: 100px;
+    padding: 0 20px;
+  }
+  .landing-stack-cards {
+    gap: 60px;
+    padding: 0;
+  }
+  .landing-stack-card-content {
+    min-height: auto;
+    grid-template-columns: 1fr;
+  }
+  .landing-stack-card-copy {
+    padding: 40px 32px;
+  }
+  .landing-stack-card-copy h3 {
+    font-family: "Inter Tight", "Inter", system-ui, sans-serif;
+    font-size: clamp(1.2rem, 3.2vw, 1.9rem);
+    letter-spacing: 0.09em;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+  }
+  .landing-stack-card-copy h3::after {
+    width: 40px;
+    height: 2px;
+  }
+  .landing-stack-card-copy p {
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  .landing-stack-card-media {
+    min-height: 300px;
+  }
+  .landing-stack-card-media img {
+    transform: scale(1.02);
+  }
+  .landing-brand-logo {
+    height: 48px;
+  }
+  .landing-logo-layer {
+    width: min(75vw, 400px);
+  }
+}
+
+@media (max-width: 760px) {
+  .landing-stack-cards {
+    gap: 40px;
+    padding: 0;
+  }
+  .landing-stack-card {
+    top: 80px;
+    padding: 0 12px;
+  }
+  .landing-stack-card-copy {
+    padding: 24px 20px;
+  }
+  .landing-stack-card-copy h3 {
+    font-family: "Inter Tight", "Inter", system-ui, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+  }
+  .landing-stack-card-copy h3::after {
+    width: 32px;
+    height: 2px;
+  }
+  .landing-stack-card-copy p {
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+  .landing-stack-card-media {
+    min-height: 220px;
+  }
+  .landing-brand-logo {
+    height: 36px;
+  }
+  .landing-logo-layer {
+    width: min(85vw, 280px);
+  }
+  .landing-arrow-3d {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* ---------------------------------------------
+   Accessibility — Reduced Motion
+   The page stays fully functional; only the
+   ambient / decorative motion is stripped back.
+---------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .landing-page,
+  .landing-page *,
+  .landing-page *::before,
+  .landing-page *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .landing-scanline,
+  .landing-page::before {
+    display: none;
+  }
+
+  .landing-stack-card-media img,
+  .landing-stack-card:hover .landing-stack-card-media img {
+    transform: none !important;
+  }
+
+  .landing-arrow-3d {
+    animation: none;
+  }
+
+  .landing-stack-card-content {
+    transition: none;
+  }
+}

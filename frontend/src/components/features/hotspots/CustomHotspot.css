@@ -1,0 +1,253 @@
+/* src/components/CustomHotspot.css */
+
+/* Base */
+.hs-root {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transform: translateZ(0);
+  user-select: none;
+}
+
+/* Ring animado (Efecto Sonar) */
+.hs-ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: 999px;
+  border: 2px solid #ffffff;
+  opacity: 0;
+  animation: hs-sonar 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  pointer-events: none;
+}
+
+/* Core (glass) */
+.hs-core {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 160ms ease, box-shadow 160ms ease, background 200ms ease;
+  overflow: hidden;
+}
+
+/* Shine */
+.hs-core::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 30% 25%,
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0) 60%
+  );
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* Icon */
+.hs-ico {
+  position: relative;
+  z-index: 2;
+  font-size: 24px; /* Un poco más grande para el Chevron */
+  stroke-width: 2.5;
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+/* Hover / Active */
+.hs-root:hover .hs-core,
+.hs-root.active .hs-core {
+  transform: scale(1.15);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.2) !important; /* Aclarar al hacer hover */
+}
+
+/* ====== THEMES POR TIPO ====== */
+
+/* NAV (Estilo Pano2VR - Cox Powertrain) */
+.hs-root.hs--nav .hs-core {
+  background: rgba(0, 0, 0, 0.45); /* Fondo oscuro semitransparente elegante */
+}
+.hs-root.hs--nav .hs-ring {
+  /* El ring heredará el border blanco definido arriba */
+}
+
+/* ELEMENT */
+.hs-root.hs--element .hs-core {
+  background: linear-gradient(145deg, rgba(249, 115, 22, 0.95), rgba(194, 65, 12, 0.95));
+}
+.hs-root.hs--element .hs-ring {
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.55), rgba(249, 115, 22, 0) 60%);
+}
+
+/* INFO */
+.hs-root.hs--info .hs-core {
+  background: linear-gradient(145deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95));
+}
+.hs-root.hs--info .hs-ring {
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.55), rgba(16, 185, 129, 0) 60%);
+}
+
+/* Preview */
+.hs-preview {
+  position: absolute;
+  bottom: 62px;
+  left: 50%;
+  transform: translateX(-50%) scale(0.94);
+  width: 200px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 14px;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 100;
+  transition: all 220ms ease;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.hs-root:hover .hs-preview,
+.hs-root.active .hs-preview {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
+  bottom: 66px;
+}
+
+/* Label */
+.hs-label {
+  position: absolute;
+  bottom: -36px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.88);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 7px 12px;
+  border-radius: 10px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 200ms ease;
+  pointer-events: none;
+  z-index: 101;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hs-root:hover .hs-label,
+.hs-root.active .hs-label {
+  opacity: 1;
+  visibility: visible;
+  bottom: -40px;
+}
+
+/* Pulse */
+@keyframes hs-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+}
+
+/* Importante para Pannellum */
+.pnlm-hotspot {
+  pointer-events: auto !important;
+}
+
+@keyframes hs-sonar {
+  0% { transform: scale(1); opacity: 0.8; border-width: 2px; }
+  100% { transform: scale(2.2); opacity: 0; border-width: 0px; }
+}
+
+
+
+/* ===========================
+   THEME CLARO (LIGHT MODE)
+   =========================== */
+.theme-light .hs-root .hs-core {
+  border: 2px solid rgba(255,255,255,0.9);
+  box-shadow: 0 8px 24px rgba(6,20,51,0.15);
+}
+
+.theme-light .hs-root:hover .hs-core,
+.theme-light .hs-root.active .hs-core {
+  box-shadow: 0 14px 40px rgba(6, 20, 51, 0.25);
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* NAV */
+.theme-light .hs-root.hs--nav .hs-core {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(8px);
+}
+.theme-light .hs-root.hs--nav .hs-ring {
+  border: 2px solid #040E79;
+}
+.theme-light .hs-root.hs--nav .hs-ico {
+  color: #061433 !important;
+  stroke: #061433 !important;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* ELEMENT */
+.theme-light .hs-root.hs--element .hs-core {
+  background: linear-gradient(145deg, #2B5398, #040E79);
+}
+.theme-light .hs-root.hs--element .hs-ring {
+  border: 2px solid #2B5398;
+  background: transparent;
+}
+.theme-light .hs-root.hs--element .hs-ico {
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* INFO */
+.theme-light .hs-root.hs--info .hs-core {
+  background: linear-gradient(145deg, #0EA5E9, #0284C7);
+}
+.theme-light .hs-root.hs--info .hs-ring {
+  border: 2px solid #0EA5E9;
+  background: transparent;
+}
+.theme-light .hs-root.hs--info .hs-ico {
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* PREVIEW & LABEL */
+.theme-light .hs-preview {
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 8px 30px rgba(6, 20, 51, 0.10);
+}
+
+.theme-light .hs-label {
+  background: rgba(255,255,255,0.95);
+  color: #061433;
+  box-shadow: 0 4px 12px rgba(6, 20, 51, 0.08);
+}
