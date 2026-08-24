@@ -184,7 +184,7 @@ export const LandingPageTemplate = ({
               {stackingCards.map((card, index) => (
                 <div 
                   key={card.id} 
-                  className="landing-stack-card group cursor-pointer"
+                  className="landing-stack-card group"
                   style={{ "--index0": index, "--index": index + 1 }}
                 >
                   <div className="landing-stack-card-content">
@@ -215,9 +215,8 @@ export const LandingPageTemplate = ({
             {/* 4th Custom Card: 360 View Fullscreen */}
             <div 
               ref={fullScreenCardRef}
-              className="relative w-full h-screen flex items-center justify-center cursor-pointer group overflow-hidden sticky top-0 z-40"
+              className="relative w-full h-screen flex items-center justify-center group overflow-hidden sticky top-0 z-40"
               style={{ marginTop: '0', "--index0": stackingCards.length, "--index": stackingCards.length + 1 }}
-              onClick={() => navigate(featuredTourUrl)}
             >
                 <img
                   ref={fullScreenImageRef}

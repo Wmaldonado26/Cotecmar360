@@ -1,4 +1,3 @@
-
 /* ---------------------------------------------
    Design tokens — Cotecmar Corporate (Dark Edition)
    Cinematic, Corporate, Precision Engineering
@@ -255,7 +254,7 @@
    Hero / GSAP Elements
 ---------------------------------------------- */
 .landing-logo-scroll {
-  height: 150vh;
+  height: 250vh; /* Aumentado de 150vh para dar más recorrido */
   position: relative;
 }
 
@@ -598,9 +597,11 @@
   filter: brightness(1.02);
 }
 
-.landing-stack-card:hover .landing-stack-card-media img {
-  transform: scale(1.15);
-  filter: brightness(1.06);
+@media (hover: hover) {
+  .landing-stack-card:hover .landing-stack-card-media img {
+    transform: scale(1.15);
+    filter: brightness(1.06);
+  }
 }
 
 /* Subtle top sheen so the "screen" reads as a solid, lit surface rather than a flat block */
@@ -653,10 +654,12 @@
   transition: all 0.8s var(--ease-soft);
 }
 
-.group:hover .text-stroke-360 {
-  color: rgba(255, 255, 255, 0.2);
-  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.8);
-  text-shadow: 0 0 80px rgba(255, 255, 255, 0.15);
+@media (hover: hover) {
+  .group:hover .text-stroke-360 {
+    color: rgba(255, 255, 255, 0.2);
+    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.8);
+    text-shadow: 0 0 80px rgba(255, 255, 255, 0.15);
+  }
 }
 
 /* ---------------------------------------------
