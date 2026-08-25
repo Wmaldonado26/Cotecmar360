@@ -18,7 +18,7 @@ export const LandingPageTemplate = ({
   retrying,
   retryFetchCards,
 }) => {
-  const featuredTourUrl = ""; // TODO: Colocar aquí la nueva ruta principal, o obtenerla de la DB
+  const featuredTourUrl = "/project/proj_1787580651232_2f1jl70eu/experience/zone_1787584150095";
   const [videoFailed, setVideoFailed] = useState(false);
 
   return (
