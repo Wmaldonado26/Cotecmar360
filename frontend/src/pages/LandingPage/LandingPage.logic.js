@@ -1,11 +1,7 @@
-import { useEffect, useRef, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import authService from "../../services/AuthService";
 import landingService from "../../services/LandingService";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const DICTIONARIES = {
   es: {
@@ -86,17 +82,9 @@ const useLandingPageLogic = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const scrollSectionRef = useRef(null);
-  const logoStageRef = useRef(null);
-  const logoFrameRef = useRef(null);
-  const logoImageRef = useRef(null);
-  const videoBgRef = useRef(null);
-  const scrollArrowRef = useRef(null);
-  const fullScreenCardRef = useRef(null);
-  const fullScreenImageRef = useRef(null);
-  const fullScreenTextRef = useRef(null);
-
   const [stackingCards, setStackingCards] = useState([]);
+  const [loadingCards, setLoadingCards] = useState(true);
+  const [errorCards, setErrorCards] = useState(null);
 
   const [lang, setLang] = useState("es");
 
@@ -127,11 +115,20 @@ const useLandingPageLogic = () => {
 
   useEffect(() => {
     const fetchCards = async () => {
+      setLoadingCards(true);
+      setErrorCards(null);
       try {
         const data = await landingService.getCards();
-        setStackingCards(data);
+        if (data && data.length > 0) {
+          setStackingCards(data);
+        } else {
+          setErrorCards("No hay contenido disponible por el momento.");
+        }
       } catch (err) {
         console.error("Error fetching landing cards:", err);
+        setErrorCards("Hubo un error al cargar el contenido. Por favor intenta de nuevo más tarde.");
+      } finally {
+        setLoadingCards(false);
       }
     };
     fetchCards();
@@ -150,18 +147,11 @@ const useLandingPageLogic = () => {
     document.documentElement.lang = startLang;
     document.title = resolveDict(DICTIONARIES[startLang] || DICTIONARIES.es, "titleHome");
 
-    // GSAP animations removed per user request
-    
     setTimeout(() => {
       try {
         landingService.registerVisit().catch(() => {});
       } catch (_) { }
     }, 2000);
-
-    return () => {
-      document.documentElement.lang = "es";
-      document.title = "COTECMAR";
-    };
   }, []);
 
   const activeDict = useMemo(() => DICTIONARIES[lang] || DICTIONARIES.es, [lang]);
@@ -184,16 +174,9 @@ const useLandingPageLogic = () => {
     navigate,
     currentUser,
     isAuthenticated,
-    scrollSectionRef,
-    logoStageRef,
-    logoFrameRef,
-    logoImageRef,
-    videoBgRef,
-    scrollArrowRef,
-    fullScreenCardRef,
-    fullScreenImageRef,
-    fullScreenTextRef,
     stackingCards,
+    loadingCards,
+    errorCards,
     lang,
     toggleLang,
     t,

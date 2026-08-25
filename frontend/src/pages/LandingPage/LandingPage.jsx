@@ -1,25 +1,16 @@
 import cotecmarLogo from "../../assets/images/logo.png";
-import cotecmarLogoColored from "../../assets/images/cotecmar-logo.png";
 import xrlabLogo from "../../assets/images/cotecmar1.svg";
 import fondoVideo from "../../assets/images/planta.mp4";
 import img360Card from "../../assets/images/CARD.webp";
-import icon360 from "../../assets/images/360.png";
 import "./LandingPage.css";
 
 export const LandingPageTemplate = ({
   navigate,
   isAuthenticated,
   currentUser,
-  scrollSectionRef,
-  logoStageRef,
-  logoFrameRef,
-  logoImageRef,
-  videoBgRef,
-  scrollArrowRef,
-  fullScreenCardRef,
-  fullScreenImageRef,
-  fullScreenTextRef,
   stackingCards,
+  loadingCards,
+  errorCards,
   lang,
   toggleLang,
   t,
@@ -56,52 +47,41 @@ export const LandingPageTemplate = ({
               {t("lang.short")}
             </span>
           </button>
-
-
-
         </div>
       </header>
 
       <main className="w-full">
-        <section 
-          className="landing-logo-scroll w-full" 
-          ref={scrollSectionRef}
-        >
+        <section className="landing-logo-scroll w-full">
           <div 
             className="landing-logo-stage w-full bg-cover bg-center" 
-            ref={logoStageRef}
-            style={{ backgroundImage: "url('')" }}
           >
             <div className="landing-scanline"></div>
 
             <video 
-              ref={videoBgRef}
               src={fondoVideo} 
               className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
               autoPlay 
               loop 
               muted 
-              playsInline 
+              playsInline
+              preload="metadata"
+              aria-hidden="true"
             />
-            <div className="absolute inset-0 z-0 transition-colors duration-500 bg-black bg-opacity-10"></div>
+            <div className="absolute inset-0 z-0 bg-black bg-opacity-10 pointer-events-none"></div>
             
             <div className="landing-logo-layer z-10">
-              <div className="landing-logo-frame" ref={logoFrameRef}>
-                <div className="animate-float w-full">
+              <div className="landing-logo-frame">
+                <div className="w-full">
                   <img
-                    ref={logoImageRef}
                     src={xrlabLogo}
                     alt={t("logoShowcaseAlt")}
-                    className="landing-logo-showcase w-full h-auto object-contain transition-all duration-500"
+                    className="landing-logo-showcase w-full h-auto object-contain"
                   />
                 </div>
               </div>
             </div>
             
-            <div 
-              ref={scrollArrowRef}
-              className="absolute bottom-36 left-1/2 transform -translate-x-1/2 text-center z-20 w-full px-4 flex flex-col items-center gap-4"
-            >
+            <div className="absolute bottom-36 left-1/2 transform -translate-x-1/2 text-center z-20 w-full px-4 flex flex-col items-center gap-4">
               <span className="landing-eyebrow"></span>
               <div className="landing-scroll-arrow">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="landing-arrow-3d">
@@ -116,54 +96,65 @@ export const LandingPageTemplate = ({
         <section className="landing-stack-section w-full relative">
           
           <div className="w-full">
-            <div className="landing-stack-cards" style={{ "--numcards": (stackingCards.length + 1) || 1 }}>
-              {stackingCards.map((card, index) => (
-                <div 
-                  key={card.id} 
-                  className="landing-stack-card group"
-                  style={{ "--index0": index, "--index": index + 1 }}
-                >
-                  <div className="landing-stack-card-content">
-                    <div className="landing-stack-card-copy">
-                      <h3>{card.title}</h3>
-                      <p className="mb-6">{card.description}</p>
-                      <button 
-                        className="landing-btn mt-6"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(card.link || "/public-tour/businu/bridge");
-                        }}
-                      >
-                        {t("tourCard.action")}
-                      </button>
-                    </div>
-                    <div className="landing-stack-card-media">
-                        <img
-                          src={card.image || '/images/default_image.png'}
-                          alt={card.title || t("tourCard.tour360Alt")}
-                          className="w-full h-full object-cover"
-                        />
+            <div className="landing-stack-cards" style={{ "--numcards": (stackingCards?.length + 1) || 1 }}>
+              
+              {loadingCards ? (
+                <div className="w-full flex justify-center py-20">
+                  <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+                </div>
+              ) : errorCards ? (
+                <div className="w-full flex justify-center py-20 text-red-400 font-semibold text-lg text-center px-4">
+                  {errorCards}
+                </div>
+              ) : (
+                stackingCards.map((card, index) => (
+                  <div 
+                    key={card.id} 
+                    className="landing-stack-card group"
+                    style={{ "--index0": index, "--index": index + 1 }}
+                  >
+                    <div className="landing-stack-card-content">
+                      <div className="landing-stack-card-copy">
+                        <h3>{card.title}</h3>
+                        <p className="mb-6">{card.description}</p>
+                        <button 
+                          className="landing-btn mt-6"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(card.link || "/public-tour/businu/bridge");
+                          }}
+                        >
+                          {t("tourCard.action")}
+                        </button>
+                      </div>
+                      <div className="landing-stack-card-media">
+                          <img
+                            src={card.image || '/images/default_image.png'}
+                            alt={card.title || t("tourCard.tour360Alt")}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
 
-            {/* 4th Custom Card: 360 View Fullscreen */}
-            <div 
-              ref={fullScreenCardRef}
-              className="relative w-full h-screen flex items-center justify-center group overflow-hidden sticky top-0 z-40"
-              style={{ marginTop: '0', "--index0": stackingCards.length, "--index": stackingCards.length + 1, minHeight: '100svh' }}
-            >
+              <div 
+                className="relative w-full h-screen flex items-center justify-center group overflow-hidden sticky top-0 z-40"
+                style={{ marginTop: '0', "--index0": stackingCards?.length || 0, "--index": (stackingCards?.length || 0) + 1, minHeight: '100svh' }}
+              >
                 <img
-                  ref={fullScreenImageRef}
                   src={img360Card}
                   alt={t("tourCard.tour360Alt")}
                   className="absolute inset-0 w-full h-full object-cover z-0 origin-center"
+                  loading="lazy"
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-0 z-10 transition-opacity duration-300 group-hover:bg-opacity-0"></div>
+                
+                <div className="absolute inset-0 bg-black/40 z-10 transition-opacity duration-500 group-hover:bg-black/10 pointer-events-none"></div>
                 
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
-                  <h2 ref={fullScreenTextRef} className="text-white text-7xl md:text-9xl font-bold tracking-widest opacity-90 drop-shadow-2xl m-0" style={{ color: 'white' }}>
+                  <h2 className="text-white text-7xl md:text-9xl font-bold tracking-widest opacity-90 drop-shadow-2xl m-0" style={{ color: 'white' }}>
                     360
                   </h2>
                 </div>
@@ -181,6 +172,7 @@ export const LandingPageTemplate = ({
                   </button>
                 </div>
               </div>
+
             </div>
           </div>
         </section>
