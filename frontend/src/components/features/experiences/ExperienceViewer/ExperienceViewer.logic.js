@@ -2,6 +2,51 @@ import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import projectService from "../../../../services/ProjectService";
 import { getSceneYawOffsetDeg, normalizeYawDeg } from "../../../../components/features/experiences/utils/sceneCalibration";
 
+const getOptimalImage = (baseUrl) => {
+  if (!baseUrl || typeof baseUrl !== 'string') return baseUrl;
+  
+  try {
+    // Detectar capacidad del dispositivo
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isTablet = /iPad|Android(?!.*Mobile)/i.test(navigator.userAgent);
+    const screenWidth = window.innerWidth;
+    const connectionType = navigator.connection?.effectiveType || '4g';
+    
+    // Decidir resolución
+    let resolution = 'hd';
+    
+    if (isMobile || connectionType === '2g' || connectionType === '3g') {
+      resolution = 'sd';
+    } else if (isTablet || screenWidth < 1024 || connectionType === 'slow-2g') {
+      resolution = 'hd';
+    } else if (screenWidth >= 2560 && connectionType === '4g') {
+      resolution = '8k';
+    } else if (screenWidth >= 1440) {
+      resolution = '4k';
+    }
+    
+    // Si la URL ya tiene parámetros, no la modifiques
+    if (baseUrl.includes('?')) return baseUrl;
+    
+    // Añadir sufijo de resolución
+    const lastDot = baseUrl.lastIndexOf('.');
+    if (lastDot === -1) return baseUrl;
+    
+    const base = baseUrl.substring(0, lastDot);
+    const ext = baseUrl.substring(lastDot);
+    
+    // Si ya tiene resolución, no la modifiques
+    if (base.endsWith('-sd') || base.endsWith('-hd') || 
+        base.endsWith('-4k') || base.endsWith('-8k')) {
+      return baseUrl;
+    }
+    
+    return `${base}-${resolution}${ext}`;
+  } catch {
+    return baseUrl;
+  }
+};
+
 export const useExperienceViewerLogic = ({ selectedExperience }) => {
   const [project, setProject] = useState(null);
   const [allProjects, setAllProjects] = useState([]);
@@ -380,10 +425,12 @@ export const useExperienceViewerLogic = ({ selectedExperience }) => {
     carouselRef.current.scrollLeft = scrollLeft.current - walk;
   };
 
+  const optimizedScene = scene ? { ...scene, image: getOptimalImage(scene.image) } : scene;
+
   return {
     project,
     allProjects,
-    scene,
+    scene: optimizedScene,
     scenes,
     sceneKeys,
     activeSceneKeys,
