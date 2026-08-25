@@ -113,47 +113,49 @@ const DynamicNavbarView = (props) => {
           <div className="manager-header-actions dynamicnavbar__actions">
             {children}
             
-            <div 
-              className="profile-container dynamicnavbar__profile-container"
-              onMouseEnter={handleMenuMouseEnter}
-              onMouseLeave={handleMenuMouseLeave}
-            >
-              <button className="profile-btn dynamicnavbar__profile-btn" onClick={handleMenuToggle}>
-                <div className="avatar-wrapper dynamicnavbar__avatar-wrapper">
-                  <FaUserCircle className="user-avatar-icon dynamicnavbar__avatar-icon" />
-                </div>
-                <span className="avatar-username dynamicnavbar__avatar-username">{currentUser?.name || 'Perfil'}</span>
-                <FaChevronDown className="dynamicnavbar__chevron" />
-              </button>
-              {menuOpen && (
-                <div className="profile-dropdown-menu dynamicnavbar__dropdown-menu">
-                  <div className="dropdown-user-info dynamicnavbar__dropdown-user-info">
-                    <p className="user-name dynamicnavbar__dropdown-username">{currentUser?.name || 'Usuario'}</p>
-                    <p className="user-role dynamicnavbar__dropdown-userrole">{currentUser?.email || ''}</p>
+            {!props.hideProfile && (
+              <div 
+                className="profile-container dynamicnavbar__profile-container"
+                onMouseEnter={handleMenuMouseEnter}
+                onMouseLeave={handleMenuMouseLeave}
+              >
+                <button className="profile-btn dynamicnavbar__profile-btn" onClick={handleMenuToggle}>
+                  <div className="avatar-wrapper dynamicnavbar__avatar-wrapper">
+                    <FaUserCircle className="user-avatar-icon dynamicnavbar__avatar-icon" />
                   </div>
-                  <hr className="dropdown-divider dynamicnavbar__dropdown-divider" />
-                  <button className="dropdown-item dynamicnavbar__dropdown-item" onClick={handleGalleryClick}>
-                    <FaImages className="dropdown-icon dynamicnavbar__dropdown-icon" /> Galería de proyectos
-                  </button>
-                  <button className="dropdown-item dynamicnavbar__dropdown-item" onClick={handleProfileEditClick}>
-                    <FaUserEdit className="dropdown-icon dynamicnavbar__dropdown-icon" /> Editar información
-                  </button>
-                  <button className="dropdown-item dynamicnavbar__dropdown-item" onClick={handlePasswordClick}>
-                    <FaKey className="dropdown-icon dynamicnavbar__dropdown-icon" /> Cambiar contraseña
-                  </button>
-                  <button className="dropdown-item dynamicnavbar__dropdown-item" onClick={handleCalibrationClick}>
-                    <FaMapMarkerAlt className="dropdown-icon dynamicnavbar__dropdown-icon" /> Calibrar orientación
-                  </button>
-                  <button className="dropdown-item dynamicnavbar__dropdown-item" onClick={handleThemeToggle}>
-                    {isLightMode ? <FaMoon className="dropdown-icon dynamicnavbar__dropdown-icon" /> : <FaSun className="dropdown-icon dynamicnavbar__dropdown-icon" />} {isLightMode ? 'Activar modo oscuro' : 'Activar modo claro'}
-                  </button>
-                  <hr className="dropdown-divider dynamicnavbar__dropdown-divider" />
-                  <button className="dropdown-item logout dynamicnavbar__dropdown-item dynamicnavbar__dropdown-item--logout" onClick={handleLogout}>
-                    <FaSignOutAlt className="dropdown-icon dynamicnavbar__dropdown-icon" /> Cerrar sesión
-                  </button>
-                </div>
-              )}
-            </div>
+                  <span className="avatar-username dynamicnavbar__avatar-username">{currentUser?.name || 'Perfil'}</span>
+                  <FaChevronDown className="dynamicnavbar__chevron" />
+                </button>
+                {menuOpen && (
+                  <div className="profile-dropdown-menu dynamicnavbar__dropdown-menu">
+                    <div className="dropdown-user-info dynamicnavbar__dropdown-user-info">
+                      <p className="user-name dynamicnavbar__dropdown-username">{currentUser?.name || 'Usuario'}</p>
+                      <p className="user-role dynamicnavbar__dropdown-userrole">{currentUser?.email || ''}</p>
+                    </div>
+                    <hr className="dropdown-divider dynamicnavbar__dropdown-divider" />
+                    <button className="dropdown-item dynamicnavbar__dropdown-item" onClick={handleGalleryClick}>
+                      <FaImages className="dropdown-icon dynamicnavbar__dropdown-icon" /> Galería de proyectos
+                    </button>
+                    <button className="dropdown-item dynamicnavbar__dropdown-item" onClick={handleProfileEditClick}>
+                      <FaUserEdit className="dropdown-icon dynamicnavbar__dropdown-icon" /> Editar información
+                    </button>
+                    <button className="dropdown-item dynamicnavbar__dropdown-item" onClick={handlePasswordClick}>
+                      <FaKey className="dropdown-icon dynamicnavbar__dropdown-icon" /> Cambiar contraseña
+                    </button>
+                    <button className="dropdown-item dynamicnavbar__dropdown-item" onClick={handleCalibrationClick}>
+                      <FaMapMarkerAlt className="dropdown-icon dynamicnavbar__dropdown-icon" /> Calibrar orientación
+                    </button>
+                    <button className="dropdown-item dynamicnavbar__dropdown-item" onClick={handleThemeToggle}>
+                      {isLightMode ? <FaMoon className="dropdown-icon dynamicnavbar__dropdown-icon" /> : <FaSun className="dropdown-icon dynamicnavbar__dropdown-icon" />} {isLightMode ? 'Activar modo oscuro' : 'Activar modo claro'}
+                    </button>
+                    <hr className="dropdown-divider dynamicnavbar__dropdown-divider" />
+                    <button className="dropdown-item logout dynamicnavbar__dropdown-item dynamicnavbar__dropdown-item--logout" onClick={handleLogout}>
+                      <FaSignOutAlt className="dropdown-icon dynamicnavbar__dropdown-icon" /> Cerrar sesión
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </header>

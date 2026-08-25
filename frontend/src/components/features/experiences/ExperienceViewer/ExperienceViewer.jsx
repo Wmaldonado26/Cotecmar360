@@ -326,6 +326,7 @@ export const ExperienceViewerTemplate = ({
       <InfoSidebar isOpen={infoSidebarOpen} onClose={() => setInfoSidebarOpen(false)} content={currentInfoContent} />
 
       <DynamicNavbar
+        hideProfile={true}
         title={null}
         subtitle={null}
         middleContent={
