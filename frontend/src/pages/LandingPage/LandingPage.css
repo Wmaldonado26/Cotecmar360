@@ -28,7 +28,6 @@
   font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   letter-spacing: 0.02em;
   transition: background-color 0.6s var(--ease-soft), color 0.6s var(--ease-soft);
-  position: relative;
   isolation: isolate;
 }
 
@@ -254,7 +253,7 @@
    Hero / GSAP Elements
 ---------------------------------------------- */
 .landing-logo-scroll {
-  height: 250vh; /* Aumentado de 150vh para dar más recorrido */
+  height: 120vh; /* Reducido para llegar más rápido a las cards */
   position: relative;
 }
 
