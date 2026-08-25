@@ -139,17 +139,12 @@ const useLandingPageLogic = () => {
     fetchCards();
   }, []);
 
-  const primaryAction = async () => {
+  const primaryAction = () => {
     if (!isAuthenticated) {
       navigate("/login");
       return;
     }
-    const role = currentUser?.role;
-    if (role === "admin" || role === "editor" || role === "viewer") {
-      navigate("/admin/dashboard");
-    } else {
-      navigate("/dashboard");
-    }
+    navigate((currentUser?.role === "admin" || currentUser?.role === "project_admin") ? "/admin" : "/gallery");
   };
 
   useEffect(() => {
@@ -167,27 +162,29 @@ const useLandingPageLogic = () => {
     body.classList.add(startLight ? 'landing-light' : 'landing-dark');
     setIsLightMode(startLight);
 
-    const html = document.documentElement;
-    html.style.scrollBehavior = 'smooth';
     document.documentElement.lang = startLang;
     document.title = resolveDict(DICTIONARIES[startLang] || DICTIONARIES.es, "titleHome");
-
-    const cleanupTimers = [];
-    const refreshScrollTrigger = () => {
-      cleanupTimers.forEach(id => window.clearTimeout(id));
-      cleanupTimers.length = 0;
-      [100, 250, 500, 750, 1000, 1500, 2000].forEach(delay => {
-        cleanupTimers.push(
-          window.setTimeout(() => {
-            ScrollTrigger.refresh();
-          }, delay)
-        );
-      });
-    };
 
     ScrollTrigger.defaults({
       scrub: true,
       markers: false,
+    });
+
+    gsap.set(logoFrameRef.current, {
+      scale: 0.9,
+      opacity: 2,
+      yPercent: 0,
+    });
+
+    gsap.set(logoImageRef.current, {
+      scale: 1,
+      opacity: 0.5,
+    });
+
+    gsap.set(videoBgRef.current, {
+      scale: 1,
+      opacity: 0.8,
+      filter: "blur(0px)",
     });
 
     const timeline = gsap.timeline({
@@ -196,7 +193,6 @@ const useLandingPageLogic = () => {
         start: "top top",
         end: "bottom bottom",
         scrub: true,
-        onUpdate: refreshScrollTrigger,
       },
     });
 
@@ -231,6 +227,36 @@ const useLandingPageLogic = () => {
         },
         0.5 
       );
+      
+    if (fullScreenCardRef.current && fullScreenImageRef.current && fullScreenTextRef.current) {
+      gsap.fromTo(
+        fullScreenImageRef.current,
+        { scale: 1 },
+        {
+          scale: 1.15,
+          scrollTrigger: {
+            trigger: fullScreenCardRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          }
+        }
+      );
+
+      gsap.fromTo(
+        fullScreenTextRef.current,
+        { y: 150, opacity: 0, scale: 0.9 },
+        {
+          y: 0, opacity: 1, scale: 1,
+          scrollTrigger: {
+            trigger: fullScreenCardRef.current,
+            start: "top 80%",
+            end: "center center",
+            scrub: true,
+          }
+        }
+      );
+    }
     
     setTimeout(() => {
       try {
@@ -241,8 +267,6 @@ const useLandingPageLogic = () => {
     return () => {
       ScrollTrigger.getAll().forEach((t) => t.kill());
       timeline.kill();
-      cleanupTimers.forEach(id => window.clearTimeout(id));
-      html.style.scrollBehavior = '';
       document.documentElement.lang = "es";
       document.title = "COTECMAR";
     };
