@@ -150,70 +150,7 @@ const useLandingPageLogic = () => {
     document.documentElement.lang = startLang;
     document.title = resolveDict(DICTIONARIES[startLang] || DICTIONARIES.es, "titleHome");
 
-    ScrollTrigger.defaults({
-      scrub: true,
-      markers: false,
-    });
-
-    gsap.set(logoFrameRef.current, {
-      scale: 0.9,
-      opacity: 2,
-      yPercent: 0,
-    });
-
-    gsap.set(logoImageRef.current, {
-      scale: 1,
-      opacity: 0.5,
-    });
-
-    gsap.set(videoBgRef.current, {
-      scale: 1,
-      opacity: 0.8,
-      filter: "blur(0px)",
-    });
-
-    const timeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: scrollSectionRef.current,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: true,
-      },
-    });
-
-    timeline
-      .to(
-        scrollArrowRef.current,
-        {
-          opacity: 0,
-          y: 30,
-          duration: 0.1,
-          ease: "power1.out",
-        },
-        0
-      )
-      .to(
-        videoBgRef.current,
-        {
-          opacity: 0,
-          scale: 1, 
-          filter: "blur(2px)", 
-          duration: 0.5, 
-          ease: "power2.inOut",
-        },
-        0
-      )
-      .to(
-        logoImageRef.current,
-        {
-          opacity: 1, 
-          duration: 0.2, 
-          ease: "power2.out",
-        },
-        0.5 
-      );
-      
-    // GSAP animations for fullScreenCardRef removed per user request
+    // GSAP animations removed per user request
     
     setTimeout(() => {
       try {
@@ -222,8 +159,6 @@ const useLandingPageLogic = () => {
     }, 2000);
 
     return () => {
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-      timeline.kill();
       document.documentElement.lang = "es";
       document.title = "COTECMAR";
     };
@@ -265,4 +200,4 @@ const useLandingPageLogic = () => {
   };
 };
 
-export default useLandingPageLogic;
+export default useLandingPageLogic; 
