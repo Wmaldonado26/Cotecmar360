@@ -99,7 +99,6 @@ const useLandingPageLogic = () => {
   const [stackingCards, setStackingCards] = useState([]);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLightMode, setIsLightMode] = useState(false);
   const [lang, setLang] = useState("es");
 
   useEffect(() => {
@@ -150,17 +149,12 @@ const useLandingPageLogic = () => {
   useEffect(() => {
     const body = document.body;
     if (!body) return;
-    const savedTheme = localStorage.getItem('landing-theme');
-    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-    const startLight = savedTheme ? savedTheme === 'light' : prefersLight;
-
     const savedLang = localStorage.getItem('landing-lang');
     const startLang = (savedLang === "es" || savedLang === "en") ? savedLang : (navigator.language && navigator.language.toLowerCase().startsWith("es") ? "es" : "en");
     setLang(startLang);
 
-    body.classList.remove('landing-dark', 'landing-light');
-    body.classList.add(startLight ? 'landing-light' : 'landing-dark');
-    setIsLightMode(startLight);
+    body.classList.remove('landing-light');
+    body.classList.add('landing-dark');
 
     document.documentElement.lang = startLang;
     document.title = resolveDict(DICTIONARIES[startLang] || DICTIONARIES.es, "titleHome");
@@ -288,11 +282,6 @@ const useLandingPageLogic = () => {
     });
   }, []);
 
-  const setIsLightModePersisted = useCallback((nextValue) => {
-    setIsLightMode(nextValue);
-    try { localStorage.setItem("landing-theme", nextValue ? "light" : "dark"); } catch (_) {}
-  }, []);
-
   return {
     navigate,
     currentUser,
@@ -309,8 +298,6 @@ const useLandingPageLogic = () => {
     stackingCards,
     isMenuOpen,
     setIsMenuOpen,
-    isLightMode,
-    setIsLightMode: setIsLightModePersisted,
     primaryAction,
     lang,
     toggleLang,

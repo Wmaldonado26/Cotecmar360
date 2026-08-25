@@ -21,21 +21,19 @@ export const LandingPageTemplate = ({
   stackingCards,
   isMenuOpen,
   setIsMenuOpen,
-  isLightMode,
-  setIsLightMode,
   primaryAction,
   lang,
   toggleLang,
   t,
 }) => {
-  const featuredTourUrl = "/gallery";
+  const featuredTourUrl = "/public-tour/businu/bridge";
 
   return (
-    <div className={`landing-page ${isLightMode ? 'light-theme' : ''}`}>
+    <div className="landing-page">
       <header className="landing-header w-full px-6 md:px-12 py-4 flex justify-between items-center transition-all duration-300" role="banner" aria-label={t("aria.header")}>
         <div className="flex items-center gap-4">
           <img 
-            src={isLightMode ? cotecmarLogoColored : cotecmarLogo} 
+            src={cotecmarLogo} 
             alt={t("brandAlt")}
             className="landing-brand-logo transition-all duration-50" 
           />
@@ -61,30 +59,7 @@ export const LandingPageTemplate = ({
             </span>
           </button>
 
-          <button
-            onClick={() => setIsLightMode(!isLightMode)}
-            className="transition-colors hover:opacity-70 p-2"
-            title={t("themeToggle")}
-            aria-label={t("themeToggle")}
-          >
-            {isLightMode ? (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-              </svg>
-            ) : (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="5"></circle>
-                <line x1="12" y1="1" x2="12" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="23"></line>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                <line x1="1" y1="12" x2="3" y2="12"></line>
-                <line x1="21" y1="12" x2="23" y2="12"></line>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-              </svg>
-            )}
-          </button>
+
 
           <button 
             className="hover:opacity-70 transition-colors z-50 p-2"
@@ -147,14 +122,14 @@ export const LandingPageTemplate = ({
               muted 
               playsInline 
             />
-            <div className={`absolute inset-0 z-0 transition-colors duration-500 ${isLightMode ? 'bg-white bg-opacity-10' : 'bg-black bg-opacity-10'}`}></div>
+            <div className="absolute inset-0 z-0 transition-colors duration-500 bg-black bg-opacity-10"></div>
             
             <div className="landing-logo-layer z-10">
               <div className="landing-logo-frame" ref={logoFrameRef}>
                 <div className="animate-float w-full">
                   <img
                     ref={logoImageRef}
-                    src={isLightMode ? cotecmarLogoColored : xrlabLogo}
+                    src={xrlabLogo}
                     alt={t("logoShowcaseAlt")}
                     className="landing-logo-showcase w-full h-auto object-contain transition-all duration-500"
                   />
@@ -195,7 +170,7 @@ export const LandingPageTemplate = ({
                         className="landing-btn mt-6"
                         onClick={(e) => {
                           e.stopPropagation();
-                          window.open(card.link || "https://tudominio.com", "_blank");
+                          navigate(card.link || "/public-tour/businu/bridge");
                         }}
                       >
                         {t("tourCard.action")}
