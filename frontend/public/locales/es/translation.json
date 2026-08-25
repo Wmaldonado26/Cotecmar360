@@ -1,30 +1,30 @@
 {
-    "brand":  "COTECMAR",
-    "brandAlt":  "COTECMAR",
-    "logoShowcaseAlt":  "XR Lab",
-    "titleHome":  "Tour Virtual 360° | COTECMAR",
-    "themeToggle":  "Cambiar tema",
-    "menuToggle":  "Abrir menú",
-    "menuClose":  "Cerrar menú",
-    "menu":  {
-                 "goToPanel":  "Ir al panel",
-                 "goToGallery":  "Ir a la galería",
-                 "login":  "Iniciar sesión"
-             },
-    "tourCard":  {
-                     "action":  "Recorrido 360",
-                     "tour360Alt":  "Vista 360",
-                     "clickAction":  "Hacer clic"
-                 },
-    "lang":  {
-                 "toggle":  "Cambiar idioma",
-                 "label":  "ES",
-                 "short":  "ES"
-             },
-    "aria":  {
-                 "header":  "Cabecera principal"
-             },
-    "scrollHint":  "Desliza para explorar",
-    "heroSlogan":  "Explora nuestras instalaciones en 360°",
-    "retryButton":  "Reintentar"
+  "brand": "COTECMAR",
+  "brandAlt": "COTECMAR",
+  "logoShowcaseAlt": "XR Lab",
+  "titleHome": "Tour Virtual 360ï¿½ | COTECMAR",
+  "themeToggle": "Cambiar tema",
+  "menuToggle": "Abrir menï¿½",
+  "menuClose": "Cerrar menï¿½",
+  "menu": {
+    "goToPanel": "Ir al panel",
+    "goToGallery": "Ir a la galerï¿½a",
+    "login": "Iniciar sesiï¿½n"
+  },
+  "tourCard": {
+    "action": "Recorrido 360",
+    "tour360Alt": "Vista 360",
+    "clickAction": "Hacer clic"
+  },
+  "lang": {
+    "toggle": "Cambiar idioma",
+    "label": "ES",
+    "short": "ES"
+  },
+  "aria": {
+    "header": "Cabecera principal"
+  },
+  "scrollHint": "Desliza para explorar",
+  "heroSlogan": "CorporaciÃ³n de Ciencia y TecnologÃ­a",
+  "retryButton": "Reintentar"
 }
