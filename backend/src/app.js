@@ -9,7 +9,19 @@ const app = express();
 
 app.use(
   cors({
-    origin: CORS_ORIGIN,
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (CORS_ORIGIN === true || CORS_ORIGIN === "*") return callback(null, true);
+      if (Array.isArray(CORS_ORIGIN)) {
+        if (CORS_ORIGIN.includes(origin) || CORS_ORIGIN.includes("*")) {
+          return callback(null, true);
+        }
+        if (origin.endsWith(".vercel.app")) {
+          return callback(null, true);
+        }
+      }
+      callback(null, false); // Using false instead of Error to avoid throwing errors in logs for preflight
+    },
     credentials: true,
   })
 );
