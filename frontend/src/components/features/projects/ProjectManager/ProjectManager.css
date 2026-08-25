@@ -491,7 +491,8 @@
 }
 
 .project-card-image { 
-  height: 160px; 
+  aspect-ratio: 16 / 9;
+  height: auto;
   position: relative; 
   background: #f1f5f9; 
   overflow: hidden; 
