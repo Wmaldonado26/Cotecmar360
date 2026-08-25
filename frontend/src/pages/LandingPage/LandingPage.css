@@ -313,7 +313,7 @@
   z-index: 2;
   display: grid;
   place-items: center;
-  width: min(44vw, 480px);
+  width: min(30vw, 320px);
   margin: 0;
   padding: 0;
 }
@@ -321,8 +321,8 @@
 .landing-logo-glow {
   position: absolute;
   inset: auto;
-  width: min(50vw, 560px);
-  height: min(50vw, 560px);
+  width: min(35vw, 380px);
+  height: min(35vw, 380px);
   border-radius: 50%;
   background: radial-gradient(circle, rgba(43, 83, 152, 0.15) 0%, transparent 60%);
   opacity: 0;
@@ -342,8 +342,8 @@
 .landing-logo-frame::before {
   content: "";
   position: absolute;
-  width: min(44vw, 480px);
-  height: min(44vw, 480px);
+  width: min(30vw, 320px);
+  height: min(30vw, 320px);
   border-radius: 50%;
   background: radial-gradient(circle, var(--c-glow-soft) 0%, transparent 70%);
   filter: blur(8px);
@@ -701,7 +701,7 @@
     height: 48px;
   }
   .landing-logo-layer {
-    width: min(75vw, 400px);
+    width: min(50vw, 260px);
   }
 }
 
@@ -748,7 +748,7 @@
     height: 36px;
   }
   .landing-logo-layer {
-    width: min(85vw, 280px);
+    width: min(60vw, 200px);
   }
   .landing-arrow-3d {
     width: 32px;
