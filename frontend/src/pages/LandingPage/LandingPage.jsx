@@ -163,7 +163,7 @@ export const LandingPageTemplate = ({
                 <div className="absolute inset-0 bg-black bg-opacity-0 z-10 transition-opacity duration-300 group-hover:bg-opacity-0"></div>
                 
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
-                  img
+                  <img
                     ref={fullScreenTextRef}
                     src={icon360}
                     alt="360"
