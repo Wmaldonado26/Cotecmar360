@@ -18,7 +18,7 @@ export const LandingPageTemplate = ({
   retrying,
   retryFetchCards,
 }) => {
-  const featuredTourUrl = "/public-tour/businu/bridge";
+  const featuredTourUrl = ""; // TODO: Colocar aquí la nueva ruta principal, o obtenerla de la DB
   const [videoFailed, setVideoFailed] = useState(false);
 
   return (
@@ -135,20 +135,23 @@ export const LandingPageTemplate = ({
                       <div className="landing-stack-card-copy">
                         <h3>{lang === 'en' && card.titleEn ? card.titleEn : card.title}</h3>
                         <p className="mb-6">{lang === 'en' && card.descriptionEn ? card.descriptionEn : card.description}</p>
-                        <button 
-                          className="landing-btn mt-6"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const destUrl = card.link || "/public-tour/businu/bridge";
-                            if (destUrl.startsWith("http")) {
-                              window.location.href = destUrl;
-                            } else {
-                              navigate(destUrl);
-                            }
-                          }}
-                        >
-                          {t("tourCard.action")}
-                        </button>
+                        
+                        {card.link && (
+                          <button 
+                            className="landing-btn mt-6"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const destUrl = card.link;
+                              if (destUrl.startsWith("http")) {
+                                window.location.href = destUrl;
+                              } else {
+                                navigate(destUrl);
+                              }
+                            }}
+                          >
+                            {t("tourCard.action")}
+                          </button>
+                        )}
                       </div>
                       <div className="landing-stack-card-media">
                           <img
@@ -167,13 +170,19 @@ export const LandingPageTemplate = ({
                 className="relative w-full h-screen flex items-center justify-center group overflow-hidden sticky top-0 z-40"
                 style={{ marginTop: '0', "--index0": stackingCards?.length || 0, "--index": (stackingCards?.length || 0) + 1, minHeight: '100svh' }}
                 onClick={(e) => {
-                  navigate(featuredTourUrl);
+                  if (featuredTourUrl) {
+                    if (featuredTourUrl.startsWith("http")) {
+                      window.location.href = featuredTourUrl;
+                    } else {
+                      navigate(featuredTourUrl);
+                    }
+                  }
                 }}
               >
                 <img
                   src={img360Card}
                   alt={t("tourCard.tour360Alt")}
-                  className="absolute inset-0 w-full h-full object-cover z-0 origin-center cursor-pointer"
+                  className={`absolute inset-0 w-full h-full object-cover z-0 origin-center ${featuredTourUrl ? 'cursor-pointer' : ''}`}
                   loading="lazy"
                 />
                 
@@ -181,25 +190,30 @@ export const LandingPageTemplate = ({
                 
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
                   <h2 className="text-white text-7xl md:text-9xl font-bold tracking-widest opacity-90 drop-shadow-2xl m-0" style={{ color: 'white' }}>
-                    360
+                    Vista 360°
                   </h2>
                   <span className="text-white/90 tracking-[0.2em] uppercase text-sm mt-2 font-medium drop-shadow-md">
-                    Vista 360°
                   </span>
                 </div>
 
-                <div className="absolute bottom-16 left-0 right-0 z-20 flex justify-center pointer-events-none">
-                  <button 
-                    className="landing-btn pointer-events-auto"
-                    style={{ backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(featuredTourUrl);
-                    }}
-                  >
-                    {t("tourCard.clickAction")}
-                  </button>
-                </div>
+                {featuredTourUrl && (
+                  <div className="absolute bottom-16 left-0 right-0 z-20 flex justify-center pointer-events-none">
+                    <button 
+                      className="landing-btn pointer-events-auto"
+                      style={{ backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (featuredTourUrl.startsWith("http")) {
+                          window.location.href = featuredTourUrl;
+                        } else {
+                          navigate(featuredTourUrl);
+                        }
+                      }}
+                    >
+                      {t("tourCard.clickAction")}
+                    </button>
+                  </div>
+                )}
               </div>
 
             </div>
