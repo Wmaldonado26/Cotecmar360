@@ -213,35 +213,7 @@ const useLandingPageLogic = () => {
         0.5 
       );
       
-    if (fullScreenCardRef.current && fullScreenImageRef.current && fullScreenTextRef.current) {
-      gsap.fromTo(
-        fullScreenImageRef.current,
-        { scale: 1 },
-        {
-          scale: 1.15,
-          scrollTrigger: {
-            trigger: fullScreenCardRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          }
-        }
-      );
-
-      gsap.fromTo(
-        fullScreenTextRef.current,
-        { y: 150, opacity: 0, scale: 0.9 },
-        {
-          y: 0, opacity: 1, scale: 1,
-          scrollTrigger: {
-            trigger: fullScreenCardRef.current,
-            start: "top 80%",
-            end: "center center",
-            scrub: true,
-          }
-        }
-      );
-    }
+    // GSAP animations for fullScreenCardRef removed per user request
     
     setTimeout(() => {
       try {
