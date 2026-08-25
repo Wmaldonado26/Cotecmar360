@@ -18,7 +18,7 @@ export const LandingPageTemplate = ({
   retrying,
   retryFetchCards,
 }) => {
-  const featuredTourUrl = "/project/proj_1787580651232_2f1jl70eu/experience/zone_1787584150095";
+  const featuredTourUrl = "/public-tour/proj_1787580651232_2f1jl70eu/zone_1787584150095";
   const [videoFailed, setVideoFailed] = useState(false);
 
   return (
