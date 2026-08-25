@@ -28,7 +28,9 @@ const LandingCardsAdminView = (props) => {
     handleEditModalStopPropagation,
     handleFormLayerChange,
     handleFormTitleChange,
+    handleFormTitleEnChange,
     handleFormDescriptionChange,
+    handleFormDescriptionEnChange,
     handleFormOrderChange,
     handleFormLinkChange,
     handleFileChange,
@@ -174,7 +176,7 @@ const LandingCardsAdminView = (props) => {
                 />
               </label>
               <label>
-                Título
+                Título (Español)
                 <input 
                   type="text" 
                   value={formData.title} 
@@ -184,12 +186,30 @@ const LandingCardsAdminView = (props) => {
                 />
               </label>
               <label>
-                Descripción
+                Título (Inglés)
+                <input 
+                  type="text" 
+                  value={formData.titleEn} 
+                  onChange={handleFormTitleEnChange} 
+                  placeholder="Card title"
+                />
+              </label>
+              <label>
+                Descripción (Español)
                 <textarea 
                   value={formData.description} 
                   onChange={handleFormDescriptionChange} 
                   required
                   placeholder="Describe el contenido..."
+                  className="landingcardsadmin__form-textarea"
+                />
+              </label>
+              <label>
+                Descripción (Inglés)
+                <textarea 
+                  value={formData.descriptionEn} 
+                  onChange={handleFormDescriptionEnChange} 
+                  placeholder="Describe the content..."
                   className="landingcardsadmin__form-textarea"
                 />
               </label>

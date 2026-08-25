@@ -72,7 +72,9 @@ model LandingCard {
   id          Int      @id @default(autoincrement())
   layer       String
   title       String
+  titleEn     String?
   description String
+  descriptionEn String?
   imagePath   String
   link        String?
   orderIndex  Int      @default(0)

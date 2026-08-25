@@ -13,7 +13,7 @@ export default function useLandingCardsAdminLogic(props) {
 
   const [isEditing, setIsEditing] = useState(false);
   const [currentCard, setCurrentCard] = useState(null);
-  const [formData, setFormData] = useState({ layer: "", title: "", description: "", orderIndex: 0, link: "" });
+  const [formData, setFormData] = useState({ layer: "", title: "", titleEn: "", description: "", descriptionEn: "", orderIndex: 0, link: "" });
   const [selectedFile, setSelectedFile] = useState(null);
 
   const fetchCards = async () => {
@@ -44,13 +44,15 @@ export default function useLandingCardsAdminLogic(props) {
       setFormData({
         layer: card.layer,
         title: card.title,
+        titleEn: card.titleEn || "",
         description: card.description,
+        descriptionEn: card.descriptionEn || "",
         orderIndex: card.orderIndex,
         link: card.link || ""
       });
     } else {
       setCurrentCard(null);
-      setFormData({ layer: "", title: "", description: "", orderIndex: cards.length, link: "" });
+      setFormData({ layer: "", title: "", titleEn: "", description: "", descriptionEn: "", orderIndex: cards.length, link: "" });
     }
     setSelectedFile(null);
     setIsEditing(true);
@@ -67,7 +69,9 @@ export default function useLandingCardsAdminLogic(props) {
       const data = new FormData();
       data.append("layer", formData.layer);
       data.append("title", formData.title);
+      data.append("titleEn", formData.titleEn);
       data.append("description", formData.description);
+      data.append("descriptionEn", formData.descriptionEn);
       data.append("orderIndex", formData.orderIndex);
       data.append("link", formData.link);
       if (selectedFile) {
@@ -106,7 +110,9 @@ export default function useLandingCardsAdminLogic(props) {
 
   const handleFormLayerChange = (e) => setFormData({...formData, layer: e.target.value});
   const handleFormTitleChange = (e) => setFormData({...formData, title: e.target.value});
+  const handleFormTitleEnChange = (e) => setFormData({...formData, titleEn: e.target.value});
   const handleFormDescriptionChange = (e) => setFormData({...formData, description: e.target.value});
+  const handleFormDescriptionEnChange = (e) => setFormData({...formData, descriptionEn: e.target.value});
   const handleFormOrderChange = (e) => setFormData({...formData, orderIndex: parseInt(e.target.value) || 0});
   const handleFormLinkChange = (e) => setFormData({...formData, link: e.target.value});
   const handleFileChange = (e) => setSelectedFile(e.target.files[0]);
@@ -143,7 +149,9 @@ export default function useLandingCardsAdminLogic(props) {
     handleEditModalStopPropagation,
     handleFormLayerChange,
     handleFormTitleChange,
+    handleFormTitleEnChange,
     handleFormDescriptionChange,
+    handleFormDescriptionEnChange,
     handleFormOrderChange,
     handleFormLinkChange,
     handleFileChange,

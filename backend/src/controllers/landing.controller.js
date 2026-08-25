@@ -17,7 +17,9 @@ class LandingController {
     const data = {
       layer: req.body.layer,
       title: req.body.title,
+      titleEn: req.body.titleEn,
       description: req.body.description,
+      descriptionEn: req.body.descriptionEn,
       orderIndex: req.body.orderIndex,
       imagePath,
       link: req.body.link,
@@ -32,7 +34,9 @@ class LandingController {
     const data = {
       layer: req.body.layer,
       title: req.body.title,
+      titleEn: req.body.titleEn,
       description: req.body.description,
+      descriptionEn: req.body.descriptionEn,
       orderIndex: req.body.orderIndex,
       link: req.body.link,
     };

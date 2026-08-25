@@ -14,7 +14,9 @@ class LandingService {
       data: {
         layer: data.layer,
         title: data.title,
+        titleEn: data.titleEn,
         description: data.description,
+        descriptionEn: data.descriptionEn,
         imagePath: data.imagePath,
         orderIndex: Number(data.orderIndex) || 0,
         link: data.link,
@@ -40,7 +42,9 @@ class LandingService {
       data: {
         layer: data.layer ?? existing.layer,
         title: data.title ?? existing.title,
+        titleEn: data.titleEn !== undefined ? data.titleEn : existing.titleEn,
         description: data.description ?? existing.description,
+        descriptionEn: data.descriptionEn !== undefined ? data.descriptionEn : existing.descriptionEn,
         imagePath: data.imagePath ?? existing.imagePath,
         orderIndex: data.orderIndex !== undefined ? Number(data.orderIndex) : existing.orderIndex,
         link: data.link !== undefined ? data.link : existing.link,
