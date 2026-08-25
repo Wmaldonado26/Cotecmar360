@@ -162,7 +162,15 @@ class ProjectService {
 
   async getProjectById(projectId) {
     if (!authService.isAuthenticated()) {
-      return null;
+      if (!USE_BACKEND) return null;
+      try {
+        const response = await fetch(`${API_BASE_URL}/projects/public/${projectId}`);
+        if (!response.ok) return null;
+        const proj = await response.json();
+        return normalizeProject(proj);
+      } catch (e) {
+        return null;
+      }
     }
 
     if (!USE_BACKEND) {

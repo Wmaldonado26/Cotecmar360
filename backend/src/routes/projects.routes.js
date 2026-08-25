@@ -10,6 +10,15 @@ const { asyncHandler } = require("../utils/errors");
 const router = Router();
 
 router.get("/", requireAuth, asyncHandler(projectsController.listProjects));
+
+router.get("/public/:id", asyncHandler(async (req, res) => {
+  const projectService = require("../services/project.service");
+  const { createHttpError } = require("../utils/errors");
+  const project = await projectService.getProjectById(req.params.id);
+  if (!project) throw createHttpError(404, "Proyecto no encontrado");
+  res.json(project);
+}));
+
 router.get("/:id", requireAuth, asyncHandler(ensureProjectAccess), asyncHandler(projectsController.getProject));
 router.post("/", requireAuth, requireRole("admin", "project_admin"), asyncHandler(projectsController.createProject));
 router.put(
