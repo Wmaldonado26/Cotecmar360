@@ -3,6 +3,7 @@ import cotecmarLogoColored from "../../assets/images/cotecmar-logo.png";
 import xrlabLogo from "../../assets/images/cotecmar1.svg";
 import fondoVideo from "../../assets/images/planta.mp4";
 import img360Card from "../../assets/images/CARD.webp";
+import icon360 from "../../assets/images/360.png";
 import "./LandingPage.css";
 
 export const LandingPageTemplate = ({
@@ -162,9 +163,12 @@ export const LandingPageTemplate = ({
                 <div className="absolute inset-0 bg-black bg-opacity-0 z-10 transition-opacity duration-300 group-hover:bg-opacity-0"></div>
                 
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
-                  <h2 ref={fullScreenTextRef} className="text-white text-9xl md:text-[15rem] font-bold tracking-widest opacity-90 drop-shadow-2xl m-0 text-stroke-360" style={{ color: 'white' }}>
-                    360
-                  </h2>
+                  img
+                    ref={fullScreenTextRef}
+                    src={icon360}
+                    alt="360"
+                    className="w-48 md:w-96 drop-shadow-2xl opacity-90 object-contain"
+                  />
                 </div>
 
                 <div className="absolute bottom-16 left-0 right-0 z-20 flex justify-center pointer-events-none">
@@ -189,3 +193,4 @@ export const LandingPageTemplate = ({
 };
 
 export default LandingPageTemplate;
+  
