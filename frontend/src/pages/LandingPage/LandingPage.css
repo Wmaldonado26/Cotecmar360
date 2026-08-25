@@ -592,14 +592,12 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transform: scale(1.08);
-  transition: transform 0.8s var(--ease-soft), filter 0.8s var(--ease-soft);
+  transition: filter 0.8s var(--ease-soft);
   filter: brightness(1.02);
 }
 
 @media (hover: hover) {
   .landing-stack-card:hover .landing-stack-card-media img {
-    transform: scale(1.15);
     filter: brightness(1.06);
   }
 }
@@ -730,7 +728,7 @@
     flex-basis: auto;
   }
   .landing-stack-card-media img {
-    transform: scale(1.02);
+    /* No scale */
   }
   .landing-brand-logo {
     height: 48px;
