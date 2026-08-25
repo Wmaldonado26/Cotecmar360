@@ -139,7 +139,12 @@ export const LandingPageTemplate = ({
                           className="landing-btn mt-6"
                           onClick={(e) => {
                             e.stopPropagation();
-                            navigate(card.link || "/public-tour/businu/bridge");
+                            const destUrl = card.link || "/public-tour/businu/bridge";
+                            if (destUrl.startsWith("http")) {
+                              window.location.href = destUrl;
+                            } else {
+                              navigate(destUrl);
+                            }
                           }}
                         >
                           {t("tourCard.action")}
