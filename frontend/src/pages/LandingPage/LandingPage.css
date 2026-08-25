@@ -399,9 +399,9 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 80px;
-  view-timeline-name: --landing-stack-scroll;
   width: 100%;
   max-width: 100%;
 }
@@ -694,10 +694,10 @@
     line-height: 1.6;
   }
   .landing-stack-card-media {
+    height: 250px !important;
     aspect-ratio: 16 / 9;
     max-height: 280px;
-    height: auto !important;
-    min-height: unset !important;
+    min-height: 250px !important;
     flex-shrink: 0;
     flex-basis: auto;
   }
@@ -744,10 +744,10 @@
     line-height: 1.55;
   }
   .landing-stack-card-media {
+    height: 220px !important;
     aspect-ratio: 16 / 9;
     max-height: 220px;
-    height: auto !important;
-    min-height: unset !important;
+    min-height: 220px !important;
     flex-shrink: 0;
     flex-basis: auto;
   }

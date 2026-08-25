@@ -163,16 +163,9 @@ export const LandingPageTemplate = ({
                 <div className="absolute inset-0 bg-black bg-opacity-0 z-10 transition-opacity duration-300 group-hover:bg-opacity-0"></div>
                 
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
-                  <img
-                    ref={fullScreenTextRef}
-                    src={icon360}
-                    alt="360"
-                    className="w-48 md:w-96 drop-shadow-2xl opacity-90 object-contain pointer-events-auto cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(featuredTourUrl);
-                    }}
-                  />
+                  <h2 ref={fullScreenTextRef} className="text-white text-7xl md:text-9xl font-bold tracking-widest opacity-90 drop-shadow-2xl m-0" style={{ color: 'white' }}>
+                    360
+                  </h2>
                 </div>
 
                 <div className="absolute bottom-16 left-0 right-0 z-20 flex justify-center pointer-events-none">
