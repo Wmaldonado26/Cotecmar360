@@ -1,3 +1,4 @@
+import { useState } from "react";
 import cotecmarLogo from "../../assets/images/logo.png";
 import xrlabLogo from "../../assets/images/cotecmar1.svg";
 import fondoVideo from "../../assets/images/planta.mp4";
@@ -14,8 +15,11 @@ export const LandingPageTemplate = ({
   lang,
   toggleLang,
   t,
+  retrying,
+  retryFetchCards,
 }) => {
   const featuredTourUrl = "/public-tour/businu/bridge";
+  const [videoFailed, setVideoFailed] = useState(false);
 
   return (
     <div className="landing-page">
@@ -34,18 +38,19 @@ export const LandingPageTemplate = ({
         <div className="flex items-center relative gap-4">
           <button
             onClick={toggleLang}
-            className="landing-lang-btn transition-all hover:opacity-80 flex items-center gap-1.5 p-2 rounded-full"
+            className="landing-lang-btn transition-all flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 bg-black/20 backdrop-blur-md"
             title={t("lang.toggle")}
             aria-label={t("lang.toggle")}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="2" y1="12" x2="22" y2="12"></line>
-              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+               <circle cx="12" cy="12" r="10"></circle>
+               <path d="M2 12h20"></path>
+               <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
             </svg>
-            <span className="landing-lang-label font-semibold tracking-wider uppercase" style={{ fontSize: 11, minWidth: 22, textAlign: 'center' }}>
-              {t("lang.short")}
-            </span>
+            <div className="flex gap-1 items-center font-bold text-xs">
+              <span className={`px-1.5 py-0.5 rounded-sm transition-colors ${lang === 'es' ? 'bg-[#2B5398] text-white' : 'text-white/60'}`}>ES</span>
+              <span className={`px-1.5 py-0.5 rounded-sm transition-colors ${lang === 'en' ? 'bg-[#2B5398] text-white' : 'text-white/60'}`}>EN</span>
+            </div>
           </button>
         </div>
       </header>
@@ -53,7 +58,7 @@ export const LandingPageTemplate = ({
       <main className="w-full">
         <section className="landing-logo-scroll w-full">
           <div 
-            className="landing-logo-stage w-full bg-cover bg-center" 
+            className={`landing-logo-stage w-full bg-cover bg-center ${videoFailed ? 'video-failed' : ''}`}
           >
             <div className="landing-scanline"></div>
 
@@ -65,30 +70,36 @@ export const LandingPageTemplate = ({
               muted 
               playsInline
               preload="metadata"
+              poster={img360Card}
+              onError={() => setVideoFailed(true)}
               aria-hidden="true"
+              style={{ display: videoFailed ? 'none' : 'block' }}
             />
-            <div className="absolute inset-0 z-0 bg-black bg-opacity-10 pointer-events-none"></div>
+            <div className="absolute inset-0 z-0 bg-black bg-opacity-30 pointer-events-none"></div>
             
-            <div className="landing-logo-layer z-10">
-              <div className="landing-logo-frame">
-                <div className="w-full">
-                  <img
-                    src={xrlabLogo}
-                    alt={t("logoShowcaseAlt")}
-                    className="landing-logo-showcase w-full h-auto object-contain"
-                  />
-                </div>
+            <div className="landing-logo-layer z-10 flex flex-col items-center justify-center">
+              <div className="landing-logo-frame w-full">
+                <img
+                  src={xrlabLogo}
+                  alt={t("logoShowcaseAlt")}
+                  className="landing-logo-showcase w-full h-auto object-contain"
+                />
               </div>
+              <p className="landing-hero-slogan text-gray-300 text-sm md:text-base mt-6 tracking-wide text-center max-w-md px-4 font-light drop-shadow-md">
+                {t("heroSlogan")}
+              </p>
             </div>
             
-            <div className="absolute bottom-36 left-1/2 transform -translate-x-1/2 text-center z-20 w-full px-4 flex flex-col items-center gap-4">
-              <span className="landing-eyebrow"></span>
+            <div className="absolute bottom-16 md:bottom-24 left-1/2 transform -translate-x-1/2 text-center z-20 w-full px-4 flex flex-col items-center gap-3">
               <div className="landing-scroll-arrow">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="landing-arrow-3d">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="landing-arrow-3d">
                   <polyline points="7 13 12 18 17 13"></polyline>
                   <polyline points="7 6 12 11 17 6"></polyline>
                 </svg>
               </div>
+              <span className="text-white/80 text-xs font-medium tracking-[0.15em] uppercase drop-shadow-md">
+                {t("scrollHint")}
+              </span>
             </div>
           </div>
         </section>
@@ -99,12 +110,19 @@ export const LandingPageTemplate = ({
             <div className="landing-stack-cards" style={{ "--numcards": (stackingCards?.length + 1) || 1 }}>
               
               {loadingCards ? (
-                <div className="w-full flex justify-center py-20">
-                  <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+                <div className="w-full flex justify-center py-24">
+                  <div className="animate-spin rounded-full h-14 w-14 border-4 border-transparent border-t-[#2B5398] border-b-[#8fa7d6]"></div>
                 </div>
               ) : errorCards ? (
-                <div className="w-full flex justify-center py-20 text-red-400 font-semibold text-lg text-center px-4">
-                  {errorCards}
+                <div className="w-full flex flex-col items-center justify-center py-24 text-red-400 font-semibold text-lg text-center px-4 gap-6">
+                  <span>{errorCards}</span>
+                  <button 
+                    onClick={retryFetchCards} 
+                    disabled={retrying}
+                    className="landing-btn"
+                  >
+                    {retrying ? "..." : t("retryButton")}
+                  </button>
                 </div>
               ) : (
                 stackingCards.map((card, index) => (
@@ -143,20 +161,26 @@ export const LandingPageTemplate = ({
               <div 
                 className="relative w-full h-screen flex items-center justify-center group overflow-hidden sticky top-0 z-40"
                 style={{ marginTop: '0', "--index0": stackingCards?.length || 0, "--index": (stackingCards?.length || 0) + 1, minHeight: '100svh' }}
+                onClick={(e) => {
+                  navigate(featuredTourUrl);
+                }}
               >
                 <img
                   src={img360Card}
                   alt={t("tourCard.tour360Alt")}
-                  className="absolute inset-0 w-full h-full object-cover z-0 origin-center"
+                  className="absolute inset-0 w-full h-full object-cover z-0 origin-center cursor-pointer"
                   loading="lazy"
                 />
                 
-                <div className="absolute inset-0 bg-black/40 z-10 transition-opacity duration-500 group-hover:bg-black/10 pointer-events-none"></div>
+                <div className="absolute inset-0 bg-black/40 z-10 transition-colors duration-500 group-hover:bg-black/10 group-active:bg-black/10 pointer-events-none"></div>
                 
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
                   <h2 className="text-white text-7xl md:text-9xl font-bold tracking-widest opacity-90 drop-shadow-2xl m-0" style={{ color: 'white' }}>
                     360
                   </h2>
+                  <span className="text-white/90 tracking-[0.2em] uppercase text-sm mt-2 font-medium drop-shadow-md">
+                    Vista 360°
+                  </span>
                 </div>
 
                 <div className="absolute bottom-16 left-0 right-0 z-20 flex justify-center pointer-events-none">

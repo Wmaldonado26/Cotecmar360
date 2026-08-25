@@ -40,26 +40,36 @@ const useLandingPageLogic = () => {
     initAuthState();
   }, []);
 
-  useEffect(() => {
-    const fetchCards = async () => {
-      setLoadingCards(true);
-      setErrorCards(null);
-      try {
-        const data = await landingService.getCards();
-        if (data && data.length > 0) {
-          setStackingCards(data);
-        } else {
-          setErrorCards("No hay contenido disponible por el momento.");
-        }
-      } catch (err) {
-        console.error("Error fetching landing cards:", err);
-        setErrorCards("Hubo un error al cargar el contenido. Por favor intenta de nuevo más tarde.");
-      } finally {
-        setLoadingCards(false);
+  const [retrying, setRetrying] = useState(false);
+
+  const fetchCards = useCallback(async () => {
+    setLoadingCards(true);
+    setErrorCards(null);
+    try {
+      const data = await landingService.getCards();
+      if (data && data.length > 0) {
+        setStackingCards(data);
+      } else {
+        setErrorCards("No hay contenido disponible por el momento.");
       }
-    };
-    fetchCards();
+    } catch (err) {
+      console.error("Error fetching landing cards:", err);
+      setErrorCards("Hubo un error al cargar el contenido. Por favor intenta de nuevo más tarde.");
+    } finally {
+      setLoadingCards(false);
+      setRetrying(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchCards();
+  }, [fetchCards]);
+
+  const retryFetchCards = useCallback(() => {
+    if (retrying) return;
+    setRetrying(true);
+    fetchCards();
+  }, [retrying, fetchCards]);
 
   useEffect(() => {
     const body = document.body;
@@ -95,6 +105,8 @@ const useLandingPageLogic = () => {
     lang: i18n.language,
     toggleLang,
     t,
+    retrying,
+    retryFetchCards,
   };
 };
 
