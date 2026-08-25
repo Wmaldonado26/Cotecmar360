@@ -722,6 +722,7 @@
   }
   .landing-stack-card-media {
     aspect-ratio: 16 / 9;
+    max-height: 280px;
     height: auto !important;
     min-height: unset !important;
     flex-shrink: 0;
@@ -771,6 +772,7 @@
   }
   .landing-stack-card-media {
     aspect-ratio: 16 / 9;
+    max-height: 220px;
     height: auto !important;
     min-height: unset !important;
     flex-shrink: 0;
