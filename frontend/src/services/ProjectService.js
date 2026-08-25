@@ -160,6 +160,18 @@ class ProjectService {
     }
   }
 
+  async getPublicProjects() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/projects/public`);
+      if (!response.ok) return [];
+      const projects = await response.json();
+      return projects.map(normalizeProject);
+    } catch (e) {
+      console.error("Error fetching public projects:", e);
+      return [];
+    }
+  }
+
   async getProjectById(projectId) {
     if (!authService.isAuthenticated()) {
       if (!USE_BACKEND) return null;

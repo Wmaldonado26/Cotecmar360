@@ -14,6 +14,7 @@ const useLandingPageLogic = () => {
   const [stackingCards, setStackingCards] = useState([]);
   const [loadingCards, setLoadingCards] = useState(true);
   const [errorCards, setErrorCards] = useState(null);
+  const [publicProjects, setPublicProjects] = useState([]);
 
   useEffect(() => {
     const initAuthState = async () => {
@@ -50,20 +51,31 @@ const useLandingPageLogic = () => {
       if (data && data.length > 0) {
         setStackingCards(data);
       } else {
-        setErrorCards("No hay contenido disponible por el momento.");
+        setStackingCards([]);
       }
     } catch (err) {
-      console.error("Error fetching landing cards:", err);
-      setErrorCards("Hubo un error al cargar el contenido. Por favor intenta de nuevo más tarde.");
+      console.error("Error al cargar landing cards:", err);
+      setErrorCards(err.message || "Error al cargar las tarjetas.");
     } finally {
       setLoadingCards(false);
-      setRetrying(false);
+      setTimeout(() => setRetrying(false), 500);
+    }
+  }, []);
+
+  const fetchPublicProjects = useCallback(async () => {
+    try {
+      const projectService = require("../../services/ProjectService").default;
+      const projects = await projectService.getPublicProjects();
+      setPublicProjects(projects);
+    } catch (err) {
+      console.error("Error al cargar proyectos publicos:", err);
     }
   }, []);
 
   useEffect(() => {
     fetchCards();
-  }, [fetchCards]);
+    fetchPublicProjects();
+  }, [fetchCards, fetchPublicProjects]);
 
   const retryFetchCards = useCallback(() => {
     if (retrying) return;
@@ -102,6 +114,7 @@ const useLandingPageLogic = () => {
     stackingCards,
     loadingCards,
     errorCards,
+    publicProjects,
     lang: i18n.language,
     toggleLang,
     t,
@@ -110,4 +123,4 @@ const useLandingPageLogic = () => {
   };
 };
 
-export default useLandingPageLogic; 
+export default useLandingPageLogic;

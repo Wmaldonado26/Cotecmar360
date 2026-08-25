@@ -12,6 +12,7 @@ export const LandingPageTemplate = ({
   stackingCards,
   loadingCards,
   errorCards,
+  publicProjects,
   lang,
   toggleLang,
   t,
@@ -20,6 +21,7 @@ export const LandingPageTemplate = ({
 }) => {
   const featuredTourUrl = "/public-tour/proj_1787580651232_2f1jl70eu/zone_1787584150095";
   const [videoFailed, setVideoFailed] = useState(false);
+  const [showToursDropdown, setShowToursDropdown] = useState(false);
 
   return (
     <div className="landing-page">
@@ -36,6 +38,47 @@ export const LandingPageTemplate = ({
         </div>
 
         <div className="flex items-center relative gap-4">
+            {publicProjects && publicProjects.length > 0 && (
+              <div className="relative">
+                <button 
+                  onClick={() => setShowToursDropdown(!showToursDropdown)}
+                  className="landing-lang-btn transition-all flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-black/40 backdrop-blur-md text-white hover:bg-black/60 font-medium"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                  </svg>
+                  Tours 360
+                </button>
+                {showToursDropdown && (
+                  <div className="absolute right-0 mt-2 w-64 bg-[#0a0a0a] border border-white/10 rounded-lg shadow-xl overflow-hidden z-[100]">
+                    <div className="py-1 max-h-80 overflow-y-auto">
+                      {publicProjects.map(p => (
+                        <button
+                          key={p.id}
+                          className="w-full text-left px-4 py-3 hover:bg-white/10 transition-colors text-white/90 text-sm border-b border-white/5 last:border-0 flex items-center gap-3"
+                          onClick={() => {
+                            let firstSceneId = p.experiences?.[0]?.startScene || p.experiences?.[0]?.id;
+                            if (!firstSceneId && p.scenes && Object.keys(p.scenes).length > 0) {
+                              firstSceneId = Object.keys(p.scenes)[0];
+                            }
+                            if (firstSceneId) {
+                              navigate(`/public-tour/${p.id}/${firstSceneId}`);
+                            }
+                          }}
+                        >
+                          {p.thumbnail && (
+                            <img src={p.thumbnail} alt="" className="w-8 h-8 rounded object-cover" />
+                          )}
+                          <span className="truncate">{p.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
           <button
             onClick={toggleLang}
             className="landing-lang-btn transition-all flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 bg-black/20 backdrop-blur-md"
@@ -190,7 +233,7 @@ export const LandingPageTemplate = ({
                 
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
                   <h2 className="text-white text-7xl md:text-9xl font-bold tracking-widest opacity-90 drop-shadow-2xl m-0" style={{ color: 'white' }}>
-                    Vista 360°
+                    360°
                   </h2>
                   <span className="text-white/90 tracking-[0.2em] uppercase text-sm mt-2 font-medium drop-shadow-md">
                   </span>

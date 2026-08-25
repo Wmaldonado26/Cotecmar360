@@ -231,6 +231,17 @@ export default function useProjectEditorLogic({ projectId, onClose, onSave }) {
     setHasChanges(true);
   };
 
+  const handleSettingChange = (field, value) => {
+    setProject((prev) => ({
+      ...prev,
+      settings: {
+        ...(prev.settings || {}),
+        [field]: value,
+      },
+    }));
+    setHasChanges(true);
+  };
+
   const handleRemoveThumbnail = () => {
     handleBasicInfoChange("thumbnail", "/images/default_image.png");
   };
@@ -1284,6 +1295,7 @@ export default function useProjectEditorLogic({ projectId, onClose, onSave }) {
     getMapForZone,
     isScenePlacedOnZone,
     handleBasicInfoChange,
+    handleSettingChange,
     handleRemoveThumbnail,
     handleThumbnailUpload,
     handleGalleryUpload,

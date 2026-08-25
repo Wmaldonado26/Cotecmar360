@@ -26,7 +26,7 @@ export default function ProjectEditorView({
   totalHotspots, totalMapas, scenesByZone, unassignedScenes,
   navigate, projectId,
   getZoneLabel, getMapForZone, isScenePlacedOnZone,
-  handleBasicInfoChange, handleRemoveThumbnail, handleThumbnailUpload,
+  handleBasicInfoChange, handleSettingChange, handleRemoveThumbnail, handleThumbnailUpload,
   handleGalleryUpload, handleDeleteGalleryImage, handleDocumentUpload,
   handleUpdateDocumentTitle, handleDeleteDocument, handleAddExperience,
   handleCreateZoneSubmit, handleUpdateExperience, handleDeleteExperience,
@@ -175,6 +175,18 @@ export default function ProjectEditorView({
                       <option value="draft">Borrador</option>
                       <option value="archived">Archivado</option>
                     </select>
+                  </div>
+                  <div className="form-group-modern" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '1rem' }}>
+                    <input 
+                      type="checkbox" 
+                      id="showInLandingList" 
+                      checked={project.settings?.showInLandingList || false}
+                      onChange={(e) => handleSettingChange("showInLandingList", e.target.checked)}
+                      style={{ width: '20px', height: '20px' }}
+                    />
+                    <label htmlFor="showInLandingList" style={{ margin: 0, cursor: 'pointer' }}>
+                      Mostrar en Menú de la Landing Page (Público)
+                    </label>
                   </div>
                   <div className="form-group-modern full-width">
                     <label>Descripción General</label>

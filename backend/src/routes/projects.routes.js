@@ -11,6 +11,18 @@ const router = Router();
 
 router.get("/", requireAuth, asyncHandler(projectsController.listProjects));
 
+router.get("/public", asyncHandler(async (req, res) => {
+  const prisma = require("../config/prisma");
+  const { hydrateProject } = require("../utils/project");
+  const allProjects = await prisma.project.findMany({
+    where: { status: "active" },
+    orderBy: { dateModified: "desc" },
+  });
+  const hydrated = allProjects.map(hydrateProject);
+  const publicProjects = hydrated.filter(p => p.settings?.showInLandingList === true);
+  res.json(publicProjects);
+}));
+
 router.get("/public/:id", asyncHandler(async (req, res) => {
   const projectService = require("../services/project.service");
   const { createHttpError } = require("../utils/errors");
