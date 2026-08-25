@@ -19,9 +19,6 @@ export const LandingPageTemplate = ({
   fullScreenImageRef,
   fullScreenTextRef,
   stackingCards,
-  isMenuOpen,
-  setIsMenuOpen,
-  primaryAction,
   lang,
   toggleLang,
   t,
@@ -61,43 +58,6 @@ export const LandingPageTemplate = ({
 
 
 
-          <button 
-            className="hover:opacity-70 transition-colors z-50 p-2"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            title={isMenuOpen ? t("menuClose") : t("menuToggle")}
-            aria-label={isMenuOpen ? t("menuClose") : t("menuToggle")}
-          >
-            {isMenuOpen ? (
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            ) : (
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </svg>
-            )}
-          </button>
-
-          <div 
-            className={`absolute bg-transparent flex gap-4 transition-all duration-300 top-full right-0 mt-2 flex-col lg:top-1/2 lg:right-full lg:mt-0 lg:mr-4 lg:flex-row ${isMenuOpen ? 'opacity-100 visible translate-y-0 translate-x-0 lg:-translate-y-1/2' : 'opacity-0 invisible -translate-y-2 translate-x-0 lg:translate-x-4 lg:-translate-y-1/2'}`}
-          >
-            <button 
-              className="landing-btn w-48 justify-center" 
-              onClick={() => {
-                setIsMenuOpen(false);
-                primaryAction();
-              }}
-            >
-              {isAuthenticated
-                ? (currentUser?.role === "admin" || currentUser?.role === "project_admin")
-                  ? t("menu.goToPanel")
-                  : t("menu.goToGallery")
-                : t("menu.login")}
-            </button>
-          </div>
         </div>
       </header>
 

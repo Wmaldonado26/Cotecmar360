@@ -98,7 +98,6 @@ const useLandingPageLogic = () => {
 
   const [stackingCards, setStackingCards] = useState([]);
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [lang, setLang] = useState("es");
 
   useEffect(() => {
@@ -137,14 +136,6 @@ const useLandingPageLogic = () => {
     };
     fetchCards();
   }, []);
-
-  const primaryAction = () => {
-    if (!isAuthenticated) {
-      navigate("/login");
-      return;
-    }
-    navigate((currentUser?.role === "admin" || currentUser?.role === "project_admin") ? "/admin" : "/gallery");
-  };
 
   useEffect(() => {
     const body = document.body;
@@ -296,9 +287,6 @@ const useLandingPageLogic = () => {
     fullScreenImageRef,
     fullScreenTextRef,
     stackingCards,
-    isMenuOpen,
-    setIsMenuOpen,
-    primaryAction,
     lang,
     toggleLang,
     t,
