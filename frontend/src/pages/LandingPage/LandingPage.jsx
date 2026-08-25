@@ -167,7 +167,11 @@ export const LandingPageTemplate = ({
                     ref={fullScreenTextRef}
                     src={icon360}
                     alt="360"
-                    className="w-48 md:w-96 drop-shadow-2xl opacity-90 object-contain"
+                    className="w-48 md:w-96 drop-shadow-2xl opacity-90 object-contain pointer-events-auto cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(featuredTourUrl);
+                    }}
                   />
                 </div>
 
