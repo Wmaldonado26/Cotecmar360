@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import authService from "../../services/AuthService";
 import landingService from "../../services/LandingService";
+import projectService from "../../services/ProjectService";
 
 const useLandingPageLogic = () => {
   const navigate = useNavigate();
@@ -64,7 +65,6 @@ const useLandingPageLogic = () => {
 
   const fetchPublicProjects = useCallback(async () => {
     try {
-      const projectService = require("../../services/ProjectService").default;
       const projects = await projectService.getPublicProjects();
       setPublicProjects(projects);
     } catch (err) {
