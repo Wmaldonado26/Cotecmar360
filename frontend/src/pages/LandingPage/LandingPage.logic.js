@@ -102,10 +102,12 @@ const useLandingPageLogic = () => {
     document.title = t("titleHome");
   }, [i18n.language, t]);
 
+  const currentLang = i18n.language?.startsWith("en") ? "en" : "es";
+
   const toggleLang = useCallback(() => {
-    const nextLang = i18n.language === "es" ? "en" : "es";
+    const nextLang = currentLang === "es" ? "en" : "es";
     i18n.changeLanguage(nextLang);
-  }, [i18n]);
+  }, [i18n, currentLang]);
 
   return {
     navigate,
@@ -115,7 +117,7 @@ const useLandingPageLogic = () => {
     loadingCards,
     errorCards,
     publicProjects,
-    lang: i18n.language,
+    lang: currentLang,
     toggleLang,
     t,
     retrying,
