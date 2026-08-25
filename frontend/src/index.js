@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import './i18n';
+
 (function applyPannellumSanitizePatch() {
   try {
     const sanitizeURL = function (url) {
@@ -44,7 +46,9 @@ import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  <React.Suspense fallback={<div>Loading...</div>}>
     <App />
+  </React.Suspense>
 );
 
 reportWebVitals();

@@ -1,0 +1,27 @@
+﻿{
+  "brand": "COTECMAR",
+  "brandAlt": "COTECMAR",
+  "logoShowcaseAlt": "XR Lab",
+  "titleHome": "360° Virtual Tour | COTECMAR",
+  "themeToggle": "Toggle theme",
+  "menuToggle": "Open menu",
+  "menuClose": "Close menu",
+  "menu": {
+    "goToPanel": "Go to dashboard",
+    "goToGallery": "Go to gallery",
+    "login": "Sign in"
+  },
+  "tourCard": {
+    "action": "360° Tour",
+    "tour360Alt": "360° View",
+    "clickAction": "Click here"
+  },
+  "lang": {
+    "toggle": "Switch language",
+    "label": "EN",
+    "short": "EN"
+  },
+  "aria": {
+    "header": "Main header"
+  }
+}

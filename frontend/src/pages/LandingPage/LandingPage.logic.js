@@ -1,83 +1,12 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import authService from "../../services/AuthService";
 import landingService from "../../services/LandingService";
 
-const DICTIONARIES = {
-  es: {
-    brand: "COTECMAR",
-    brandAlt: "COTECMAR",
-    logoShowcaseAlt: "XR Lab",
-    titleHome: "Tour Virtual 360° | COTECMAR",
-    themeToggle: "Cambiar tema",
-    menuToggle: "Abrir menú",
-    menuClose: "Cerrar menú",
-    menu: {
-      goToPanel: "Ir al panel",
-      goToGallery: "Ir a la galeria",
-      login: "Iniciar sesión",
-    },
-    tourCard: {
-      action: "Recorrido 360",
-      tour360Alt: "Vista 360",
-      clickAction: "Hacer click",
-    },
-    lang: {
-      toggle: "Cambiar idioma",
-      label: "ES",
-      short: "ES",
-    },
-    aria: {
-      header: "Cabecera principal",
-    },
-  },
-  en: {
-    brand: "COTECMAR",
-    brandAlt: "COTECMAR",
-    logoShowcaseAlt: "XR Lab",
-    titleHome: "360° Virtual Tour | COTECMAR",
-    themeToggle: "Toggle theme",
-    menuToggle: "Open menu",
-    menuClose: "Close menu",
-    menu: {
-      goToPanel: "Go to dashboard",
-      goToGallery: "Go to gallery",
-      login: "Sign in",
-    },
-    tourCard: {
-      action: "360° Tour",
-      tour360Alt: "360° View",
-      clickAction: "Click here",
-    },
-    lang: {
-      toggle: "Switch language",
-      label: "EN",
-      short: "EN",
-    },
-    aria: {
-      header: "Main header",
-    },
-  },
-};
-
-const NESTED_KEY_RE = /^[a-z_][a-z0-9_]*(\.[a-z_][a-z0-9_]*)*$/i;
-
-function resolveDict(dict, path) {
-  if (typeof path !== "string" || !NESTED_KEY_RE.test(path)) return path;
-  const parts = path.split(".");
-  let current = dict;
-  for (const p of parts) {
-    if (current && typeof current === "object" && p in current) {
-      current = current[p];
-    } else {
-      return path;
-    }
-  }
-  return typeof current === "string" ? current : path;
-}
-
 const useLandingPageLogic = () => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -85,8 +14,6 @@ const useLandingPageLogic = () => {
   const [stackingCards, setStackingCards] = useState([]);
   const [loadingCards, setLoadingCards] = useState(true);
   const [errorCards, setErrorCards] = useState(null);
-
-  const [lang, setLang] = useState("es");
 
   useEffect(() => {
     const initAuthState = async () => {
@@ -136,16 +63,10 @@ const useLandingPageLogic = () => {
 
   useEffect(() => {
     const body = document.body;
-    if (!body) return;
-    const savedLang = localStorage.getItem('landing-lang');
-    const startLang = (savedLang === "es" || savedLang === "en") ? savedLang : (navigator.language && navigator.language.toLowerCase().startsWith("es") ? "es" : "en");
-    setLang(startLang);
-
-    body.classList.remove('landing-light');
-    body.classList.add('landing-dark');
-
-    document.documentElement.lang = startLang;
-    document.title = resolveDict(DICTIONARIES[startLang] || DICTIONARIES.es, "titleHome");
+    if (body) {
+      body.classList.remove('landing-light');
+      body.classList.add('landing-dark');
+    }
 
     setTimeout(() => {
       try {
@@ -154,21 +75,15 @@ const useLandingPageLogic = () => {
     }, 2000);
   }, []);
 
-  const activeDict = useMemo(() => DICTIONARIES[lang] || DICTIONARIES.es, [lang]);
-
-  const t = useCallback((key) => {
-    return resolveDict(activeDict, key);
-  }, [activeDict]);
+  useEffect(() => {
+    document.documentElement.lang = i18n.language || "es";
+    document.title = t("titleHome");
+  }, [i18n.language, t]);
 
   const toggleLang = useCallback(() => {
-    setLang((prev) => {
-      const next = prev === "es" ? "en" : "es";
-      try { localStorage.setItem("landing-lang", next); } catch (_) {}
-      document.documentElement.lang = next;
-      document.title = resolveDict(DICTIONARIES[next] || DICTIONARIES.es, "titleHome");
-      return next;
-    });
-  }, []);
+    const nextLang = i18n.language === "es" ? "en" : "es";
+    i18n.changeLanguage(nextLang);
+  }, [i18n]);
 
   return {
     navigate,
@@ -177,7 +92,7 @@ const useLandingPageLogic = () => {
     stackingCards,
     loadingCards,
     errorCards,
-    lang,
+    lang: i18n.language,
     toggleLang,
     t,
   };
