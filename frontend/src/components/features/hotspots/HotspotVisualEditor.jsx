@@ -383,15 +383,7 @@ export default function HotspotVisualEditorView(props) {
                             </div>
                           </div>
 
-                          <div className="form-group">
-                            <label>Etiqueta flotante (Tooltip al pasar el mouse)</label>
-                            <input
-                              type="text"
-                              value={hotspot.label || ""}
-                              onChange={(e) => handleUpdateHotspot(key, "label", e.target.value)}
-                              placeholder={isNav ? "Ej: Ir a la Sala de Máquinas" : "Ej: Ver detalles"}
-                            />
-                          </div>
+
 
                           {(isInfo || isElement) && (
                             <div className="form-group">
