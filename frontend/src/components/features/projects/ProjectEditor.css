@@ -11,7 +11,7 @@ body .project-editor.modern-editor {
   color: #003d82;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow: hidden;
-  padding-top: 0 !important;
+  padding-top: 80px !important;
 }
 
 /* ========================================
@@ -1269,3 +1269,29 @@ body .project-editor.modern-editor {
   background: #ffffff;
   overflow: hidden;
 }
+
+/* ======================================== */
+/* FIX ESPACIADOS PROJECT EDITOR (Zonas y Escenas) */
+/* ======================================== */
+.project-editor.modern-editor .dynamicnavbar__spacer {
+  display: none !important;
+}
+
+.project-editor.modern-editor .editor-content-modern {
+  padding-top: 16px !important;
+}
+
+.project-editor.modern-editor .project-editor__back-row {
+  margin-bottom: 8px !important;
+}
+
+
+
+
+
+.project-editor.modern-editor .dynamicnavbar__header {
+  position: fixed !important;
+  top: 0 !important;
+  width: 100%;
+}
+

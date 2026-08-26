@@ -8,6 +8,9 @@ const {
 const { asyncHandler } = require("../utils/errors");
 
 const router = Router();
+const zonesRoutes = require("./zones.routes");
+
+router.use("/:projectId/zones", zonesRoutes);
 
 router.get("/", requireAuth, asyncHandler(projectsController.listProjects));
 

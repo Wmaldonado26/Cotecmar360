@@ -1,3 +1,6 @@
+import projectService from "../../../../services/ProjectService";
+import { useState } from "react";
+
 export const useExperiences = ({
   project,
   setProject,
@@ -8,6 +11,8 @@ export const useExperiences = ({
   setMapSelectedSceneKey,
   setMapPlacingMode,
 }) => {
+  const [isDeletingZone, setIsDeletingZone] = useState(false);
+
   const handleAddExperience = () => {
     const newExp = {
       id: `zone_${Date.now()}`,
@@ -38,48 +43,52 @@ export const useExperiences = ({
     setModal({
       isOpen: true,
       type: "danger",
-      title: "¿Eliminar zona?",
-      message: `Vas a eliminar "${expName}". Esta acción no se puede deshacer.`,
-      onConfirm: () => {
+      title: "¿Eliminar zona de forma segura?",
+      message: `Vas a eliminar permanentemente "${expName}" y TODAS SUS ESCENAS EXCLUSIVAS (incluyendo imágenes en la nube). Esta acción limpiará todo su rastro y no se puede deshacer.`,
+      onConfirm: async () => {
         const zoneIdToDelete = project.experiences?.[index]?.id;
-
-        setProject((prev) => {
-          // 1) borrar zona
-          const nextExperiences = (prev.experiences || []).filter(
-            (_, i) => i !== index,
-          );
-
-          // 2) limpiar mapByZone
-          const nextMapByZone = { ...(prev.settings?.mapByZone || {}) };
-          if (zoneIdToDelete) delete nextMapByZone[zoneIdToDelete];
-
-          // 3) opcional: limpiar escenas ubicadas en esa zona
-          const nextScenes = { ...(prev.scenes || {}) };
-          if (zoneIdToDelete) {
-            Object.keys(nextScenes).forEach((k) => {
-              const m = nextScenes[k]?.map;
-              if (m?.zoneId === zoneIdToDelete) {
-                nextScenes[k] = { ...nextScenes[k], map: undefined };
-              }
-            });
-          }
-
-          return {
-            ...prev,
-            experiences: nextExperiences,
-            scenes: nextScenes,
-            settings: { ...(prev.settings || {}), mapByZone: nextMapByZone },
-          };
-        });
-
-        // reset UI si estaba en esa zona
-        if (mapZoneId === zoneIdToDelete) {
-          setMapZoneId("");
-          setMapSelectedSceneKey("");
-          setMapPlacingMode(false);
+        
+        if (!zoneIdToDelete) {
+          setModal((m) => ({ ...m, isOpen: false }));
+          return;
         }
 
-        setHasChanges(true);
+        if (!project?.id) {
+          alert("Error: No hay ID de proyecto");
+          return;
+        }
+
+        setIsDeletingZone(true);
+        setModal((m) => ({ 
+          ...m, 
+          message: "Eliminando zona y limpiando Cloudinary. Por favor espera...", 
+          showCancelButton: false, 
+          confirmText: "Procesando..." 
+        }));
+
+        const result = await projectService.deleteZoneCascade(project.id, zoneIdToDelete);
+        
+        if (result.success) {
+          // Refetch fresh project state to guarantee consistency
+          const updatedProject = await projectService.getProjectById(project.id);
+          
+          if (updatedProject) {
+            setProject(updatedProject);
+          }
+
+          // reset UI si estaba en esa zona
+          if (mapZoneId === zoneIdToDelete) {
+            setMapZoneId("");
+            setMapSelectedSceneKey("");
+            setMapPlacingMode(false);
+          }
+
+          setHasChanges(false); // Refetched project is in sync with DB
+        } else {
+          alert(`Error al eliminar la zona: ${result.error}`);
+        }
+
+        setIsDeletingZone(false);
         setModal((m) => ({ ...m, isOpen: false }));
       },
       showCancelButton: true,
@@ -92,5 +101,6 @@ export const useExperiences = ({
     handleAddExperience,
     handleUpdateExperience,
     handleDeleteExperience,
+    isDeletingZone,
   };
 };

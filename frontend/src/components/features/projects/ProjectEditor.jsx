@@ -40,11 +40,9 @@ export default function ProjectEditorView({
   handleDeleteProject, runFabPrimary, handleMultipleImagesUpload,
   handleCloseModal, handleCloseCreateZone, handleVisualEditorSave,
 }) {
-  if (!project) return <div className="loading">Cargando proyecto...</div>;
-
   const dynamicNavbarTitle = (
     <div className="project-editor__nav-title-group">
-      <h1 className="project-editor__nav-title">{project.name}</h1>
+      <h1 className="project-editor__nav-title">{project?.name || "Cargando..."}</h1>
     </div>
   );
 
@@ -73,7 +71,7 @@ export default function ProjectEditorView({
           <button
             className={`btn-save-modern ${hasChanges ? 'project-editor__btn-save--active' : 'project-editor__btn-save--idle'}`}
             onClick={handleSaveProject}
-            disabled={isSaving || !hasChanges}
+            disabled={isSaving || !hasChanges || !project}
           >
             <FaSave /> {isSaving ? 'Guardando...' : hasChanges ? 'Guardar Cambios' : 'Guardado'}
           </button>
@@ -123,14 +121,20 @@ export default function ProjectEditorView({
       </div>
 
       <div className="editor-content-modern" ref={contentRef}>
-        <div className="project-editor__back-row">
-          <button 
-            onClick={() => navigate("/admin")} 
-            className="back-btn-cotecmar"
-          >
-            <FaArrowLeft /> Volver
-          </button>
-        </div>
+        {!project ? (
+          <div className="loading" style={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <div className="animate-spin rounded-full h-14 w-14 border-4 border-transparent border-t-[#2B5398] border-b-[#8fa7d6]"></div>
+          </div>
+        ) : (
+          <>
+            <div className="project-editor__back-row">
+              <button 
+                onClick={() => navigate("/admin")} 
+                className="back-btn-cotecmar"
+              >
+                <FaArrowLeft /> Volver
+              </button>
+            </div>
         
         {activeTab === "basic" && (
           <div className="tab-pane-modern">
@@ -829,6 +833,8 @@ export default function ProjectEditorView({
               </div>
             </div>
           </div>
+        )}
+          </>
         )}
       </div>
 

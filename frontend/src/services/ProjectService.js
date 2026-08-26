@@ -294,6 +294,24 @@ class ProjectService {
     }
   }
 
+  async deleteZoneCascade(projectId, zoneId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/projects/${projectId}/zones/${zoneId}`, {
+        method: "DELETE",
+        headers: authService.getAuthHeaders(),
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        const message = errorData?.error || errorData?.message || "Error al eliminar la zona";
+        throw new Error(message);
+      }
+      return await response.json();
+    } catch (e) {
+      console.error("Error deleting zone:", e);
+      return { success: false, error: e.message };
+    }
+  }
+
   async duplicateProject(projectId) {
     const original = await this.getProjectById(projectId);
     if (!original) return { success: false, error: "Project not found" };
