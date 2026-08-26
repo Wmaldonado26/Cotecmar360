@@ -63,9 +63,7 @@ export default function HotspotVisualEditorView(props) {
     FaAngleLeft,
     FaAngleRight,
   } = props;
-
-  const [sceneSearch, setSceneSearch] = React.useState("");
-
+  
   return (
     <main
       className={`hotspot-visual-editor ${
@@ -421,45 +419,6 @@ export default function HotspotVisualEditorView(props) {
                                   </option>
                                 ))}
                               </select>
-                              
-                              <div className="scene-search-wrapper u-mt-8" style={{ marginTop: '12px' }}>
-                                <input 
-                                  type="text" 
-                                  placeholder="🔍 Buscar escena..." 
-                                  value={sceneSearch} 
-                                  onChange={(e) => setSceneSearch(e.target.value)} 
-                                  className="scene-search-input" 
-                                />
-                              </div>
-
-                              <div className="scene-destination-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)', marginTop: '8px' }}>
-                                {sceneEntries.filter(([sk, sc]) => formatSceneName(sc.title, sk).toLowerCase().includes(sceneSearch.toLowerCase())).map(([sk, sc]) => {
-                                  const active = hotspot.scene === sk;
-                                  return (
-                                    <button
-                                      type="button"
-                                      key={sk}
-                                      className={`scene-card ${active ? "active" : ""}`}
-                                      onClick={() => handleUpdateHotspot(key, "scene", sk)}
-                                    >
-                                      <div className="scene-card__thumb">
-                                        {getSceneThumb(sc) ? (
-                                          <img src={getSceneThumb(sc)} alt="" />
-                                        ) : (
-                                          <div className="scene-card__thumb--empty">
-                                            <FaImage size={24} />
-                                          </div>
-                                        )}
-                                      </div>
-                                      <div className="scene-card__meta">
-                                        <div className="scene-card__title" title={formatSceneName(sc.title, sk)}>
-                                          {formatSceneName(sc.title, sk)}
-                                        </div>
-                                      </div>
-                                    </button>
-                                  );
-                                })}
-                              </div>
                             </div>
                           </div>
                         )}
