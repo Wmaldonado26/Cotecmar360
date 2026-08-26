@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import projectService from "../../../../services/ProjectService";
 import { getSceneYawOffsetDeg, normalizeYawDeg } from "../../../../components/features/experiences/utils/sceneCalibration";
+import { getOrderedVisibleZones } from "../../../../components/features/experiences/utils/zoneNavigation";
 
 const getOptimalImage = (baseUrl) => {
   if (!baseUrl || typeof baseUrl !== 'string') return baseUrl;
@@ -313,9 +314,9 @@ export const useExperienceViewerLogic = ({ selectedExperience }) => {
   }, [sceneKeys, scenes, scene]);
 
   const zonesNavigationList = useMemo(() => {
-    const exp = Array.isArray(project?.experiences) ? project.experiences : [];
-    if (exp.length) {
-      return exp.map(e => {
+    const visibleZones = getOrderedVisibleZones(project);
+    if (visibleZones.length) {
+      return visibleZones.map(e => {
         const id = e.id;
         const firstScene =
           (e.startScene && scenes[e.startScene])
@@ -372,17 +373,19 @@ export const useExperienceViewerLogic = ({ selectedExperience }) => {
   }, [zonesNavigationList, scenes, navigateToScenePreserveOrientation]);
 
   const handlePrevious = () => {
-    if (!activeSceneKeys.length || !scene?.key) return;
-    const currentIndex = activeSceneKeys.indexOf(scene.key);
-    const previousIndex = currentIndex > 0 ? currentIndex - 1 : activeSceneKeys.length - 1;
-    navigateToScenePreserveOrientation(activeSceneKeys[previousIndex]);
+    if (!zonesNavigationList.length || !activeZoneId) return;
+    const currentZoneIndex = zonesNavigationList.findIndex(z => String(z.id) === String(activeZoneId));
+    if (currentZoneIndex === -1) return;
+    const prevZoneIndex = currentZoneIndex > 0 ? currentZoneIndex - 1 : zonesNavigationList.length - 1;
+    changeZone(zonesNavigationList[prevZoneIndex].id);
   };
 
   const handleNext = () => {
-    if (!activeSceneKeys.length || !scene?.key) return;
-    const currentIndex = activeSceneKeys.indexOf(scene.key);
-    const nextIndex = currentIndex < activeSceneKeys.length - 1 ? currentIndex + 1 : 0;
-    navigateToScenePreserveOrientation(activeSceneKeys[nextIndex]);
+    if (!zonesNavigationList.length || !activeZoneId) return;
+    const currentZoneIndex = zonesNavigationList.findIndex(z => String(z.id) === String(activeZoneId));
+    if (currentZoneIndex === -1) return;
+    const nextZoneIndex = currentZoneIndex < zonesNavigationList.length - 1 ? currentZoneIndex + 1 : 0;
+    changeZone(zonesNavigationList[nextZoneIndex].id);
   };
 
   const handleMoveUp = () => {

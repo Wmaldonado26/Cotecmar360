@@ -97,10 +97,21 @@ export const useExperiences = ({
     });
   };
 
+  const handleReorderExperiences = (sourceIndex, destinationIndex) => {
+    setProject((prev) => {
+      const newExperiences = [...(prev.experiences || [])];
+      const [movedItem] = newExperiences.splice(sourceIndex, 1);
+      newExperiences.splice(destinationIndex, 0, movedItem);
+      return { ...prev, experiences: newExperiences };
+    });
+    setHasChanges(true);
+  };
+
   return {
     handleAddExperience,
     handleUpdateExperience,
     handleDeleteExperience,
+    handleReorderExperiences,
     isDeletingZone,
   };
 };

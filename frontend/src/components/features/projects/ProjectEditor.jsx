@@ -4,7 +4,7 @@ import {
   FaSave, FaTimes, FaCheck, FaExclamationTriangle, FaInfoCircle,
   FaMapMarkedAlt, FaCompass, FaRegDotCircle, FaVideo,
   FaGripLines, FaUndo, FaRedo, FaCaretDown, FaCaretUp, FaTrash,
-  FaFileExport, FaDownload, FaUpload, FaFilePdf, FaPaperclip, FaChevronUp, FaShip, FaSearch, FaMapMarkerAlt, FaMousePointer, FaEye, FaEdit
+  FaFileExport, FaDownload, FaUpload, FaFilePdf, FaPaperclip, FaChevronUp, FaShip, FaSearch, FaMapMarkerAlt, FaMousePointer, FaEye, FaEyeSlash, FaEdit
 } from 'react-icons/fa';
 import DynamicNavbar from '../../layout/Navbar/DynamicNavbar';
 import "./ProjectEditor.css";
@@ -39,7 +39,10 @@ export default function ProjectEditorView({
   handleUpdateHotspotAttachmentFolder, handleSaveProject, handleClose,
   handleDeleteProject, runFabPrimary, handleMultipleImagesUpload,
   handleCloseModal, handleCloseCreateZone, handleVisualEditorSave,
+  handleReorderExperiences,
 }) {
+  const [draggedZoneIndex, setDraggedZoneIndex] = React.useState(null);
+
   const dynamicNavbarTitle = (
     <div className="project-editor__nav-title-group">
       <h1 className="project-editor__nav-title">{project?.name || "Cargando..."}</h1>
@@ -321,20 +324,54 @@ export default function ProjectEditorView({
                       </button>
                     </div>
                   )}
-                  {(project.experiences || []).filter(z => (z.name || "").toLowerCase().includes(zoneSearchQuery.toLowerCase())).map((zone, index) => {
+                  {(project.experiences || []).filter(z => (z.name || "").toLowerCase().includes(zoneSearchQuery.toLowerCase())).map((zone) => {
+                    const originalIndex = project.experiences.findIndex(exp => exp.id === zone.id);
                     const isActive = selectedZoneId === zone.id;
                     const sceneCountZone = (scenesByZone[zone.id] || []).length;
+                    const isVisible = zone.visible !== false;
                     return (
                       <div 
                         key={zone.id} 
+                        draggable={true}
+                        onDragStart={(e) => {
+                          e.dataTransfer.effectAllowed = 'move';
+                          setDraggedZoneIndex(originalIndex);
+                        }}
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          e.dataTransfer.dropEffect = 'move';
+                        }}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          if (draggedZoneIndex !== null && draggedZoneIndex !== originalIndex) {
+                            handleReorderExperiences(draggedZoneIndex, originalIndex);
+                          }
+                          setDraggedZoneIndex(null);
+                        }}
                         onClick={() => setSelectedZoneId(zone.id)}
                         className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all border ${
                           isActive 
                             ? "bg-blue-600 text-white border-blue-600 shadow-md" 
                             : "bg-white text-slate-700 border-slate-100 hover:border-slate-300 hover:bg-slate-50"
-                        }`}
+                        } ${draggedZoneIndex === originalIndex ? "opacity-50 border-dashed" : ""}`}
                       >
                         <div className="flex items-center gap-3 truncate">
+                          <FaGripLines 
+                            className={`flex-shrink-0 cursor-grab ${isActive ? "text-blue-200 hover:text-white" : "text-slate-400 hover:text-slate-600"}`} 
+                            title="Arrastrar para reordenar"
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleUpdateExperience(originalIndex, "visible", !isVisible);
+                            }}
+                            className={`flex-shrink-0 focus:outline-none transition-colors ${isVisible ? (isActive ? "text-blue-200 hover:text-white" : "text-blue-500 hover:text-blue-600") : "text-slate-400 hover:text-slate-600"}`}
+                            title={isVisible ? "Zona Visible" : "Zona Oculta"}
+                          >
+                            {isVisible ? <FaEye size={16} /> : <FaEyeSlash size={16} />}
+                          </button>
                           <input 
                             type="checkbox" 
                             checked={selectedZonesToDelete.includes(zone.id)}
@@ -344,18 +381,18 @@ export default function ProjectEditorView({
                                else setSelectedZonesToDelete(selectedZonesToDelete.filter(id => id !== zone.id));
                             }}
                             className="w-4 h-4 cursor-pointer accent-red-600 rounded"
+                            title="Seleccionar para eliminar"
                           />
-                          <FaShip className={`flex-shrink-0 ${isActive ? "text-blue-100" : "text-slate-400"}`} />
-                          <span className="font-semibold text-sm truncate">{zone.name || "Zona sin nombre"}</span>
+                          <span className={`font-semibold text-sm truncate ${!isVisible ? "line-through opacity-70" : ""}`}>{zone.name || "Zona sin nombre"}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className={`text-xs font-bold px-2 py-1 rounded-full ${isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"}`}>
+                          <div className={`text-xs font-bold px-2 py-1 rounded-full ${isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"}`} title={`${sceneCountZone} escenas`}>
                             {sceneCountZone}
                           </div>
                           {isActive && (
                             <button 
                               className="text-white hover:text-red-200 p-1"
-                              onClick={(e) => { e.stopPropagation(); handleDeleteExperience(index); }}
+                              onClick={(e) => { e.stopPropagation(); handleDeleteExperience(originalIndex); }}
                               title="Eliminar Zona"
                             >
                               <FaTrash size={12} />

@@ -406,6 +406,16 @@ export default function useProjectEditorLogic({ projectId, onClose, onSave }) {
     setHasChanges(true);
   };
 
+  const handleReorderExperiences = (sourceIndex, destinationIndex) => {
+    setProject((prev) => {
+      const newExperiences = [...(prev.experiences || [])];
+      const [movedItem] = newExperiences.splice(sourceIndex, 1);
+      newExperiences.splice(destinationIndex, 0, movedItem);
+      return { ...prev, experiences: newExperiences };
+    });
+    setHasChanges(true);
+  };
+
   const handleDeleteExperience = (index) => {
     const expName = project.experiences?.[index]?.name || "esta zona";
     setModal({
@@ -1306,6 +1316,7 @@ export default function useProjectEditorLogic({ projectId, onClose, onSave }) {
     handleAddExperience,
     handleCreateZoneSubmit,
     handleUpdateExperience,
+    handleReorderExperiences,
     handleDeleteExperience,
     handleBulkDeleteZones,
     handleAddScene,
