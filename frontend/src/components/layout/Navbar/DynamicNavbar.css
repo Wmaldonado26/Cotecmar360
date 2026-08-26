@@ -7,9 +7,8 @@
   right: 0;
   height: 72px;
   background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid #e2e8f0;
+  
+    border-bottom: 1px solid #e2e8f0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -174,3 +173,5 @@
   .manager-header-actions .profile-container .avatar-username { display: none !important; }
   .manager-header-middle { display: none !important; }
 }
+
+

@@ -52,6 +52,18 @@ export const ExperienceViewerTemplate = ({
     handleMiniMapClick,
     mapHeading,
   } = logic;
+  const hotspotRoots = useRef(new Map());
+
+  // GESTIÓN DE MEMORIA: Limpiar los roots de React de los hotspots al cambiar de escena o desmontar
+  useEffect(() => {
+    return () => {
+      hotspotRoots.current.forEach(root => {
+        try { root.unmount(); } catch (e) {}
+      });
+      hotspotRoots.current.clear();
+    };
+  }, [scene?.key]);
+
   const showZoneButton = !!(zonesNavigationList && zonesNavigationList.length);
 
   const renderHotspot = (element, i) => {
@@ -68,6 +80,7 @@ export const ExperienceViewerTemplate = ({
           cssClass="moveScene"
           tooltip={(hotSpotDiv) => {
             const root = ReactDOM.createRoot(hotSpotDiv);
+            hotspotRoots.current.set(hotSpotDiv, root);
             root.render(
               <CustomHotspot previewImage={navPreview} label={element.label} type="nav" />
             );
@@ -90,6 +103,7 @@ export const ExperienceViewerTemplate = ({
           cssClass="hotSpotElement"
           tooltip={(hotSpotDiv) => {
             const root = ReactDOM.createRoot(hotSpotDiv);
+            hotspotRoots.current.set(hotSpotDiv, root);
             root.render(
               <CustomHotspot
                 previewImage={element.previewImage}
@@ -122,6 +136,7 @@ export const ExperienceViewerTemplate = ({
           cssClass="infoHotspot"
           tooltip={(hotSpotDiv) => {
             const root = ReactDOM.createRoot(hotSpotDiv);
+            hotspotRoots.current.set(hotSpotDiv, root);
             root.render(
               <CustomHotspot
                 previewImage={element.previewImage}

@@ -16,13 +16,13 @@ const Preloader = ({ onComplete }) => {
     // Fake loading progress
     let currentProgress = 0;
     const interval = setInterval(() => {
-      currentProgress += Math.floor(Math.random() * 8) + 2; // Average 5.5 per tick
+      currentProgress += Math.floor(Math.random() * 20) + 15; // fast progress
       if (currentProgress >= 100) {
         currentProgress = 100;
         clearInterval(interval);
       }
       setProgress(currentProgress);
-    }, 180); // 180ms * ~18 ticks = ~3.2 seconds loading
+    }, 40); // 40ms tick
 
     return () => clearInterval(interval);
   }, []);

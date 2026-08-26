@@ -1,23 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense, lazy } from "react";
 import { Navigate, Route, Routes, useNavigate, useParams } from "react-router-dom";
-import Scene from "../components/features/experiences/ExperienceViewer";
-import ExperienceSelector from "../components/features/experiences/ExperienceSelector";
-import ProjectDetails from "../components/features/projects/ProjectDetails";
-import ProjectManager from "../components/features/projects/ProjectManager";
-import ProjectGallery from "../components/features/projects/ProjectGallery";
-import ProjectEditor from "../components/features/projects/ProjectEditor";
-import HotspotVisualEditor from "../components/features/hotspots/HotspotVisualEditor";
-import Login from "../components/features/auth/Login";
-import UserManagement from "../components/features/users/UserManagement";
-import UserPermissions from "../components/features/users/UserPermissions";
-import ConfirmModal from "../components/common/Modal/ConfirmModal";
 import LandingPage from "../pages/LandingPage/LandingPage";
-import LandingCardsAdmin from "../components/features/landing/LandingCardsAdmin";
-import PagesInformations from "../components/ui/PagesInformations/PagesInformations";
 import authService from "../services/AuthService";
 import projectService from "../services/ProjectService";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
+
+const Scene = lazy(() => import("../components/features/experiences/ExperienceViewer"));
+const ExperienceSelector = lazy(() => import("../components/features/experiences/ExperienceSelector"));
+const ProjectDetails = lazy(() => import("../components/features/projects/ProjectDetails"));
+const ProjectManager = lazy(() => import("../components/features/projects/ProjectManager"));
+const ProjectGallery = lazy(() => import("../components/features/projects/ProjectGallery"));
+const ProjectEditor = lazy(() => import("../components/features/projects/ProjectEditor"));
+const HotspotVisualEditor = lazy(() => import("../components/features/hotspots/HotspotVisualEditor"));
+const Login = lazy(() => import("../components/features/auth/Login"));
+const UserManagement = lazy(() => import("../components/features/users/UserManagement"));
+const UserPermissions = lazy(() => import("../components/features/users/UserPermissions"));
+const ConfirmModal = lazy(() => import("../components/common/Modal/ConfirmModal"));
+const LandingCardsAdmin = lazy(() => import("../components/features/landing/LandingCardsAdmin"));
+const PagesInformations = lazy(() => import("../components/ui/PagesInformations/PagesInformations"));
+
 
 const ProjectViewerWrapper = () => {
   const { projectId } = useParams();
@@ -294,123 +296,131 @@ const HotspotVisualEditorWrapper = () => {
   );
 };
 
+const SuspenseFallback = () => (
+  <div className="loading-screen" style={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <div className="animate-spin rounded-full h-14 w-14 border-4 border-transparent border-t-[#2B5398] border-b-[#8fa7d6]"></div>
+  </div>
+);
+
 const AppRoutes = () => {
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
+    <Suspense fallback={<SuspenseFallback />}>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
 
-      <Route
-        path="/gallery"
-        element={
-          <PrivateRoute roles={["admin", "project_admin", "user"]}>
-            <ProjectGallery />
-          </PrivateRoute>
-        }
-      />
+        <Route
+          path="/gallery"
+          element={
+            <PrivateRoute roles={["admin", "project_admin", "user"]}>
+              <ProjectGallery />
+            </PrivateRoute>
+          }
+        />
 
-      <Route
-        path="/project/:projectId"
-        element={
-          <PrivateRoute roles={["admin", "project_admin", "user"]}>
-            <ProjectViewerWrapper />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/project/:projectId/experience/:experienceId"
-        element={
-          <PrivateRoute roles={["admin", "project_admin", "user"]}>
-            <ExperienceViewerWrapper />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/public-tour/:projectId/:experienceId"
-        element={
-          <PublicRoute redirectByRole={false}>
-            <ExperienceViewerWrapper />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/project/:projectId/details"
-        element={
-          <PrivateRoute roles={["admin", "project_admin", "user"]}>
-            <ProjectDetailsWrapper />
-          </PrivateRoute>
-        }
-      />
+        <Route
+          path="/project/:projectId"
+          element={
+            <PrivateRoute roles={["admin", "project_admin", "user"]}>
+              <ProjectViewerWrapper />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/project/:projectId/experience/:experienceId"
+          element={
+            <PrivateRoute roles={["admin", "project_admin", "user"]}>
+              <ExperienceViewerWrapper />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/public-tour/:projectId/:experienceId"
+          element={
+            <PublicRoute redirectByRole={false}>
+              <ExperienceViewerWrapper />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/project/:projectId/details"
+          element={
+            <PrivateRoute roles={["admin", "project_admin", "user"]}>
+              <ProjectDetailsWrapper />
+            </PrivateRoute>
+          }
+        />
 
-      <Route
-        path="/pages/information"
-        element={
-          <PrivateRoute roles={["admin", "project_admin", "user"]}>
-            <PagesInformations />
-          </PrivateRoute>
-        }
-      />
+        <Route
+          path="/pages/information"
+          element={
+            <PrivateRoute roles={["admin", "project_admin", "user"]}>
+              <PagesInformations />
+            </PrivateRoute>
+          }
+        />
 
-      <Route
-        path="/login"
-        element={
-          <PublicRoute>
-            <LoginWrapper />
-          </PublicRoute>
-        }
-      />
-      <Route path="/admin/login" element={<Navigate to="/login" replace />} />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginWrapper />
+            </PublicRoute>
+          }
+        />
+        <Route path="/admin/login" element={<Navigate to="/login" replace />} />
 
-      <Route
-        path="/admin"
-        element={
-          <PrivateRoute roles={["admin", "project_admin"]}>
-            <AdminWrapper />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/admin/users"
-        element={
-          <PrivateRoute roles={["admin"]}>
-            <UserManagementWrapper />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/admin/permissions"
-        element={
-          <PrivateRoute roles={["admin"]}>
-            <UserPermissionsWrapper />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/admin/landing"
-        element={
-          <PrivateRoute roles={["admin", "project_admin"]}>
-            <LandingCardsAdminWrapper />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/admin/edit/:projectId"
-        element={
-          <PrivateRoute roles={["admin", "project_admin"]}>
-            <ProjectEditorWrapper />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/admin/edit/:projectId/scene/:sceneKey"
-        element={
-          <PrivateRoute roles={["admin", "project_admin"]}>
-            <HotspotVisualEditorWrapper />
-          </PrivateRoute>
-        }
-      />
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoute roles={["admin", "project_admin"]}>
+              <AdminWrapper />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <PrivateRoute roles={["admin"]}>
+              <UserManagementWrapper />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/permissions"
+          element={
+            <PrivateRoute roles={["admin"]}>
+              <UserPermissionsWrapper />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/landing"
+          element={
+            <PrivateRoute roles={["admin", "project_admin"]}>
+              <LandingCardsAdminWrapper />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/edit/:projectId"
+          element={
+            <PrivateRoute roles={["admin", "project_admin"]}>
+              <ProjectEditorWrapper />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/edit/:projectId/scene/:sceneKey"
+          element={
+            <PrivateRoute roles={["admin", "project_admin"]}>
+              <HotspotVisualEditorWrapper />
+            </PrivateRoute>
+          }
+        />
 
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Suspense>
   );
 };
 

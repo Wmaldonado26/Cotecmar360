@@ -60,9 +60,6 @@ export const useExperienceViewerLogic = ({ selectedExperience }) => {
   const [autoRotate, setAutoRotate] = useState(false);
   const [userInteracting, setUserInteracting] = useState(false);
   const [showCarousel, setShowCarousel] = useState(true);
-  const [currentHfov, setCurrentHfov] = useState(140);
-  const [currentYaw, setCurrentYaw] = useState(0);
-  const [currentPitch, setCurrentPitch] = useState(0);
   const [mapOverlayOpen, setMapOverlayOpen] = useState(false);
   const [showZonesList, setShowZonesList] = useState(true);
   const [activeZoneId, setActiveZoneId] = useState(null);
@@ -147,59 +144,74 @@ export const useExperienceViewerLogic = ({ selectedExperience }) => {
       // Solo hacer fallback al primer experience si no tenemos nada activo
       setActiveZoneId(prev => prev || project.experiences[0].id);
     }
-  }, [scene, project]);
+
+    // GESTIÓN DE MEMORIA: Pre-cargar texturas de hotspots adyacentes limitando la RAM (Caché inteligente)
+    if (scene && scene.hotSpots) {
+      const MAX_CACHE = 5;
+      if (!window.__panoramaCache) window.__panoramaCache = new Map();
+      const cache = window.__panoramaCache;
+
+      const adjacentKeys = Object.values(scene.hotSpots)
+        .filter(h => h.cssClass === 'moveScene' && h.scene)
+        .map(h => h.scene);
+
+      adjacentKeys.slice(0, MAX_CACHE).forEach(key => {
+        const targetScene = scenes[key];
+        if (targetScene && targetScene.image) {
+          const imgUrl = targetScene.image;
+          if (!cache.has(imgUrl)) {
+            const img = new Image();
+            img.src = imgUrl;
+            cache.set(imgUrl, img);
+            if (cache.size > MAX_CACHE) {
+              const firstKey = cache.keys().next().value;
+              cache.delete(firstKey);
+            }
+          }
+        }
+      });
+    }
+  }, [scene, project, scenes]);
+
+  // GESTIÓN DE MEMORIA: Forzar la limpieza del WebGLRenderer al desmontar
+  useEffect(() => {
+    return () => {
+      if (pannellumRef) {
+        try {
+          const viewer = pannellumRef.getViewer();
+          if (viewer && typeof viewer.destroy === 'function') {
+            viewer.destroy();
+          }
+        } catch (e) {
+          console.warn("Error cleaning up WebGL context", e);
+        }
+      }
+    };
+  }, [pannellumRef]);
+
+  const currentYawRef = useRef(0);
+  const currentPitchRef = useRef(0);
+  const currentHfovRef = useRef(140);
 
   const sceneKeySafe = scene?.key || null;
   const mapHeading = useMemo(() => {
     if (!sceneKeySafe) return 0;
-    return normalizeYawDeg((currentYaw || 0) + getSceneYawOffsetDeg(sceneKeySafe));
-  }, [sceneKeySafe, currentYaw]);
-
-  useEffect(() => {
-    let rafId = null;
-
-    const updateYawHfov = () => {
-      if (pannellumRef) {
-        try {
-          const viewer = pannellumRef.getViewer();
-          if (viewer && typeof viewer.getYaw === "function") {
-            const yaw = viewer.getYaw();
-            const hfov = viewer.getHfov();
-            const pitch =
-              typeof viewer.getPitch === "function"
-                ? viewer.getPitch()
-                : currentPitch;
-
-            setCurrentYaw(yaw);
-            setCurrentHfov(hfov);
-            setCurrentPitch(pitch);
-          }
-        } catch (e) {
-          console.error("Error en RAF:", e);
-        }
-      }
-      rafId = requestAnimationFrame(updateYawHfov);
-    };
-
-    rafId = requestAnimationFrame(updateYawHfov);
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, [pannellumRef, currentPitch]);
+    return normalizeYawDeg((currentYawRef.current || 0) + getSceneYawOffsetDeg(sceneKeySafe));
+  }, [sceneKeySafe]); // Ref removed from deps since it doesn't trigger renders
 
   useEffect(() => {
     if (!scene) return;
-    setCurrentYaw(scene.yaw || 0);
-    setCurrentPitch(scene.pitch || 0);
-    setCurrentHfov(project?.settings?.defaultHfov || 140);
+    currentYawRef.current = scene.yaw || 0;
+    currentPitchRef.current = scene.pitch || 0;
+    currentHfovRef.current = project?.settings?.defaultHfov || 140;
   }, [scene, project]);
 
   const navigateToScenePreserveOrientation = (nextKey) => {
     const nextScene = scenes[nextKey];
     if (!nextScene) return;
 
-    let yawToKeep = currentYaw || 0;
-    let pitchToKeep = currentPitch || 0;
+    let yawToKeep = currentYawRef.current || 0;
+    let pitchToKeep = currentPitchRef.current || 0;
 
     try {
       const viewer = pannellumRef?.getViewer?.();
@@ -216,8 +228,8 @@ export const useExperienceViewerLogic = ({ selectedExperience }) => {
     const globalHeading = normalizeYawDeg(yawToKeep + currentOffset);
     const nextLocalYaw = normalizeYawDeg(globalHeading - nextOffset);
 
-    setCurrentYaw(nextLocalYaw);
-    setCurrentPitch(pitchToKeep);
+    currentYawRef.current = nextLocalYaw;
+    currentPitchRef.current = pitchToKeep;
 
     const newScene = { ...nextScene, key: nextKey, yaw: nextLocalYaw, pitch: pitchToKeep };
     setScene(newScene);
@@ -278,16 +290,16 @@ export const useExperienceViewerLogic = ({ selectedExperience }) => {
 
   const handleZoomIn = () => {
     if (!pannellumRef) return;
-    const newHfov = Math.max(currentHfov - 10, 80);
+    const newHfov = Math.max(currentHfovRef.current - 10, 80);
     pannellumRef.getViewer().setHfov(newHfov);
-    setCurrentHfov(newHfov);
+    currentHfovRef.current = newHfov;
   };
 
   const handleZoomOut = () => {
     if (!pannellumRef) return;
-    const newHfov = Math.min(currentHfov + 10, 150);
+    const newHfov = Math.min(currentHfovRef.current + 10, 150);
     pannellumRef.getViewer().setHfov(newHfov);
-    setCurrentHfov(newHfov);
+    currentHfovRef.current = newHfov;
   };
 
   const activeSceneKeys = useMemo(() => {
@@ -443,9 +455,9 @@ export const useExperienceViewerLogic = ({ selectedExperience }) => {
     autoRotate,
     userInteracting,
     showCarousel, setShowCarousel,
-    currentHfov,
-    currentYaw,
-    currentPitch,
+    currentHfov: currentHfovRef.current,
+    currentYaw: currentYawRef.current,
+    currentPitch: currentPitchRef.current,
     mapOverlayOpen, setMapOverlayOpen,
     showZonesList, setShowZonesList,
     activeZoneId, setActiveZoneId,
