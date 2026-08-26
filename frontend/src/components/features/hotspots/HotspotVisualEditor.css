@@ -1487,3 +1487,48 @@
   color: #040E79;
   border-color: rgba(43, 83, 152, 0.3);
 }
+.hotspot-editor-section { display: flex; flex-direction: column; gap: 16px; }
+.hotspot-editor-section:last-child {
+  margin-bottom: 0;
+}
+.hotspot-editor-section__title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--c-text-muted);
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--c-border);
+  padding-bottom: 6px;
+}
+/* Fix for native select options contrast */
+.form-group select option,
+.form-group select optgroup {
+  background-color: #ffffff;
+  color: #1e293b;
+}
+.theme-light .form-group select option,
+.theme-light .form-group select optgroup {
+  background-color: #ffffff;
+  color: #1e293b;
+}
+.scene-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface-hover);
+  color: var(--c-text-main);
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+.scene-search-input:focus {
+  outline: none;
+  border-color: var(--c-brand-light);
+}
+.theme-light .scene-search-input {
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #0f172a;
+}
+

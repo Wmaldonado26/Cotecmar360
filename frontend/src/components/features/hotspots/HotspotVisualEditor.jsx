@@ -64,6 +64,8 @@ export default function HotspotVisualEditorView(props) {
     FaAngleRight,
   } = props;
 
+  const [sceneSearch, setSceneSearch] = React.useState("");
+
   return (
     <main
       className={`hotspot-visual-editor ${
@@ -294,47 +296,33 @@ export default function HotspotVisualEditorView(props) {
                         <FaGripVertical />
                       </div>
                       <div className="hotspot-card__content">
-                        <div className="hotspot-card__top">
-                          <span className="hotspot-card__title">
+                        <div className="hotspot-card__info">
+                          <div className="hotspot-card__title">
                             {hotspot.label || hotspot.title || "Sin etiqueta"}
-                          </span>
-                          <span
-                            className={`hotspot-card__type hotspot-card__type--${hotspot.cssClass}`}
-                          >
-                            <Icon size={12} /> {meta.label}
-                          </span>
-                        </div>
-                        <div className="hotspot-card__sub">
-                          {isNav ? (
-                            sceneMatch ? (
-                              <span className="hotspot-card__note hotspot-card__note--valid">
-                                <FaShip size={10} />{" "}
-                                {formatSceneName(
-                                  sceneMatch.title,
-                                  hotspot.scene
-                                )}
+                          </div>
+                          {editingHotspot !== key && (
+                            <div className="hotspot-card__details">
+                              <span className={`hotspot-card__type hotspot-card__type--${hotspot.cssClass}`}>
+                                <Icon size={12} /> {meta.label}
                               </span>
-                            ) : (
-                              <span className="hotspot-card__note hotspot-card__note--missing">
-                                <FaInfoCircle size={10} /> Sin destino
+                              {isNav ? (
+                                <span className={`hotspot-card__note ${sceneMatch ? "hotspot-card__note--valid" : "hotspot-card__note--missing"}`}>
+                                  {sceneMatch ? <><FaShip size={10} /> {formatSceneName(sceneMatch.title, hotspot.scene)}</> : <><FaInfoCircle size={10} /> Sin destino</>}
+                                </span>
+                              ) : isInfo ? (
+                                <span className="hotspot-card__note">
+                                  {hotspot.title || hotspot.description ? "Información configurada" : "Sin información"}
+                                </span>
+                              ) : (
+                                <span className="hotspot-card__note">
+                                  {attachments.length} anexo{attachments.length !== 1 ? "s" : ""}
+                                </span>
+                              )}
+                              <span className="hotspot-card__coords">
+                                P: {Number(hotspot.pitch || 0).toFixed(1)}° | Y: {Number(hotspot.yaw || 0).toFixed(1)}°
                               </span>
-                            )
-                          ) : isInfo ? (
-                            <span className="hotspot-card__note">
-                              {hotspot.title || hotspot.description
-                                ? "Información configurada"
-                                : "Sin información"}
-                            </span>
-                          ) : (
-                            <span className="hotspot-card__note">
-                              {attachments.length} anexo
-                              {attachments.length !== 1 ? "s" : ""}
-                            </span>
+                            </div>
                           )}
-                          <span className="hotspot-card__coords">
-                            P: {Number(hotspot.pitch || 0).toFixed(1)}° | Y:{" "}
-                            {Number(hotspot.yaw || 0).toFixed(1)}°
-                          </span>
                         </div>
                       </div>
                       <div
@@ -372,377 +360,280 @@ export default function HotspotVisualEditorView(props) {
 
                     {editingHotspot === key && (
                       <div className="hotspot-editor">
-                        <div className="form-group">
-                          <label>Tipo de Hotspot</label>
-                          <div className="type-switcher">
-                            {Object.entries(HOTSPOT_TYPE_META).map(([k, m]) => {
-                              const active =
-                                (hotspot.cssClass || "moveScene") === k;
-                              return (
-                                <button
-                                  key={k}
-                                  type="button"
-                                  className={`type-switch hotspot-type--${k} ${
-                                    active ? "is-active" : ""
-                                  }`}
-                                  onClick={() =>
-                                    handleUpdateHotspot(key, "cssClass", k)
-                                  }
-                                  title={m.hint}
-                                >
-                                  <m.Icon size={14} className="type-switch__icon" />{" "}
-                                  {m.label}
-                                </button>
-                              );
-                            })}
+                        <div className="hotspot-editor-section">
+                          <h4 className="hotspot-editor-section__title">CONFIGURACIÓN</h4>
+                          <div className="form-group">
+                            <label>Tipo de Hotspot</label>
+                            <div className="type-switcher">
+                              {Object.entries(HOTSPOT_TYPE_META).map(([k, m]) => {
+                                const active = (hotspot.cssClass || "moveScene") === k;
+                                return (
+                                  <button
+                                    key={k}
+                                    type="button"
+                                    className={`type-switch hotspot-type--${k} ${active ? "is-active" : ""}`}
+                                    onClick={() => handleUpdateHotspot(key, "cssClass", k)}
+                                    title={m.hint}
+                                  >
+                                    <m.Icon size={14} className="type-switch__icon" /> {m.label}
+                                  </button>
+                                );
+                              })}
+                            </div>
                           </div>
-                        </div>
 
-                        <div className="form-group">
-                          <label>
-                            Etiqueta flotante (Tooltip al pasar el mouse)
-                          </label>
-                          <input
-                            type="text"
-                            value={hotspot.label || ""}
-                            onChange={(e) =>
-                              handleUpdateHotspot(key, "label", e.target.value)
-                            }
-                            placeholder={
-                              isNav
-                                ? "Ej: Ir a la Sala de Máquinas"
-                                : "Ej: Ver detalles"
-                            }
-                          />
+                          <div className="form-group">
+                            <label>Etiqueta flotante (Tooltip al pasar el mouse)</label>
+                            <input
+                              type="text"
+                              value={hotspot.label || ""}
+                              onChange={(e) => handleUpdateHotspot(key, "label", e.target.value)}
+                              placeholder={isNav ? "Ej: Ir a la Sala de Máquinas" : "Ej: Ver detalles"}
+                            />
+                          </div>
+
+                          {(isInfo || isElement) && (
+                            <div className="form-group">
+                              <label>Título principal (Dentro del panel)</label>
+                              <input
+                                type="text"
+                                value={hotspot.title || ""}
+                                onChange={(e) => handleUpdateHotspot(key, "title", e.target.value)}
+                                placeholder="Ej: Motor Principal"
+                              />
+                            </div>
+                          )}
                         </div>
 
                         {isNav && (
-                          <div className="form-group">
-                            <label>Escena destino</label>
-                            <select
-                              value={hotspot.scene || ""}
-                              onChange={(e) =>
-                                handleUpdateHotspot(key, "scene", e.target.value)
-                              }
-                            >
-                              <option value="">
-                                Seleccionar escena destino...
-                              </option>
-                              {sceneEntries.map(([sk, sc]) => (
-                                <option key={sk} value={sk}>
-                                  {formatSceneName(sc.title, sk)}
-                                </option>
-                              ))}
-                            </select>
-                            <div className="scene-destination-grid">
-                              {sceneEntries.map(([sk, sc]) => {
-                                const active = hotspot.scene === sk;
-                                return (
+                          <div className="hotspot-editor-section">
+                            <h4 className="hotspot-editor-section__title">NAVEGACIÓN</h4>
+                            <div className="form-group">
+                              <label>Escena destino</label>
+                              <select
+                                value={hotspot.scene || ""}
+                                onChange={(e) => handleUpdateHotspot(key, "scene", e.target.value)}
+                              >
+                                <option value="">Seleccionar escena destino...</option>
+                                {sceneEntries.map(([sk, sc]) => (
+                                  <option key={sk} value={sk}>
+                                    {formatSceneName(sc.title, sk)}
+                                  </option>
+                                ))}
+                              </select>
+                              
+                              <div className="scene-search-wrapper u-mt-8" style={{ marginTop: '12px' }}>
+                                <input 
+                                  type="text" 
+                                  placeholder="🔍 Buscar escena..." 
+                                  value={sceneSearch} 
+                                  onChange={(e) => setSceneSearch(e.target.value)} 
+                                  className="scene-search-input" 
+                                />
+                              </div>
+
+                              <div className="scene-destination-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)', marginTop: '8px' }}>
+                                {sceneEntries.filter(([sk, sc]) => formatSceneName(sc.title, sk).toLowerCase().includes(sceneSearch.toLowerCase())).map(([sk, sc]) => {
+                                  const active = hotspot.scene === sk;
+                                  return (
+                                    <button
+                                      type="button"
+                                      key={sk}
+                                      className={`scene-card ${active ? "active" : ""}`}
+                                      onClick={() => handleUpdateHotspot(key, "scene", sk)}
+                                    >
+                                      <div className="scene-card__thumb">
+                                        {getSceneThumb(sc) ? (
+                                          <img src={getSceneThumb(sc)} alt="" />
+                                        ) : (
+                                          <div className="scene-card__thumb--empty">
+                                            <FaImage size={24} />
+                                          </div>
+                                        )}
+                                      </div>
+                                      <div className="scene-card__meta">
+                                        <div className="scene-card__title" title={formatSceneName(sc.title, sk)}>
+                                          {formatSceneName(sc.title, sk)}
+                                        </div>
+                                      </div>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {isInfo && (
+                          <div className="hotspot-editor-section">
+                            <h4 className="hotspot-editor-section__title">CONTENIDO</h4>
+                            <div className="form-group">
+                              <label>Descripción / Contenido</label>
+                              <textarea
+                                value={hotspot.description || ""}
+                                onChange={(e) => handleUpdateHotspot(key, "description", e.target.value)}
+                                rows={4}
+                                placeholder="Escribe la información que verá el usuario aquí..."
+                              />
+                            </div>
+                            <div className="form-group">
+                              <div className="cover-action-row">
+                                <label className="cover-action-row__label">Imagen de portada (Tarjeta informativa)</label>
+                                <label className="btn-secondary btn-secondary--sm">
+                                  <FaCamera /> Subir imagen
+                                  <input
+                                    className="u-hidden"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => handleHotspotCoverUpload(key, e)}
+                                    disabled={uploadingCoverMap[key]}
+                                  />
+                                </label>
+                              </div>
+
+                              {hotspot.coverImage ? (
+                                <div className="hotspot-cover-preview">
+                                  <div className="hotspot-cover-preview__img-wrap">
+                                    <img className="hotspot-cover-preview__img" src={hotspot.coverImage} alt="Portada" />
+                                  </div>
+                                  <div className="hotspot-cover-preview__badge-wrap">
+                                    <div className="hotspot-cover-preview__badge">{hotspot.title || "Vista previa"}</div>
+                                  </div>
                                   <button
                                     type="button"
-                                    key={sk}
-                                    className={`scene-card ${
-                                      active ? "active" : ""
-                                    }`}
-                                    onClick={() =>
-                                      handleUpdateHotspot(key, "scene", sk)
-                                    }
+                                    onClick={() => handleRemoveHotspotCover(key)}
+                                    className="hotspot-cover-preview__remove"
+                                    title="Quitar portada"
                                   >
-                                    <div className="scene-card__thumb">
-                                      {getSceneThumb(sc) ? (
-                                        <img
-                                          src={getSceneThumb(sc)}
-                                          alt=""
-                                        />
-                                      ) : (
-                                        <div className="scene-card__thumb--empty">
-                                          <FaImage size={24} />
-                                        </div>
-                                      )}
-                                    </div>
-                                    <div className="scene-card__meta">
-                                      <div
-                                        className="scene-card__title"
-                                        title={formatSceneName(sc.title, sk)}
-                                      >
-                                        {formatSceneName(sc.title, sk)}
-                                      </div>
-                                    </div>
+                                    <FaTimes size={12} />
                                   </button>
+                                </div>
+                              ) : (
+                                <div className="hotspot-cover-empty">
+                                  {uploadingCoverMap[key] ? (
+                                    <p className="hotspot-cover-empty__text">Subiendo imagen...</p>
+                                  ) : (
+                                    <>
+                                      <FaImage size={28} className="hotspot-cover-empty__icon" />
+                                      <p className="hotspot-cover-empty__text">Sin imagen de portada. Sube una foto para que aparezca como cabecera en el modal informativo con estilo de tarjeta.</p>
+                                    </>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {isElement && (
+                          <div className="hotspot-editor-section">
+                            <h4 className="hotspot-editor-section__title">ANEXOS</h4>
+                            <div className="form-group">
+                              <div className="cover-action-row">
+                                <label>Anexos</label>
+                                <label className="btn-secondary btn-secondary--sm">
+                                  <FaPaperclip /> Subir
+                                  <input
+                                    className="u-hidden"
+                                    type="file"
+                                    accept="image/*,application/pdf,video/*"
+                                    multiple
+                                    onChange={(e) => {
+                                      const files = Array.from(e.target.files || []);
+                                      handleHotspotAttachmentsBulkUpload(key, files);
+                                      e.target.value = "";
+                                    }}
+                                  />
+                                </label>
+                              </div>
+
+                              {attachments.length > 0 && (
+                                <input
+                                  type="text"
+                                  className="u-mt-8"
+                                  placeholder="Filtrar anexos..."
+                                  value={attachmentsSearch[key] || ""}
+                                  onChange={(e) => handleAttachmentsSearchChange(key, e.target.value)}
+                                />
+                              )}
+
+                              {filteredAtts.map((att, idx) => {
+                                const realIdx = attachments.indexOf(att);
+                                return (
+                                  <div key={idx} className="hotspot-att-row">
+                                    <div className="hotspot-att-row__top">
+                                      <strong className="hotspot-att-row__filename">{att.originalName || att.filename}</strong>
+                                      <button type="button" className="btn-text-subtle" onClick={() => handleRemoveHotspotAttachment(key, realIdx)}>Quitar</button>
+                                    </div>
+                                    <input
+                                      type="text"
+                                      className="hotspot-att-row__folder-input"
+                                      value={att.folder || ""}
+                                      onChange={(e) => handleUpdateHotspotAttachmentFolder(key, realIdx, e.target.value)}
+                                      placeholder="Carpeta (Ej: Motor/Manuales)"
+                                    />
+                                  </div>
                                 );
                               })}
                             </div>
                           </div>
                         )}
 
-                        {(isInfo || isElement) && (
-                          <div className="form-group">
-                            <label>Título principal (Dentro del panel)</label>
-                            <input
-                              type="text"
-                              value={hotspot.title || ""}
-                              onChange={(e) =>
-                                handleUpdateHotspot(key, "title", e.target.value)
-                              }
-                              placeholder="Ej: Motor Principal"
-                            />
-                          </div>
-                        )}
-
-                        {isInfo && (
-                          <div className="form-group">
-                            <label>Descripción / Contenido</label>
-                            <textarea
-                              value={hotspot.description || ""}
-                              onChange={(e) =>
-                                handleUpdateHotspot(
-                                  key,
-                                  "description",
-                                  e.target.value
-                                )
-                              }
-                              rows={4}
-                              placeholder="Escribe la información que verá el usuario aquí..."
-                            />
-                          </div>
-                        )}
-
-                        {isInfo && (
-                          <div className="form-group">
-                            <div className="cover-action-row">
-                              <label className="cover-action-row__label">
-                                Imagen de portada (Tarjeta informativa)
-                              </label>
-                              <label className="btn-secondary btn-secondary--sm">
-                                <FaCamera /> Subir imagen
-                                <input
-                                  className="u-hidden"
-                                  type="file"
-                                  accept="image/*"
-                                  onChange={(e) =>
-                                    handleHotspotCoverUpload(key, e)
-                                  }
-                                  disabled={uploadingCoverMap[key]}
-                                />
-                              </label>
-                            </div>
-
-                            {hotspot.coverImage ? (
-                              <div className="hotspot-cover-preview">
-                                <div className="hotspot-cover-preview__img-wrap">
-                                  <img
-                                    className="hotspot-cover-preview__img"
-                                    src={hotspot.coverImage}
-                                    alt="Portada"
-                                  />
-                                </div>
-                                <div className="hotspot-cover-preview__badge-wrap">
-                                  <div className="hotspot-cover-preview__badge">
-                                    {hotspot.title || "Vista previa"}
-                                  </div>
-                                </div>
-                                <button
-                                  type="button"
-                                  onClick={() => handleRemoveHotspotCover(key)}
-                                  className="hotspot-cover-preview__remove"
-                                  title="Quitar portada"
-                                >
-                                  <FaTimes size={12} />
-                                </button>
-                              </div>
-                            ) : (
-                              <div className="hotspot-cover-empty">
-                                {uploadingCoverMap[key] ? (
-                                  <p className="hotspot-cover-empty__text">
-                                    Subiendo imagen...
-                                  </p>
-                                ) : (
-                                  <>
-                                    <FaImage
-                                      size={28}
-                                      className="hotspot-cover-empty__icon"
-                                    />
-                                    <p className="hotspot-cover-empty__text">
-                                      Sin imagen de portada. Sube una foto para
-                                      que aparezca como cabecera en el modal
-                                      informativo con estilo de tarjeta.
-                                    </p>
-                                  </>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        )}
-
-                        {isElement && (
-                          <div className="form-group">
-                            <div className="cover-action-row">
-                              <label>Anexos</label>
-                              <label className="btn-secondary btn-secondary--sm">
-                                <FaPaperclip /> Subir
-                                <input
-                                  className="u-hidden"
-                                  type="file"
-                                  accept="image/*,application/pdf,video/*"
-                                  multiple
-                                  onChange={(e) => {
-                                    const files = Array.from(
-                                      e.target.files || []
-                                    );
-                                    handleHotspotAttachmentsBulkUpload(
-                                      key,
-                                      files
-                                    );
-                                    e.target.value = "";
-                                  }}
-                                />
-                              </label>
-                            </div>
-
-                            {attachments.length > 0 && (
-                              <input
-                                type="text"
-                                className="u-mt-8"
-                                placeholder="Filtrar anexos..."
-                                value={attachmentsSearch[key] || ""}
-                                onChange={(e) =>
-                                  handleAttachmentsSearchChange(
-                                    key,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            )}
-
-                            {filteredAtts.map((att, idx) => {
-                              const realIdx = attachments.indexOf(att);
-                              return (
-                                <div key={idx} className="hotspot-att-row">
-                                  <div className="hotspot-att-row__top">
-                                    <strong className="hotspot-att-row__filename">
-                                      {att.originalName || att.filename}
-                                    </strong>
-                                    <button
-                                      type="button"
-                                      className="btn-text-subtle"
-                                      onClick={() =>
-                                        handleRemoveHotspotAttachment(
-                                          key,
-                                          realIdx
-                                        )
-                                      }
-                                    >
-                                      Quitar
-                                    </button>
-                                  </div>
-                                  <input
-                                    type="text"
-                                    className="hotspot-att-row__folder-input"
-                                    value={att.folder || ""}
-                                    onChange={(e) =>
-                                      handleUpdateHotspotAttachmentFolder(
-                                        key,
-                                        realIdx,
-                                        e.target.value
-                                      )
-                                    }
-                                    placeholder="Carpeta (Ej: Motor/Manuales)"
-                                  />
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-
                         {!isInfo && (
-                          <div className="editor-grid editor-grid--2">
-                            <div className="form-group">
-                              <label>Pitch (Vertical)</label>
-                              <div className="coord-input-row">
-                                <input
-                                  type="number"
-                                  value={hotspot.pitch}
-                                  step="0.1"
-                                  onChange={(e) =>
-                                    handleUpdateHotspot(
-                                      key,
-                                      "pitch",
-                                      parseFloat(e.target.value)
-                                    )
-                                  }
-                                />
-                                <button
-                                  type="button"
-                                  className="coord-btn"
-                                  onClick={() => {
-                                    if (props.pannellumRef.current) {
-                                      try {
-                                        handleUpdateHotspot(
-                                          key,
-                                          "pitch",
-                                          Number(
-                                            props.pannellumRef.current
-                                              .getPitch()
-                                              .toFixed(3)
-                                          )
-                                        );
-                                      } catch {}
-                                    }
-                                  }}
-                                  title="Usar pitch actual"
-                                >
-                                  📍
-                                </button>
+                          <div className="hotspot-editor-section">
+                            <h4 className="hotspot-editor-section__title">POSICIÓN</h4>
+                            <div className="editor-grid editor-grid--2">
+                              <div className="form-group">
+                                <label>Pitch (Vertical)</label>
+                                <div className="coord-input-row">
+                                  <input
+                                    type="number"
+                                    value={hotspot.pitch}
+                                    step="0.1"
+                                    onChange={(e) => handleUpdateHotspot(key, "pitch", parseFloat(e.target.value))}
+                                  />
+                                  <button
+                                    type="button"
+                                    className="coord-btn"
+                                    onClick={() => {
+                                      if (props.pannellumRef.current) {
+                                        try { handleUpdateHotspot(key, "pitch", Number(props.pannellumRef.current.getPitch().toFixed(3))); } catch {}
+                                      }
+                                    }}
+                                    title="Usar pitch actual"
+                                  >
+                                    📍
+                                  </button>
+                                </div>
                               </div>
-                            </div>
-                            <div className="form-group">
-                              <label>Yaw (Horizontal)</label>
-                              <div className="coord-input-row">
-                                <input
-                                  type="number"
-                                  value={hotspot.yaw}
-                                  step="0.1"
-                                  onChange={(e) =>
-                                    handleUpdateHotspot(
-                                      key,
-                                      "yaw",
-                                      parseFloat(e.target.value)
-                                    )
-                                  }
-                                />
-                                <button
-                                  type="button"
-                                  className="coord-btn"
-                                  onClick={() => {
-                                    if (props.pannellumRef.current) {
-                                      try {
-                                        handleUpdateHotspot(
-                                          key,
-                                          "yaw",
-                                          Number(
-                                            props.pannellumRef.current
-                                              .getYaw()
-                                              .toFixed(3)
-                                          )
-                                        );
-                                      } catch {}
-                                    }
-                                  }}
-                                  title="Usar yaw actual"
-                                >
-                                  📍
-                                </button>
+                              <div className="form-group">
+                                <label>Yaw (Horizontal)</label>
+                                <div className="coord-input-row">
+                                  <input
+                                    type="number"
+                                    value={hotspot.yaw}
+                                    step="0.1"
+                                    onChange={(e) => handleUpdateHotspot(key, "yaw", parseFloat(e.target.value))}
+                                  />
+                                  <button
+                                    type="button"
+                                    className="coord-btn"
+                                    onClick={() => {
+                                      if (props.pannellumRef.current) {
+                                        try { handleUpdateHotspot(key, "yaw", Number(props.pannellumRef.current.getYaw().toFixed(3))); } catch {}
+                                      }
+                                    }}
+                                    title="Usar yaw actual"
+                                  >
+                                    📍
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
                         )}
 
                         <div className="editor-actions-row">
-                          <button
-                            type="button"
-                            className="btn-primary"
-                            onClick={() => setEditingHotspot(null)}
-                          >
+                          <button type="button" className="btn-primary" onClick={() => setEditingHotspot(null)}>
                             <FaCheck /> Listo
                           </button>
                         </div>
