@@ -594,15 +594,7 @@ export default function ProjectEditorView({
                                      </select>
                                    </div>
 
-                                   <div className="pt-3 mt-auto border-t border-slate-100 grid grid-cols-3 gap-2">
-                                     <button
-                                       className="project-editor__scene-action project-editor__scene-action--editor"
-                                       onClick={() => navigate(`/admin/edit/${projectId}/scene/${sceneKey}`)}
-                                       title="Editar en Vista 360"
-                                     >
-                                       <FaMousePointer size={14} />
-                                       <span className="project-editor__scene-action-label">Editor</span>
-                                     </button>
+                                   <div className="pt-3 mt-auto border-t border-slate-100 grid grid-cols-2 gap-2">
                                      <button
                                        className="project-editor__scene-action project-editor__scene-action--hotspots"
                                        onClick={() => setVisualEditorSceneKey(sceneKey)}

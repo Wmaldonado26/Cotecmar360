@@ -1202,14 +1202,6 @@ body .project-editor.modern-editor {
   transition: background-color 0.15s, color 0.15s;
 }
 
-.project-editor__scene-action--editor {
-  color: #64748b;
-}
-.project-editor__scene-action--editor:hover {
-  color: #2563eb;
-  background: #eff6ff;
-}
-
 .project-editor__scene-action--hotspots {
   color: #64748b;
 }
