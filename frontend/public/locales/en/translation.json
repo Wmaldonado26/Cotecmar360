@@ -2,7 +2,7 @@
   "brand": "COTECMAR",
   "brandAlt": "COTECMAR",
   "logoShowcaseAlt": "XR Lab",
-  "titleHome": "360� Virtual Tour | COTECMAR",
+  "titleHome": "cotecmar",
   "themeToggle": "Toggle theme",
   "menuToggle": "Open menu",
   "menuClose": "Close menu",
@@ -28,3 +28,4 @@
   "heroSlogan": "Science and Technology Corporation",
   "retryButton": "Retry"
 }
+
