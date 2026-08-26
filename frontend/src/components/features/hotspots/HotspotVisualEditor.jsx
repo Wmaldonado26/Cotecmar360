@@ -64,6 +64,9 @@ export default function HotspotVisualEditorView(props) {
     FaAngleRight,
   } = props;
   
+  const [sceneSearch, setSceneSearch] = React.useState("");
+  const [isSceneDropdownOpen, setIsSceneDropdownOpen] = React.useState(false);
+
   return (
     <main
       className={`hotspot-visual-editor ${
@@ -408,17 +411,52 @@ export default function HotspotVisualEditorView(props) {
                             <h4 className="hotspot-editor-section__title">NAVEGACIÓN</h4>
                             <div className="form-group">
                               <label>Escena destino</label>
-                              <select
-                                value={hotspot.scene || ""}
-                                onChange={(e) => handleUpdateHotspot(key, "scene", e.target.value)}
-                              >
-                                <option value="">Seleccionar escena destino...</option>
-                                {sceneEntries.map(([sk, sc]) => (
-                                  <option key={sk} value={sk}>
-                                    {formatSceneName(sc.title, sk)}
-                                  </option>
-                                ))}
-                              </select>
+                              <div className="custom-scene-select">
+                                <div 
+                                  className="custom-scene-select__header" 
+                                  onClick={() => setIsSceneDropdownOpen(!isSceneDropdownOpen)}
+                                >
+                                  {hotspot.scene && sceneEntries.find(([sk]) => sk === hotspot.scene) 
+                                    ? formatSceneName(sceneEntries.find(([sk]) => sk === hotspot.scene)[1].title, hotspot.scene) 
+                                    : "Seleccionar escena destino..."}
+                                  <span className={`custom-scene-select__icon ${isSceneDropdownOpen ? 'open' : ''}`}>▼</span>
+                                </div>
+                                {isSceneDropdownOpen && (
+                                  <div className="custom-scene-select__dropdown">
+                                    <div className="scene-search-wrapper">
+                                      <input 
+                                        type="text" 
+                                        placeholder="🔍 Buscar escena..." 
+                                        value={sceneSearch} 
+                                        onChange={(e) => setSceneSearch(e.target.value)} 
+                                        className="scene-search-input" 
+                                        autoFocus
+                                      />
+                                    </div>
+                                    <div className="custom-scene-select__options">
+                                      {sceneEntries
+                                        .filter(([sk, sc]) => formatSceneName(sc.title, sk).toLowerCase().includes(sceneSearch.toLowerCase()))
+                                        .map(([sk, sc]) => (
+                                          <div 
+                                            key={sk} 
+                                            className={`custom-scene-select__option ${hotspot.scene === sk ? 'selected' : ''}`}
+                                            onClick={() => {
+                                              handleUpdateHotspot(key, "scene", sk);
+                                              setIsSceneDropdownOpen(false);
+                                            }}
+                                          >
+                                            {formatSceneName(sc.title, sk)}
+                                          </div>
+                                      ))}
+                                      {sceneEntries.filter(([sk, sc]) => formatSceneName(sc.title, sk).toLowerCase().includes(sceneSearch.toLowerCase())).length === 0 && (
+                                        <div className="custom-scene-select__option disabled">
+                                          No se encontraron escenas
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           </div>
                         )}

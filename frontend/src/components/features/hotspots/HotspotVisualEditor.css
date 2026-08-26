@@ -1163,3 +1163,124 @@
 
 
 
+/* ==========================================================
+   CUSTOM SCENE SELECTOR (DROPDOWN)
+   ========================================================== */
+.custom-scene-select {
+  position: relative;
+  width: 100%;
+}
+
+.custom-scene-select__header {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: var(--c-surface-hover);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  color: var(--c-text-main);
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.custom-scene-select__icon {
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+
+.custom-scene-select__icon.open {
+  transform: rotate(180deg);
+}
+
+.custom-scene-select__dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  border-radius: var(--radius-sm);
+  z-index: 9999 !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-scene-select__dropdown .scene-search-wrapper {
+  padding: 8px;
+  background: #F8FAFC !important;
+  border-bottom: 1px solid #CBD5E1 !important;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.custom-scene-select__dropdown .scene-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  border-radius: var(--radius-sm);
+  color: #1E293B !important;
+  font-size: 13px;
+  outline: none;
+}
+
+.custom-scene-select__dropdown .scene-search-input:focus {
+  border-color: #3b82f6 !important;
+}
+
+.custom-scene-select__dropdown .scene-search-input::placeholder {
+  color: #64748B !important;
+}
+
+.custom-scene-select__options {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.custom-scene-select__options::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scene-select__options::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+.custom-scene-select__options::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.custom-scene-select__options::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.custom-scene-select__option {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #1E293B !important;
+  cursor: pointer;
+  transition: all 0.1s;
+  background: #FFFFFF !important;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.custom-scene-select__option:hover {
+  background: #EFF6FF !important;
+  color: #1D4ED8 !important;
+}
+
+.custom-scene-select__option.selected {
+  background: #DBEAFE !important;
+  color: #1D4ED8 !important;
+  font-weight: 600;
+}
+
+.custom-scene-select__option.disabled {
+  color: #94A3B8 !important;
+  cursor: default;
+}
+.custom-scene-select__option.disabled:hover {
+  background: #FFFFFF !important;
+  color: #94A3B8 !important;
+}
