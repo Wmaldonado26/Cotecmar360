@@ -1237,7 +1237,7 @@ export default function useProjectEditorLogic({ projectId, onClose, onSave }) {
       },
     }));
     setHasChanges(true);
-    setVisualEditorSceneKey(null);
+    
     showInfo(
       "Hotspots actualizados",
       `Se guardaron los hotspots de "${updatedScene?.title || visualEditorSceneKey}" en memoria. Presiona "Guardar Proyecto" para persistir.`
@@ -1347,3 +1347,4 @@ export default function useProjectEditorLogic({ projectId, onClose, onSave }) {
     handleVisualEditorSave,
   };
 }
+
