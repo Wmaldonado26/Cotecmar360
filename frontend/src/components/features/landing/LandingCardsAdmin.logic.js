@@ -13,8 +13,22 @@ export default function useLandingCardsAdminLogic(props) {
 
   const [isEditing, setIsEditing] = useState(false);
   const [currentCard, setCurrentCard] = useState(null);
-  const [formData, setFormData] = useState({ layer: "", title: "", titleEn: "", description: "", descriptionEn: "", orderIndex: 0, link: "" });
+  
+  // Nuevo estado para la experiencia de edicin unificada
+  const [formLanguage, setFormLanguage] = useState("es");
+  const [formData, setFormData] = useState({ 
+    layer: "", 
+    title: "", 
+    titleEn: "", 
+    description: "", 
+    descriptionEn: "", 
+    orderIndex: 0, 
+    link: "" 
+  });
   const [selectedFile, setSelectedFile] = useState(null);
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [translateMessage, setTranslateMessage] = useState(null);
+  const [translateError, setTranslateError] = useState(false);
 
   const fetchCards = async () => {
     try {
@@ -42,18 +56,29 @@ export default function useLandingCardsAdminLogic(props) {
     if (card) {
       setCurrentCard(card);
       setFormData({
-        layer: card.layer,
-        title: card.title,
+        layer: card.layer || "",
+        title: card.title || "",
         titleEn: card.titleEn || "",
-        description: card.description,
+        description: card.description || "",
         descriptionEn: card.descriptionEn || "",
-        orderIndex: card.orderIndex,
+        orderIndex: card.orderIndex || 0,
         link: card.link || ""
       });
+      // Detectar si falta traduccin
+      if (!card.titleEn || !card.descriptionEn) {
+        setTranslateMessage("Traduccin pendiente");
+        setTranslateError(true);
+      } else {
+        setTranslateMessage(null);
+        setTranslateError(false);
+      }
     } else {
       setCurrentCard(null);
-      setFormData({ layer: "", title: "", titleEn: "", description: "", descriptionEn: "", orderIndex: cards.length, link: "" });
+      setFormData({ layer: "", title: "", titleEn: "", description: "", descriptionEn: "", orderIndex: 0, link: "" });
+      setTranslateMessage(null);
+      setTranslateError(false);
     }
+    setFormLanguage("es");
     setSelectedFile(null);
     setIsEditing(true);
   };
@@ -61,19 +86,122 @@ export default function useLandingCardsAdminLogic(props) {
   const handleCloseEdit = () => {
     setIsEditing(false);
     setCurrentCard(null);
+    setTranslateMessage(null);
+    setTranslateError(false);
   };
 
-  const handleSave = async (e) => {
+  const handleSidebarOpen = () => setShowSidebar(true);
+  const handleSidebarClose = () => setShowSidebar(false);
+  const handleEditModalStopPropagation = (e) => e.stopPropagation();
+
+  const handleFormLayerChange = (e) => setFormData({ ...formData, layer: e.target.value });
+  const handleFormOrderChange = (e) => setFormData({ ...formData, orderIndex: e.target.value });
+  const handleFormLinkChange = (e) => setFormData({ ...formData, link: e.target.value });
+
+  // Manejadores unificados segn idioma
+  const handleFormTitleChange = (e) => {
+    if (formLanguage === 'es') {
+      setFormData({ ...formData, title: e.target.value });
+    } else {
+      setFormData({ ...formData, titleEn: e.target.value });
+    }
+  };
+
+  const handleFormDescriptionChange = (e) => {
+    if (formLanguage === 'es') {
+      setFormData({ ...formData, description: e.target.value });
+    } else {
+      setFormData({ ...formData, descriptionEn: e.target.value });
+    }
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
+  const handleFormLanguageChange = (e) => {
+    setFormLanguage(e.target.value);
+  };
+
+  const handleRefreshTranslation = async (e) => {
     e.preventDefault();
+    const sourceTitle = formLanguage === 'es' ? formData.title : formData.titleEn;
+    const sourceDesc = formLanguage === 'es' ? formData.description : formData.descriptionEn;
+    
+    if (!sourceTitle || !sourceDesc) {
+      setTranslateMessage("Completa el ttulo y la descripcin primero.");
+      setTranslateError(true);
+      return;
+    }
+
+    setIsTranslating(true);
+    setTranslateMessage("Traduciendo contenido...");
+    setTranslateError(false);
+
     try {
+      const result = await landingService.translateContent({
+        language: formLanguage,
+        title: sourceTitle,
+        description: sourceDesc
+      });
+      
+      if (formLanguage === 'es') {
+        setFormData(prev => ({
+          ...prev,
+          titleEn: result.title,
+          descriptionEn: result.description
+        }));
+      } else {
+        setFormData(prev => ({
+          ...prev,
+          title: result.title,
+          description: result.description
+        }));
+      }
+      setTranslateMessage("Traduccin generada correctamente");
+      setTranslateError(false);
+    } catch (err) {
+      console.error(err);
+      setTranslateMessage("No fue posible generar la traduccin. Puedes intentarlo nuevamente.");
+      setTranslateError(true);
+    } finally {
+      setIsTranslating(false);
+    }
+  };
+
+  const handleSaveCard = async (e) => {
+    e.preventDefault();
+    if (isTranslating) return;
+
+    try {
+      setLoading(true);
       const data = new FormData();
       data.append("layer", formData.layer);
-      data.append("title", formData.title);
-      data.append("titleEn", formData.titleEn);
-      data.append("description", formData.description);
-      data.append("descriptionEn", formData.descriptionEn);
       data.append("orderIndex", formData.orderIndex);
       data.append("link", formData.link);
+      
+      const sourceTitle = formLanguage === 'es' ? formData.title : formData.titleEn;
+      const sourceDesc = formLanguage === 'es' ? formData.description : formData.descriptionEn;
+
+      // Si est creando y los datos de traduccin estn vacos, decirle al backend que traduzca
+      const isNew = !currentCard;
+      const needsTranslation = isNew && ((formLanguage === 'es' && !formData.titleEn) || (formLanguage === 'en' && !formData.title));
+      
+      if (needsTranslation) {
+        data.append("translate_now", "true");
+        data.append("language", formLanguage);
+        data.append("title", sourceTitle);
+        data.append("description", sourceDesc);
+      } else {
+        // Enviar todo lo que tenemos (ya sea manual o por 'Actualizar traduccin')
+        data.append("title", formData.title);
+        data.append("description", formData.description);
+        data.append("titleEn", formData.titleEn);
+        data.append("descriptionEn", formData.descriptionEn);
+      }
+
       if (selectedFile) {
         data.append("image", selectedFile);
       }
@@ -83,82 +211,58 @@ export default function useLandingCardsAdminLogic(props) {
       } else {
         await landingService.createCard(data);
       }
-
+      await fetchCards();
       handleCloseEdit();
-      fetchCards();
     } catch (err) {
-      setError("Error al guardar la tarjeta.");
       console.error(err);
+      setError("Error al guardar la tarjeta.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("¿Seguro que deseas eliminar esta tarjeta?")) return;
+  const handleDeleteCard = async (id, e) => {
+    e.stopPropagation();
+    if (!window.confirm("Seguro que deseas eliminar esta tarjeta?")) return;
     try {
+      setLoading(true);
       await landingService.deleteCard(id);
-      fetchCards();
+      await fetchCards();
     } catch (err) {
+      console.error(err);
       setError("Error al eliminar la tarjeta.");
+      setLoading(false);
     }
   };
-
-  const handleOverlayClick = () => setShowSidebar(false);
-  const handleSidebarClose = () => setShowSidebar(false);
-  const handleSidebarOpen = () => setShowSidebar(true);
-  const handleEditOverlayClick = handleCloseEdit;
-  const handleEditModalStopPropagation = (e) => e.stopPropagation();
-
-  const handleFormLayerChange = (e) => setFormData({...formData, layer: e.target.value});
-  const handleFormTitleChange = (e) => setFormData({...formData, title: e.target.value});
-  const handleFormTitleEnChange = (e) => setFormData({...formData, titleEn: e.target.value});
-  const handleFormDescriptionChange = (e) => setFormData({...formData, description: e.target.value});
-  const handleFormDescriptionEnChange = (e) => setFormData({...formData, descriptionEn: e.target.value});
-  const handleFormOrderChange = (e) => setFormData({...formData, orderIndex: parseInt(e.target.value) || 0});
-  const handleFormLinkChange = (e) => setFormData({...formData, link: e.target.value});
-  const handleFileChange = (e) => setSelectedFile(e.target.files[0]);
-
-  const handleSidebarProjectsClick = () => navigate("/admin");
-  const handleSidebarUsersClick = () => navigate("/admin/users");
-  const handleSidebarPermissionsClick = () => navigate("/admin/permissions");
-  const handleBackClick = () => navigate(-1);
-
-  const getCardImageStyle = (card) => ({
-    backgroundImage: `url(${card.image || '/images/default_image.png'})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center'
-  });
 
   return {
     currentUser,
     cards,
     loading,
-    showSidebar,
     error,
+    showSidebar,
     isEditing,
     currentCard,
     formData,
+    formLanguage,
     selectedFile,
+    isTranslating,
+    translateMessage,
+    translateError,
+    handleSidebarOpen,
+    handleSidebarClose,
     handleOpenEdit,
     handleCloseEdit,
-    handleSave,
-    handleDelete,
-    handleOverlayClick,
-    handleSidebarClose,
-    handleSidebarOpen,
-    handleEditOverlayClick,
     handleEditModalStopPropagation,
     handleFormLayerChange,
     handleFormTitleChange,
-    handleFormTitleEnChange,
     handleFormDescriptionChange,
-    handleFormDescriptionEnChange,
+    handleFormLanguageChange,
+    handleRefreshTranslation,
     handleFormOrderChange,
     handleFormLinkChange,
     handleFileChange,
-    handleSidebarProjectsClick,
-    handleSidebarUsersClick,
-    handleSidebarPermissionsClick,
-    handleBackClick,
-    getCardImageStyle,
+    handleSaveCard,
+    handleDeleteCard,
   };
 }

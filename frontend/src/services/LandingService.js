@@ -72,6 +72,20 @@ class LandingService {
     }
   }
 
+  async translateContent(data) {
+    const token = authService.getToken();
+    const response = await fetch(`${API_BASE_URL}/landing/translate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) throw new Error("Failed to translate content");
+    return response.json();
+  }
+
   async createCard(formData) {
     const token = authService.getToken();
     const response = await fetch(`${API_BASE_URL}/landing`, {
@@ -113,3 +127,4 @@ class LandingService {
 
 const landingService = new LandingService();
 export default landingService;
+

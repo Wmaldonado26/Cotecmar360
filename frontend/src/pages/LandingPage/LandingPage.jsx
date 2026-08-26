@@ -176,8 +176,8 @@ export const LandingPageTemplate = ({
                   >
                     <div className="landing-stack-card-content">
                       <div className="landing-stack-card-copy">
-                        <h3>{lang === 'en' && card.titleEn ? card.titleEn : card.title}</h3>
-                        <p className="mb-6">{lang === 'en' && card.descriptionEn ? card.descriptionEn : card.description}</p>
+                        <h3>{lang === 'en' ? (card.titleEn || card.title) : (card.title || card.titleEn)}</h3>
+                        <p className="mb-6">{lang === 'en' ? (card.descriptionEn || card.description) : (card.description || card.descriptionEn)}</p>
                         
                         {card.link && (
                           <button 

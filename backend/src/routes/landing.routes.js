@@ -1,36 +1,25 @@
-const { Router } = require("express");
-const landingController = require("../controllers/landing.controller");
-const { requireAuth, requireRole } = require("../middlewares/auth.middleware");
-const { runMulter } = require("../middlewares/upload.middleware");
-const { asyncHandler } = require("../utils/errors");
+const express = require('express');
+const router = express.Router();
+const authMiddleware = require('../middlewares/auth.middleware');
+const roleMiddleware = require('../middlewares/role.middleware');
+const landingController = require('../controllers/landing.controller');
+const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config/cloudinary');
 
-const router = Router();
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'landing_cards',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp']
+  }
+});
+const upload = multer({ storage: storage });
 
-// Public route to fetch cards
-router.get("/", asyncHandler(landingController.getCards));
-
-// Admin routes
-router.post(
-  "/",
-  requireAuth,
-  requireRole("admin", "project_admin"),
-  runMulter,
-  asyncHandler(landingController.createCard)
-);
-
-router.put(
-  "/:id",
-  requireAuth,
-  requireRole("admin", "project_admin"),
-  runMulter,
-  asyncHandler(landingController.updateCard)
-);
-
-router.delete(
-  "/:id",
-  requireAuth,
-  requireRole("admin", "project_admin"),
-  asyncHandler(landingController.deleteCard)
-);
+router.get('/', landingController.getCards);
+router.post('/', authMiddleware, roleMiddleware(['admin', 'project_admin']), upload.fields([{ name: 'image', maxCount: 1 }]), landingController.createCard);
+router.put('/:id', authMiddleware, roleMiddleware(['admin', 'project_admin']), upload.fields([{ name: 'image', maxCount: 1 }]), landingController.updateCard);
+router.delete('/:id', authMiddleware, roleMiddleware(['admin', 'project_admin']), landingController.deleteCard);
+router.post('/translate', authMiddleware, roleMiddleware(['admin', 'project_admin']), landingController.translateContent);
 
 module.exports = router;
