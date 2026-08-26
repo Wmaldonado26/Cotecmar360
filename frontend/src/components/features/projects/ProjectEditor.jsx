@@ -564,10 +564,12 @@ export default function ProjectEditorView({
                                        <span className="text-xs font-medium">Sin imagen</span>
                                      </div>
                                    )}
-                                   <label className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center text-white cursor-pointer backdrop-blur-[2px]">
-                                     <span className="flex items-center gap-2 font-semibold"><FaUpload /> Cambiar Fondo</span>
-                                     <input type="file" accept="image/*" onChange={(e) => handleImageUpload(sceneKey, e)} className="project-editor__input-hidden" />
-                                   </label>
+                                   <button className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center text-white cursor-pointer backdrop-blur-[2px] w-full h-full border-0"
+  onClick={() => setVisualEditorSceneKey(sceneKey)}
+  title="Editar Escena"
+>
+  <span className="flex items-center gap-2 font-semibold"><FaEdit /> Editar</span>
+</button>
                                  </div>
                                  
                                  <div className="p-4 flex-1 flex flex-col gap-3">
@@ -594,15 +596,23 @@ export default function ProjectEditorView({
                                      </select>
                                    </div>
 
-                                   <div className="pt-3 mt-auto border-t border-slate-100 grid grid-cols-2 gap-2">
-                                     <button
-                                       className="project-editor__scene-action project-editor__scene-action--hotspots"
-                                       onClick={() => setVisualEditorSceneKey(sceneKey)}
-                                       title="Configurar Hotspots"
-                                     >
-                                       <FaMapMarkerAlt size={14} />
-                                       <span className="project-editor__scene-action-label">Hotspots</span>
-                                     </button>
+                                   <div className="pt-3 mt-auto border-t border-slate-100 grid grid-cols-3 gap-2">
+                                       <button
+                                         className="project-editor__scene-action project-editor__scene-action--hotspots"
+                                         onClick={() => setVisualEditorSceneKey(sceneKey)}
+                                         title="Configurar Hotspots"
+                                       >
+                                         <FaMapMarkerAlt size={14} />
+                                         <span className="project-editor__scene-action-label">Hotspots</span>
+                                       </button>
+                                       <label
+                                         className="project-editor__scene-action project-editor__scene-action--editor cursor-pointer m-0 flex items-center justify-center"
+                                         title="Cambiar Fondo"
+                                       >
+                                         <FaUpload size={14} />
+                                         <span className="project-editor__scene-action-label">Fondo</span>
+                                         <input type="file" accept="image/*" onChange={(e) => handleImageUpload(sceneKey, e)} className="hidden" />
+                                       </label>
                                      <button
                                        className="project-editor__scene-action project-editor__scene-action--delete"
                                        onClick={() => handleDeleteScene(sceneKey)}
@@ -942,3 +952,5 @@ export default function ProjectEditorView({
     </div>
   );
 }
+
+
