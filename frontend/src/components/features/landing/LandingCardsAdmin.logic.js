@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import landingService from "../../../services/LandingService";
 import authService from "../../../services/AuthService";
@@ -161,17 +161,22 @@ export default function useLandingCardsAdminLogic(props) {
       // Si editaron el texto y no han generado la traducción manualmente, lo hacemos ahora
       if (sourceChanged || !finalTranslations) {
         const isNew = !currentCard;
-        // Si es nuevo, siempre queremos traducir. Si es edición, preguntamos qué hacer con la traducción.
-        if (!isNew && currentCard.titleEn && currentCard.descriptionEn) {
+
+        if (!isNew && !sourceChanged) {
+          // Si no es nuevo y NO modificaron el texto, reutilizamos lo que ya existe
+          finalTranslations = {
+            titleEs: currentCard.title || "",
+            descriptionEs: currentCard.description || "",
+            titleEn: currentCard.titleEn || "",
+            descriptionEn: currentCard.descriptionEn || ""
+          };
+        } else if (!isNew && currentCard.titleEn && currentCard.descriptionEn) {
+          // Si es edición y SI modificaron el texto, preguntamos qué hacer
           const wantToTranslate = window.confirm("Has modificado el texto original.\n\n¿Deseas actualizar también la traducción automáticamente?\n\n[Aceptar] = Actualizar traducción\n[Cancelar] = Conservar traducción actual");
           if (wantToTranslate) {
             finalTranslations = await handleRefreshTranslation();
-            if (!finalTranslations) return; // Falló la traducción
+            if (!finalTranslations) return;
           } else {
-            // El usuario quiere conservar la traducción actual. 
-            // Necesitamos detectar el idioma de lo que acaba de escribir para guardarlo en la columna correcta, 
-            // sin pisar la vieja traducción. Para no molestar al usuario con otra llamada a IA solo para detectar idioma, 
-            // asumiremos que escribió en el mismo idioma que la interfaz le mostraba (Español).
             finalTranslations = {
               detectedLanguage: 'es',
               titleEs: formData.titleInput,

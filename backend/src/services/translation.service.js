@@ -20,24 +20,22 @@ class TranslationService {
 Recibiras un titulo y una descripcion.
 Tu tarea es:
 1. Detectar si el texto esta principalmente en espanol (es) o en ingles (en).
-2. Devolver ambas versiones del texto (espanol e ingles), traduciendo de ser necesario.
+2. Devolver ambas versiones del texto: los campos "Es" SIEMPRE en espanol y los campos "En" SIEMPRE en ingles.
 
-Reglas estrictas:
-- Mantener nombres propios y nombres de empresas sin traducir (ej. Cotecmar).
-- Mantener terminos tecnicos especializados.
-- No agregar informacion extra ni explicaciones.
-- No eliminar informacion.
+Reglas MUY estrictas:
+- SI EL TEXTO ORIGINAL ESTA EN ESPANOL: Debes copiarlo en los campos "Es" y TRADUCIRLO AL INGLES en los campos "En".
+- SI EL TEXTO ORIGINAL ESTA EN INGLES: Debes copiarlo en los campos "En" y TRADUCIRLO AL ESPANOL en los campos "Es".
+- BAJO NINGUNA CIRCUNSTANCIA los campos "Es" y "En" deben contener el mismo texto, a menos que sea un nombre propio inmodificable (como "Cotecmar"). Debes traducir los conceptos. "Actividades Cientificas y Tecnologicas" se traduce como "Scientific and Technological Activities".
+- Mantener nombres propios de empresas sin traducir.
 - No agregar comillas a menos que esten en el original.
-- No modificar numeros ni unidades.
-- Mantener un tono corporativo y profesional.
 
 Devuelve UNICAMENTE un objeto JSON valido con este formato exacto (sin bloques de codigo markdown, solo el JSON puro):
 {
   "detectedLanguage": "es",
   "titleEs": "titulo en espanol aqui",
-  "titleEn": "titulo en ingles aqui",
+  "titleEn": "titulo en ingles aqui (TRADUCIDO)",
   "descriptionEs": "descripcion en espanol aqui",
-  "descriptionEn": "descripcion en ingles aqui"
+  "descriptionEn": "descripcion en ingles aqui (TRADUCIDO)"
 }
 
 Texto:
