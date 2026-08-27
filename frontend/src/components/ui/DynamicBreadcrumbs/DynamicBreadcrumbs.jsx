@@ -13,6 +13,7 @@ const DynamicBreadcrumbsView = (props) => {
     buildBreadcrumbData,
     customDropdowns,
     customActions,
+    hideHome = false,
   } = props;
 
   const breadcrumbData = buildBreadcrumbData();
@@ -20,12 +21,14 @@ const DynamicBreadcrumbsView = (props) => {
   return (
     <nav aria-label="breadcrumb" className="breadcrumb-container">
       <ul className="breadcrumb-list">
-        <li className="breadcrumb-item">
-          <Link to={homeRoute} className="breadcrumb-link dynamicbreadcrumbs__home-link">
-            <FaHome size={20} />
-          </Link>
-        </li>
-        {pathnames.length > 0 && <li className="breadcrumb-separator"> - </li>}
+        {!hideHome && (
+          <li className="breadcrumb-item">
+            <Link to={homeRoute} className="breadcrumb-link dynamicbreadcrumbs__home-link">
+              <FaHome size={20} />
+            </Link>
+          </li>
+        )}
+        {!hideHome && pathnames.length > 0 && <li className="breadcrumb-separator"> - </li>}
         {breadcrumbData.map(({
           segment,
           index,

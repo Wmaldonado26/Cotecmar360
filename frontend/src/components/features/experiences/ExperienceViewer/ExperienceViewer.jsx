@@ -346,16 +346,12 @@ export const ExperienceViewerTemplate = ({
         subtitle={null}
         middleContent={
           <DynamicBreadcrumbs 
-            ignoreSegments={['experience', selectedExperience]}
+            hideHome={true}
+            ignoreSegments={['experience', selectedExperience, 'public-tour', 'project']}
             customMappings={{
-              'project': 'Proyectos',
-              'public-tour': 'Proyectos',
               [project?.id]: project?.name || "Proyecto"
             }} 
-            customLinks={{
-              'project': '/gallery',
-              'public-tour': '/gallery'
-            }}
+            customLinks={{}}
             customDropdowns={{
               [project?.id]: allProjects.map(p => ({
                 id: p.id,
