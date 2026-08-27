@@ -346,43 +346,30 @@ export const ExperienceViewerTemplate = ({
         subtitle={null}
         middleContent={
           <DynamicBreadcrumbs 
-            ignoreSegments={['experience', selectedExperience, project?.id]}
+            ignoreSegments={['experience', selectedExperience]}
             customMappings={{
-              project: "Proyectos",
-              [project?.id]: "Zonas"
+              'project': 'Proyectos',
+              'public-tour': 'Proyectos',
+              [project?.id]: project?.name || "Proyecto"
             }} 
             customLinks={{
-              project: "/gallery"
+              'project': '/gallery',
+              'public-tour': '/gallery'
             }}
             customDropdowns={{
-              project: allProjects.map(p => ({
+              [project?.id]: allProjects.map(p => ({
                 id: p.id,
                 label: p.name,
                 sublabel: p.vesselType || 'Visualización 360°',
                 image: p.thumbnail || p.image || '/images/default_image.png',
                 onClick: () => {
-                  window.location.href = `/project/${p.id}`;
-                }
-              })),
-              [project?.id]: (project?.experiences || []).map(exp => ({
-                id: exp.id,
-                label: exp.name,
-                sublabel: "Zona",
-                image: exp.image || '/images/default_image.png',
-                onClick: () => {
-                  const currentPath = window.location.pathname.replace(/\/$/, '');
-                  const parts = currentPath.split('/');
-                  parts[parts.length - 1] = exp.id;
-                  window.location.href = parts.join('/');
-                }
-              })),
-              [selectedExperience]: sceneKeys.map(k => ({
-                id: k,
-                label: scenes[k]?.title || k,
-                sublabel: "Escena 360°",
-                image: scenes[k]?.image || '/images/default_image.png',
-                onClick: () => {
-                  if (scenes[k]) navigateToScenePreserveOrientation(k);
+                  const isPublicTour = window.location.pathname.startsWith('/public-tour');
+                  if (isPublicTour) {
+                    const startScene = p.experiences?.[0]?.startScene || p.experiences?.[0]?.id || (p.scenes ? Object.keys(p.scenes)[0] : '');
+                    window.location.href = `/public-tour/${p.id}/${startScene}`;
+                  } else {
+                    window.location.href = `/project/${p.id}`;
+                  }
                 }
               }))
             }}
