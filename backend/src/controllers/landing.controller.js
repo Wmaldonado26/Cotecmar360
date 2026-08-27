@@ -8,12 +8,12 @@ class LandingController {
   }
 
   async translateContent(req, res) {
-    const { language, title, description } = req.body;
-    if (!language || !title || !description) {
+    const { title, description } = req.body;
+    if (!title || !description) {
       return res.status(400).json({ error: "Faltan datos para traducir." });
     }
     try {
-      const translated = await translationService.translateText(title, description, language);
+      const translated = await translationService.translateText(title, description);
       res.json(translated);
     } catch (error) {
       res.status(500).json({ error: "No se pudo generar la traducción. Inténtalo nuevamente." });
@@ -28,45 +28,14 @@ class LandingController {
         : '/uploads/' + req.files.image[0].filename;
     }
 
-    const { language, title, description, layer, orderIndex, link } = req.body;
-    let finalTitle = title;
-    let finalTitleEn = req.body.titleEn;
-    let finalDesc = description;
-    let finalDescEn = req.body.descriptionEn;
+    const { layer, orderIndex, link, titleEs, titleEn, descriptionEs, descriptionEn, title, description } = req.body;
     
-    // El frontend ahora siempre manda language, title y description y esperamos que traduzca siempre
-    // Si viene translate_now=true, lo forzamos. Si no, pero viene de form, también.
-    const translateNow = req.body.translate_now === 'true' || req.body.translate_now === true;
-
-    if (translateNow && language && title && description) {
-      try {
-        const translated = await translationService.translateText(title, description, language);
-        if (language === 'es') {
-          finalTitle = title;
-          finalDesc = description;
-          finalTitleEn = translated.title;
-          finalDescEn = translated.description;
-        } else {
-          finalTitleEn = title;
-          finalDescEn = description;
-          finalTitle = translated.title;
-          finalDesc = translated.description;
-        }
-      } catch (err) {
-        console.error("Translation error on create:", err);
-        return res.status(500).json({ error: "No se pudo generar la traducción. Inténtalo nuevamente." });
-      }
-    } else if (language === 'en') {
-      finalTitleEn = title;
-      finalDescEn = description;
-    }
-
     const data = {
       layer: layer,
-      title: finalTitle,
-      titleEn: finalTitleEn,
-      description: finalDesc,
-      descriptionEn: finalDescEn,
+      title: titleEs || title,
+      titleEn: titleEn,
+      description: descriptionEs || description,
+      descriptionEn: descriptionEn,
       orderIndex: orderIndex ? parseInt(orderIndex) : 0,
       imagePath,
       link: link,
@@ -78,43 +47,14 @@ class LandingController {
 
   async updateCard(req, res) {
     const { id } = req.params;
-    const { language, title, description, layer, orderIndex, link } = req.body;
-    const translateNow = req.body.translate_now === 'true' || req.body.translate_now === true;
+    const { layer, orderIndex, link, titleEs, titleEn, descriptionEs, descriptionEn, title, description } = req.body;
     
-    let finalTitle = title || req.body.title;
-    let finalTitleEn = req.body.titleEn;
-    let finalDesc = description || req.body.description;
-    let finalDescEn = req.body.descriptionEn;
-
-    if (translateNow && language && title && description) {
-      try {
-        const translated = await translationService.translateText(title, description, language);
-        if (language === 'es') {
-          finalTitle = title;
-          finalDesc = description;
-          finalTitleEn = translated.title;
-          finalDescEn = translated.description;
-        } else {
-          finalTitleEn = title;
-          finalDescEn = description;
-          finalTitle = translated.title;
-          finalDesc = translated.description;
-        }
-      } catch (err) {
-        console.error("Translation error on update:", err);
-        return res.status(500).json({ error: "No se pudo generar la traducción. Inténtalo nuevamente." });
-      }
-    } else if (language === 'en') {
-      finalTitleEn = title || req.body.titleEn;
-      finalDescEn = description || req.body.descriptionEn;
-    }
-
     const data = {
       layer: layer,
-      title: finalTitle,
-      titleEn: finalTitleEn,
-      description: finalDesc,
-      descriptionEn: finalDescEn,
+      title: titleEs || title,
+      titleEn: titleEn,
+      description: descriptionEs || description,
+      descriptionEn: descriptionEn,
       orderIndex: orderIndex ? parseInt(orderIndex) : undefined,
       link: link,
     };

@@ -3,6 +3,7 @@ import DynamicNavbar from "../../layout/Navbar/DynamicNavbar";
 import { FaBars, FaTimes, FaPlus, FaEdit, FaTrash, FaSyncAlt } from "react-icons/fa";
 import cotecmarLogo from "../../../assets/images/cotecmar-logo.png";
 import useLandingCardsAdminLogic from "./LandingCardsAdmin.logic";
+import "../projects/ProjectManager/ProjectManager.css";
 import "./LandingCardsAdmin.css";
 
 export default function LandingCardsAdminView(props) {
@@ -15,7 +16,6 @@ export default function LandingCardsAdminView(props) {
     isEditing,
     currentCard,
     formData,
-    formLanguage,
     selectedFile,
     isTranslating,
     translateMessage,
@@ -28,7 +28,6 @@ export default function LandingCardsAdminView(props) {
     handleFormLayerChange,
     handleFormTitleChange,
     handleFormDescriptionChange,
-    handleFormLanguageChange,
     handleRefreshTranslation,
     handleFormOrderChange,
     handleFormLinkChange,
@@ -152,25 +151,14 @@ export default function LandingCardsAdminView(props) {
                 </label>
 
                 <div className="translation-section" style={{ background: '#f8fafc', padding: '15px', borderRadius: '8px', marginBottom: '15px', border: '1px solid #e2e8f0' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '15px' }}>
-                    <label style={{ margin: 0 }}>
-                      Idioma del contenido
-                      <select 
-                        value={formLanguage} 
-                        onChange={handleFormLanguageChange}
-                        style={{ display: 'block', width: '200px', marginTop: '5px', padding: '8px', borderRadius: '4px', border: '1px solid #cbd5e1' }}
-                      >
-                        <option value="es">Español</option>
-                        <option value="en">Inglés</option>
-                      </select>
-                    </label>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '15px' }}>
                     <button 
                       type="button" 
                       onClick={handleRefreshTranslation} 
                       disabled={isTranslating}
                       className="btn-secondary btn-secondary--sm"
                     >
-                      <FaSyncAlt className={isTranslating ? 'spin' : ''} /> Actualizar traducción
+                      <FaSyncAlt className={isTranslating ? 'spin' : ''} style={{marginRight: '6px'}} /> Traducir automáticamente
                     </button>
                   </div>
 
@@ -178,7 +166,7 @@ export default function LandingCardsAdminView(props) {
                     Título
                     <input 
                       type="text" 
-                      value={formLanguage === 'es' ? formData.title : formData.titleEn} 
+                      value={formData.titleInput} 
                       onChange={handleFormTitleChange} 
                       required
                       placeholder="Título de la tarjeta"
@@ -188,7 +176,7 @@ export default function LandingCardsAdminView(props) {
                   <label>
                     Descripción
                     <textarea 
-                      value={formLanguage === 'es' ? formData.description : formData.descriptionEn} 
+                      value={formData.descriptionInput} 
                       onChange={handleFormDescriptionChange} 
                       required
                       placeholder="Describe el contenido..."

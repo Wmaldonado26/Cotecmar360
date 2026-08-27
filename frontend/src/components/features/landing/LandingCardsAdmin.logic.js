@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import landingService from "../../../services/LandingService";
 import authService from "../../../services/AuthService";
@@ -14,24 +14,22 @@ export default function useLandingCardsAdminLogic(props) {
   const [isEditing, setIsEditing] = useState(false);
   const [currentCard, setCurrentCard] = useState(null);
   
-  const [formLanguage, setFormLanguage] = useState("es");
   const [formData, setFormData] = useState({ 
     layer: "", 
-    title: "", 
-    titleEn: "", 
-    description: "", 
-    descriptionEn: "", 
+    titleInput: "", 
+    descriptionInput: "", 
     orderIndex: 0, 
     link: "" 
   });
   
-  // To track if the source text has changed since last translation
   const [sourceChanged, setSourceChanged] = useState(false);
-
   const [selectedFile, setSelectedFile] = useState(null);
   const [isTranslating, setIsTranslating] = useState(false);
   const [translateMessage, setTranslateMessage] = useState(null);
   const [translateError, setTranslateError] = useState(false);
+
+  // Guardamos las traducciones validadas para que al hacer Guardar no repitamos
+  const [generatedTranslations, setGeneratedTranslations] = useState(null);
 
   const fetchCards = async () => {
     try {
@@ -58,17 +56,16 @@ export default function useLandingCardsAdminLogic(props) {
   const handleOpenEdit = (card = null) => {
     if (card) {
       setCurrentCard(card);
+      // Mostramos siempre lo que haya en title, que típicamente es el español o el idioma principal
       setFormData({
         layer: card.layer || "",
-        title: card.title || "",
-        titleEn: card.titleEn || "",
-        description: card.description || "",
-        descriptionEn: card.descriptionEn || "",
+        titleInput: card.title || "",
+        descriptionInput: card.description || "",
         orderIndex: card.orderIndex || 0,
         link: card.link || ""
       });
       if (!card.titleEn || !card.descriptionEn) {
-        setTranslateMessage("Traducción pendiente");
+        setTranslateMessage("Falta traducción en esta tarjeta");
         setTranslateError(true);
       } else {
         setTranslateMessage(null);
@@ -76,14 +73,14 @@ export default function useLandingCardsAdminLogic(props) {
       }
     } else {
       setCurrentCard(null);
-      setFormData({ layer: "", title: "", titleEn: "", description: "", descriptionEn: "", orderIndex: 0, link: "" });
+      setFormData({ layer: "", titleInput: "", descriptionInput: "", orderIndex: 0, link: "" });
       setTranslateMessage(null);
       setTranslateError(false);
     }
-    setFormLanguage("es");
     setSelectedFile(null);
     setIsEditing(true);
     setSourceChanged(false);
+    setGeneratedTranslations(null);
   };
 
   const handleCloseEdit = () => {
@@ -92,6 +89,7 @@ export default function useLandingCardsAdminLogic(props) {
     setTranslateMessage(null);
     setTranslateError(false);
     setSourceChanged(false);
+    setGeneratedTranslations(null);
   };
 
   const handleSidebarOpen = () => setShowSidebar(true);
@@ -104,20 +102,14 @@ export default function useLandingCardsAdminLogic(props) {
 
   const handleFormTitleChange = (e) => {
     setSourceChanged(true);
-    if (formLanguage === 'es') {
-      setFormData({ ...formData, title: e.target.value });
-    } else {
-      setFormData({ ...formData, titleEn: e.target.value });
-    }
+    setGeneratedTranslations(null); // Invalidar la traducción previa si modifican
+    setFormData({ ...formData, titleInput: e.target.value });
   };
 
   const handleFormDescriptionChange = (e) => {
     setSourceChanged(true);
-    if (formLanguage === 'es') {
-      setFormData({ ...formData, description: e.target.value });
-    } else {
-      setFormData({ ...formData, descriptionEn: e.target.value });
-    }
+    setGeneratedTranslations(null);
+    setFormData({ ...formData, descriptionInput: e.target.value });
   };
 
   const handleFileChange = (e) => {
@@ -126,52 +118,34 @@ export default function useLandingCardsAdminLogic(props) {
     }
   };
 
-  const handleFormLanguageChange = (e) => {
-    setFormLanguage(e.target.value);
-  };
-
   const handleRefreshTranslation = async (e) => {
-    e.preventDefault();
-    const sourceTitle = formLanguage === 'es' ? formData.title : formData.titleEn;
-    const sourceDesc = formLanguage === 'es' ? formData.description : formData.descriptionEn;
-    
-    if (!sourceTitle || !sourceDesc) {
+    if (e) e.preventDefault();
+    if (!formData.titleInput || !formData.descriptionInput) {
       setTranslateMessage("Completa el título y la descripción primero.");
       setTranslateError(true);
-      return;
+      return null;
     }
 
     setIsTranslating(true);
-    setTranslateMessage("Traduciendo contenido...");
+    setTranslateMessage("Detectando idioma y traduciendo...");
     setTranslateError(false);
 
     try {
       const result = await landingService.translateContent({
-        language: formLanguage,
-        title: sourceTitle,
-        description: sourceDesc
+        title: formData.titleInput,
+        description: formData.descriptionInput
       });
       
-      if (formLanguage === 'es') {
-        setFormData(prev => ({
-          ...prev,
-          titleEn: result.title,
-          descriptionEn: result.description
-        }));
-      } else {
-        setFormData(prev => ({
-          ...prev,
-          title: result.title,
-          description: result.description
-        }));
-      }
-      setTranslateMessage("Traducción generada correctamente");
+      setGeneratedTranslations(result);
+      setTranslateMessage(`Traducción generada correctamente (Idioma detectado: ${result.detectedLanguage === 'es' ? 'Español' : 'Inglés'})`);
       setTranslateError(false);
-      setSourceChanged(false); // Reset since we just translated it!
+      setSourceChanged(false);
+      return result;
     } catch (err) {
       console.error(err);
-      setTranslateMessage("No fue posible generar la traducción. Puedes intentarlo nuevamente.");
+      setTranslateMessage("No fue posible generar la traducción. Inténtalo nuevamente.");
       setTranslateError(true);
+      return null;
     } finally {
       setIsTranslating(false);
     }
@@ -182,34 +156,47 @@ export default function useLandingCardsAdminLogic(props) {
     if (isTranslating) return;
 
     try {
+      let finalTranslations = generatedTranslations;
+
+      // Si editaron el texto y no han generado la traducción manualmente, lo hacemos ahora
+      if (sourceChanged || !finalTranslations) {
+        const isNew = !currentCard;
+        // Si es nuevo, siempre queremos traducir. Si es edición, preguntamos qué hacer con la traducción.
+        if (!isNew && currentCard.titleEn && currentCard.descriptionEn) {
+          const wantToTranslate = window.confirm("Has modificado el texto original.\n\n¿Deseas actualizar también la traducción automáticamente?\n\n[Aceptar] = Actualizar traducción\n[Cancelar] = Conservar traducción actual");
+          if (wantToTranslate) {
+            finalTranslations = await handleRefreshTranslation();
+            if (!finalTranslations) return; // Falló la traducción
+          } else {
+            // El usuario quiere conservar la traducción actual. 
+            // Necesitamos detectar el idioma de lo que acaba de escribir para guardarlo en la columna correcta, 
+            // sin pisar la vieja traducción. Para no molestar al usuario con otra llamada a IA solo para detectar idioma, 
+            // asumiremos que escribió en el mismo idioma que la interfaz le mostraba (Español).
+            finalTranslations = {
+              detectedLanguage: 'es',
+              titleEs: formData.titleInput,
+              descriptionEs: formData.descriptionInput,
+              titleEn: currentCard.titleEn,
+              descriptionEn: currentCard.descriptionEn
+            };
+          }
+        } else {
+          // Si es nuevo, o no tenía traducción antes, traducimos directamente
+          finalTranslations = await handleRefreshTranslation();
+          if (!finalTranslations) return;
+        }
+      }
+
       setLoading(true);
       const data = new FormData();
       data.append("layer", formData.layer);
       data.append("orderIndex", formData.orderIndex);
       data.append("link", formData.link);
       
-      const sourceTitle = formLanguage === 'es' ? formData.title : formData.titleEn;
-      const sourceDesc = formLanguage === 'es' ? formData.description : formData.descriptionEn;
-
-      // Always send the source text and language
-      data.append("language", formLanguage);
-      data.append("title", sourceTitle);
-      data.append("description", sourceDesc);
-
-      const isNew = !currentCard;
-      // If they changed the text OR it's new without translation, we ask backend to translate
-      const needsTranslation = isNew || sourceChanged || (formLanguage === 'es' && !formData.titleEn) || (formLanguage === 'en' && !formData.title);
-      
-      if (needsTranslation) {
-        data.append("translate_now", "true");
-      } else {
-        // Send existing translations if we don't need to re-translate
-        data.append("titleEn", formData.titleEn);
-        data.append("descriptionEn", formData.descriptionEn);
-        // also send es if language is en
-        data.append("titleEs", formData.title);
-        data.append("descriptionEs", formData.description);
-      }
+      data.append("titleEs", finalTranslations.titleEs);
+      data.append("descriptionEs", finalTranslations.descriptionEs);
+      data.append("titleEn", finalTranslations.titleEn);
+      data.append("descriptionEn", finalTranslations.descriptionEn);
 
       if (selectedFile) {
         data.append("image", selectedFile);
@@ -253,7 +240,6 @@ export default function useLandingCardsAdminLogic(props) {
     isEditing,
     currentCard,
     formData,
-    formLanguage,
     selectedFile,
     isTranslating,
     translateMessage,
@@ -266,7 +252,6 @@ export default function useLandingCardsAdminLogic(props) {
     handleFormLayerChange,
     handleFormTitleChange,
     handleFormDescriptionChange,
-    handleFormLanguageChange,
     handleRefreshTranslation,
     handleFormOrderChange,
     handleFormLinkChange,
