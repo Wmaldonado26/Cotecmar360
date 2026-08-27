@@ -112,6 +112,11 @@ export const useExperienceViewerLogic = ({ selectedExperience, projectId, isPubl
       }
     }
 
+    const initialSceneId = project?.settings?.initialSceneId;
+    if (initialSceneId && scenes[initialSceneId]) {
+      return { ...scenes[initialSceneId], key: initialSceneId };
+    }
+
     const savedKey = localStorage.getItem(`lastSceneKey_${projectId || project?.id}`);
     if (savedKey && scenes[savedKey]) {
       return { ...scenes[savedKey], key: savedKey };
@@ -121,11 +126,6 @@ export const useExperienceViewerLogic = ({ selectedExperience, projectId, isPubl
       if (sceneInZoneKey) {
         return { ...scenes[sceneInZoneKey], key: sceneInZoneKey };
       }
-    }
-
-    const initialSceneId = project?.settings?.initialSceneId;
-    if (initialSceneId && scenes[initialSceneId]) {
-      return { ...scenes[initialSceneId], key: initialSceneId };
     }
 
     const startScene = project?.experiences?.[0]?.startScene || project?.experiences?.[0]?.id;

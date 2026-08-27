@@ -19,7 +19,7 @@ export const LandingPageTemplate = ({
   retrying,
   retryFetchCards,
 }) => {
-  const featuredTourUrl = "/public-tour/proj_1787580651232_2f1jl70eu/zone_1787584150095";
+  const featuredTourUrl = "/public-tour/proj_1787580651232_2f1jl70eu";
   const [videoFailed, setVideoFailed] = useState(false);
   const [showToursDropdown, setShowToursDropdown] = useState(false);
 
@@ -58,17 +58,7 @@ export const LandingPageTemplate = ({
                           key={p.id}
                           className="w-full text-left px-4 py-3 hover:bg-white/10 transition-colors text-white/90 text-sm border-b border-white/5 last:border-0 flex items-center gap-3"
                           onClick={() => {
-                            let firstSceneId = null;
-                            if (p.settings?.initialSceneId && p.scenes?.[p.settings.initialSceneId]) {
-                              firstSceneId = p.settings.initialSceneId;
-                            } else if (p.experiences && p.experiences.length > 0) {
-                              firstSceneId = p.experiences[0].startScene || p.experiences[0].id;
-                            } else if (p.scenes && Object.keys(p.scenes).length > 0) {
-                              firstSceneId = Object.keys(p.scenes)[0];
-                            }
-                            if (firstSceneId) {
-                              navigate(`/public-tour/${p.id}/${firstSceneId}`);
-                            }
+                            navigate(`/public-tour/${p.id}`);
                           }}
                         >
                           {p.thumbnail && (

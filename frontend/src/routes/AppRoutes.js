@@ -113,6 +113,37 @@ const ProjectDetailsWrapper = () => {
   return <ProjectDetails onBack={() => navigate(-1)} />;
 };
 
+const PublicTourWrapper = () => {
+  const { projectId } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const loadProject = async () => {
+      if (!projectId) return;
+
+      const proj = await projectService.getProjectById(projectId);
+      if (proj) {
+        let firstSceneId = "empty";
+        if (proj.settings?.initialSceneId && proj.scenes?.[proj.settings.initialSceneId]) {
+          firstSceneId = proj.settings.initialSceneId;
+        } else if (proj.experiences && proj.experiences.length > 0) {
+          firstSceneId = proj.experiences[0].startScene || proj.experiences[0].id;
+        } else if (proj.scenes && Object.keys(proj.scenes).length > 0) {
+          firstSceneId = Object.keys(proj.scenes)[0];
+        }
+        
+        navigate(`/public-tour/${proj.id}/${firstSceneId}`, { replace: true });
+      } else {
+        navigate("/");
+      }
+    };
+
+    loadProject();
+  }, [projectId, navigate]);
+
+  return <SuspenseFallback />;
+};
+
 const LoginWrapper = () => {
   const navigate = useNavigate();
 
@@ -330,6 +361,10 @@ const AppRoutes = () => {
         <Route
           path="/project/:projectId/experience/:experienceId"
           element={<ExperienceViewerWrapper />}
+        />
+        <Route
+          path="/public-tour/:projectId"
+          element={<PublicTourWrapper />}
         />
         <Route
           path="/public-tour/:projectId/:experienceId"
