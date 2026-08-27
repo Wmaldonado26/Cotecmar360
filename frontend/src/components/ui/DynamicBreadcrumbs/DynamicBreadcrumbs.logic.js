@@ -10,7 +10,7 @@ export default function useDynamicBreadcrumbsLogic(props) {
 
   const currentUser = authService.getCurrentUser();
   const isAdmin = currentUser?.role === "admin" || currentUser?.role === "project_admin";
-  const homeRoute = isAdmin ? "/admin" : "/gallery";
+  const homeRoute = props.homeRoute || (isAdmin ? "/admin" : "/gallery");
 
   const formatSegment = (segment) => {
     if (customMappings[segment]) {

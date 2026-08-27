@@ -362,7 +362,8 @@ export const ExperienceViewerTemplate = ({
         subtitle={null}
         middleContent={
           <DynamicBreadcrumbs 
-            hideHome={true}
+            hideHome={false}
+            homeRoute={window.location.pathname.startsWith('/public-tour') ? "/" : undefined}
             ignoreSegments={['experience', selectedExperience, 'public-tour', 'project']}
             customMappings={{
               [project?.id]: project?.name || "Proyecto"
