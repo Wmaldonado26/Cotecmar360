@@ -79,22 +79,6 @@ export const LandingPageTemplate = ({
               </div>
             )}
 
-          <button
-            onClick={toggleLang}
-            className="landing-lang-btn transition-all flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 bg-black/20 backdrop-blur-md"
-            title={t("lang.toggle")}
-            aria-label={t("lang.toggle")}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-               <circle cx="12" cy="12" r="10"></circle>
-               <path d="M2 12h20"></path>
-               <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-            </svg>
-            <div className="flex gap-1 items-center font-bold text-xs">
-              <span className={`px-1.5 py-0.5 rounded-sm transition-colors ${lang === 'es' ? 'bg-[#2B5398] text-white' : 'text-white/60'}`}>ES</span>
-              <span className={`px-1.5 py-0.5 rounded-sm transition-colors ${lang === 'en' ? 'bg-[#2B5398] text-white' : 'text-white/60'}`}>EN</span>
-            </div>
-          </button>
         </div>
       </header>
 
