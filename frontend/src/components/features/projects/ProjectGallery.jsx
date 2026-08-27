@@ -48,43 +48,45 @@ export default function ProjectGalleryView({
           </button>
         </div>
         <nav className="sidebar-nav">
-          <button 
-            className={`sidebar-item ${isAdmin ? '' : 'active'}`}
-            onClick={() => {
-              if (isAdmin) {
-                navigate("/admin");
-              }
-              setShowSidebar(false);
-            }}
-          >
-            <FaFolderOpen className="sidebar-icon" />
-            <span>Mis Proyectos</span>
-          </button>
+          {isAdmin && (
+            <>
+              <button 
+                className="sidebar-item"
+                onClick={() => {
+                  navigate("/admin");
+                  setShowSidebar(false);
+                }}
+              >
+                <FaFolderOpen className="sidebar-icon" />
+                <span>Mis Proyectos</span>
+              </button>
+              
+              <button 
+                className="sidebar-item"
+                onClick={() => {
+                  navigate("/admin/users");
+                  setShowSidebar(false);
+                }}
+              >
+                <FaUsers className="sidebar-icon" />
+                <span>Gestión de Usuarios</span>
+              </button>
+              
+              <button 
+                className="sidebar-item"
+                onClick={() => {
+                  navigate("/admin/permissions");
+                  setShowSidebar(false);
+                }}
+              >
+                <FaShieldAlt className="sidebar-icon" />
+                <span>Gestión de Permisos</span>
+              </button>
+            </>
+          )}
           
           <button 
-            className={`sidebar-item ${isAdminOnly ? 'project-gallery__admin-only' : ''}`}
-            onClick={() => {
-              navigate("/admin/users");
-              setShowSidebar(false);
-            }}
-          >
-            <FaUsers className="sidebar-icon" />
-            <span>Gestión de Usuarios</span>
-          </button>
-          
-          <button 
-            className={`sidebar-item ${isAdminOnly ? 'project-gallery__admin-only' : ''}`}
-            onClick={() => {
-              navigate("/admin/permissions");
-              setShowSidebar(false);
-            }}
-          >
-            <FaShieldAlt className="sidebar-icon" />
-            <span>Gestión de Permisos</span>
-          </button>
-          
-          <button 
-            className={`sidebar-item ${isAdmin ? 'active' : ''}`}
+            className={`sidebar-item ${!isAdmin ? 'active' : ''}`}
             onClick={() => setShowSidebar(false)}
           >
             <FaImages className="sidebar-icon" />

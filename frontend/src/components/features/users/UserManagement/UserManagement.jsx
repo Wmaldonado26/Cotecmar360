@@ -173,8 +173,6 @@ export const UserManagementTemplate = ({ logic }) => {
                 value={form.role}
                 onChange={(e) => handleChange("role", e.target.value)}
               >
-                <option value="user">Usuario</option>
-                <option value="project_admin">Administrador de Proyectos</option>
                 <option value="admin">Administrador Principal</option>
               </select>
             </label>

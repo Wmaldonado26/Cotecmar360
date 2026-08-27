@@ -310,53 +310,29 @@ const AppRoutes = () => {
 
         <Route
           path="/gallery"
-          element={
-            <PrivateRoute roles={["admin", "project_admin", "user"]}>
-              <ProjectGallery />
-            </PrivateRoute>
-          }
+          element={<ProjectGallery />}
         />
 
         <Route
           path="/project/:projectId"
-          element={
-            <PrivateRoute roles={["admin", "project_admin", "user"]}>
-              <ProjectViewerWrapper />
-            </PrivateRoute>
-          }
+          element={<ProjectViewerWrapper />}
         />
         <Route
           path="/project/:projectId/experience/:experienceId"
-          element={
-            <PrivateRoute roles={["admin", "project_admin", "user"]}>
-              <ExperienceViewerWrapper />
-            </PrivateRoute>
-          }
+          element={<ExperienceViewerWrapper />}
         />
         <Route
           path="/public-tour/:projectId/:experienceId"
-          element={
-            <PublicRoute redirectByRole={false}>
-              <ExperienceViewerWrapper />
-            </PublicRoute>
-          }
+          element={<ExperienceViewerWrapper />}
         />
         <Route
           path="/project/:projectId/details"
-          element={
-            <PrivateRoute roles={["admin", "project_admin", "user"]}>
-              <ProjectDetailsWrapper />
-            </PrivateRoute>
-          }
+          element={<ProjectDetailsWrapper />}
         />
 
         <Route
           path="/pages/information"
-          element={
-            <PrivateRoute roles={["admin", "project_admin", "user"]}>
-              <PagesInformations />
-            </PrivateRoute>
-          }
+          element={<PagesInformations />}
         />
 
         <Route

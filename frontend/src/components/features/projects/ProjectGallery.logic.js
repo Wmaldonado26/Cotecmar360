@@ -34,12 +34,14 @@ export default function useProjectGalleryLogic() {
 
   useEffect(() => {
     const loadProjects = async () => {
-      const allProjects = await projectService.getAllProjects();
+      const allProjects = isAuthenticated 
+        ? await projectService.getAllProjects() 
+        : await projectService.getPublicProjects();
       setProjects(allProjects);
       setFilteredProjects(allProjects);
     };
     loadProjects();
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const user = authService.getCurrentUser();
