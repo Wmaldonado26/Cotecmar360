@@ -5,44 +5,42 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "dummy_key");
 class TranslationService {
   async translateText(title, description, sourceLanguage) {
     if (!process.env.GEMINI_API_KEY) {
-      console.warn("GEMINI_API_KEY no configurada. Las traducciones fallarán.");
+      console.warn("GEMINI_API_KEY no configurada. Las traducciones fallarÃ¡n.");
     }
 
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     const targetLanguage = sourceLanguage === 'es' ? 'en' : 'es';
-    const sourceLangName = sourceLanguage === 'es' ? 'Español' : 'Inglés';
-    const targetLangName = targetLanguage === 'es' ? 'Español' : 'Inglés';
+    const sourceLangName = sourceLanguage === 'es' ? 'EspaÃ±ol' : 'InglÃ©s';
+    const targetLangName = targetLanguage === 'es' ? 'EspaÃ±ol' : 'InglÃ©s';
 
-    const prompt = 
-Actúa como un traductor profesional de contenido corporativo, naval e industrial.
-Traduce el siguiente título y descripción de +sourceLangName+ a +targetLangName+.
+    const prompt = `ActÃºa como un traductor profesional de contenido corporativo, naval e industrial.
+Traduce el siguiente tÃ­tulo y descripciÃ³n de ${sourceLangName} a ${targetLangName}.
 
 Reglas estrictas:
 - Mantener nombres propios y nombres de empresas sin traducir (ej. Cotecmar).
-- Mantener términos técnicos especializados.
-- No agregar información extra ni explicaciones.
-- No eliminar información.
-- No agregar comillas a menos que estén en el original.
-- No modificar números ni unidades.
+- Mantener tÃ©rminos tÃ©cnicos especializados.
+- No agregar informaciÃ³n extra ni explicaciones.
+- No eliminar informaciÃ³n.
+- No agregar comillas a menos que estÃ©n en el original.
+- No modificar nÃºmeros ni unidades.
 - Mantener un tono corporativo y profesional, con aproximadamente la misma longitud.
 
-Devuelve ÚNICAMENTE un objeto JSON válido con este formato:
+Devuelve ÃšNICAMENTE un objeto JSON vÃ¡lido con este formato:
 {
-  "title": "traducción del título aquí",
-  "description": "traducción de la descripción aquí"
+  "title": "traducciÃ³n del tÃ­tulo aquÃ­",
+  "description": "traducciÃ³n de la descripciÃ³n aquÃ­"
 }
 
 Texto a traducir:
-Título: +title+
-Descripción: +description+
-;
+TÃ­tulo: ${title}
+DescripciÃ³n: ${description}`;
 
     try {
       const result = await model.generateContent(prompt);
       const response = await result.response;
       let text = response.text();
       
-      text = text.replace(/\\\json/g, '').replace(/\\\/g, '').trim();
+      text = text.replace(/```json/g, '').replace(/```/g, '').trim();
       
       const translated = JSON.parse(text);
       return {
@@ -51,7 +49,7 @@ Descripción: +description+
       };
     } catch (error) {
       console.error("Error en TranslationService:", error);
-      throw new Error("No fue posible generar la traducción automática.");
+      throw new Error("No fue posible generar la traducciÃ³n automÃ¡tica.");
     }
   }
 }
