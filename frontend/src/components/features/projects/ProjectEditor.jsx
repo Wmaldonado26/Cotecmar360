@@ -196,6 +196,21 @@ export default function ProjectEditorView({
                     </label>
                   </div>
                   <div className="form-group-modern full-width">
+                    <label>Escena Inicial (Opcional)</label>
+                    <select 
+                      value={project.settings?.initialSceneId || ""} 
+                      onChange={(e) => handleSettingChange("initialSceneId", e.target.value)}
+                    >
+                      <option value="">Seleccionar escena de inicio...</option>
+                      {Object.keys(project.scenes || {}).map(sceneKey => (
+                        <option key={sceneKey} value={sceneKey}>
+                          {project.scenes[sceneKey].title || sceneKey}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-xs text-slate-500 mt-1">Si no seleccionas ninguna, el recorrido comenzará en la primera escena de la primera zona.</p>
+                  </div>
+                  <div className="form-group-modern full-width">
                     <label>Descripción General</label>
                     <textarea value={project.description || ""} onChange={(e) => handleBasicInfoChange("description", e.target.value)} rows="3" />
                   </div>

@@ -378,7 +378,9 @@ export const ExperienceViewerTemplate = ({
                 onClick: () => {
                   const isPublicTour = window.location.pathname.startsWith('/public-tour');
                   if (isPublicTour) {
-                    const startScene = p.experiences?.[0]?.startScene || p.experiences?.[0]?.id || (p.scenes ? Object.keys(p.scenes)[0] : '');
+                    let startScene = p.settings?.initialSceneId && p.scenes?.[p.settings.initialSceneId] 
+                      ? p.settings.initialSceneId 
+                      : (p.experiences?.[0]?.startScene || p.experiences?.[0]?.id || (p.scenes ? Object.keys(p.scenes)[0] : ''));
                     if (navigate) {
                       navigate(`/public-tour/${p.id}/${startScene}`);
                     } else {

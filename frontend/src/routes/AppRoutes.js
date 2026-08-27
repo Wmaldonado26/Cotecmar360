@@ -36,7 +36,9 @@ const ProjectViewerWrapper = () => {
         projectService.setActiveProject(projectId);
         
         let firstSceneId = "empty";
-        if (proj.experiences && proj.experiences.length > 0) {
+        if (proj.settings?.initialSceneId && proj.scenes?.[proj.settings.initialSceneId]) {
+          firstSceneId = proj.settings.initialSceneId;
+        } else if (proj.experiences && proj.experiences.length > 0) {
           firstSceneId = proj.experiences[0].startScene || proj.experiences[0].id;
         } else if (proj.scenes && Object.keys(proj.scenes).length > 0) {
           firstSceneId = Object.keys(proj.scenes)[0];
@@ -134,7 +136,9 @@ const AdminWrapper = () => {
   const handleSelectProject = (project) => {
     // navigate(`/project/${project.id}`);
     let firstSceneId = null;
-    if (project.experiences && project.experiences.length > 0) {
+    if (project.settings?.initialSceneId && project.scenes?.[project.settings.initialSceneId]) {
+      firstSceneId = project.settings.initialSceneId;
+    } else if (project.experiences && project.experiences.length > 0) {
       firstSceneId = project.experiences[0].startScene || project.experiences[0].id;
     } else if (project.scenes && Object.keys(project.scenes).length > 0) {
       firstSceneId = Object.keys(project.scenes)[0];

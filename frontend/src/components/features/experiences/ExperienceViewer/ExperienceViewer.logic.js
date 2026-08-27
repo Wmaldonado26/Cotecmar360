@@ -123,6 +123,22 @@ export const useExperienceViewerLogic = ({ selectedExperience, projectId, isPubl
       }
     }
 
+    const initialSceneId = project?.settings?.initialSceneId;
+    if (initialSceneId && scenes[initialSceneId]) {
+      return { ...scenes[initialSceneId], key: initialSceneId };
+    }
+
+    const startScene = project?.experiences?.[0]?.startScene || project?.experiences?.[0]?.id;
+    if (startScene && scenes[startScene]) {
+      return { ...scenes[startScene], key: startScene };
+    }
+    if (startScene) {
+      const sceneInZoneKey = sceneKeys.find(k => (scenes[k]?.zoneId || scenes[k]?.map?.zoneId) === startScene);
+      if (sceneInZoneKey) {
+        return { ...scenes[sceneInZoneKey], key: sceneInZoneKey };
+      }
+    }
+
     const firstKey = sceneKeys[0];
     return { ...scenes[firstKey], key: firstKey };
   };

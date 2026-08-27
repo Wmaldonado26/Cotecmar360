@@ -561,7 +561,13 @@ export default function useProjectEditorLogic({ projectId, onClose, onSave }) {
         setProject((prev) => {
           const newScenes = { ...(prev.scenes || {}) };
           delete newScenes[sceneKey];
-          return { ...prev, scenes: newScenes };
+          
+          let newSettings = { ...(prev.settings || {}) };
+          if (newSettings.initialSceneId === sceneKey) {
+            newSettings.initialSceneId = "";
+          }
+
+          return { ...prev, scenes: newScenes, settings: newSettings };
         });
         setHasChanges(true);
         setModal((m) => ({ ...m, isOpen: false }));
@@ -582,10 +588,16 @@ export default function useProjectEditorLogic({ projectId, onClose, onSave }) {
       onConfirm: () => {
         setProject((prev) => {
           const newScenes = { ...(prev.scenes || {}) };
+          let newSettings = { ...(prev.settings || {}) };
+
           selectedScenesToDelete.forEach((key) => {
             delete newScenes[key];
+            if (newSettings.initialSceneId === key) {
+              newSettings.initialSceneId = "";
+            }
           });
-          return { ...prev, scenes: newScenes };
+          
+          return { ...prev, scenes: newScenes, settings: newSettings };
         });
         setSelectedScenesToDelete([]);
         setHasChanges(true);
