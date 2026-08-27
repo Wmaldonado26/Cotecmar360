@@ -14,7 +14,6 @@ export default function useLandingCardsAdminLogic(props) {
   const [isEditing, setIsEditing] = useState(false);
   const [currentCard, setCurrentCard] = useState(null);
   
-  // Nuevo estado para la experiencia de edicin unificada
   const [formLanguage, setFormLanguage] = useState("es");
   const [formData, setFormData] = useState({ 
     layer: "", 
@@ -25,6 +24,10 @@ export default function useLandingCardsAdminLogic(props) {
     orderIndex: 0, 
     link: "" 
   });
+  
+  // To track if the source text has changed since last translation
+  const [sourceChanged, setSourceChanged] = useState(false);
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [isTranslating, setIsTranslating] = useState(false);
   const [translateMessage, setTranslateMessage] = useState(null);
@@ -64,9 +67,8 @@ export default function useLandingCardsAdminLogic(props) {
         orderIndex: card.orderIndex || 0,
         link: card.link || ""
       });
-      // Detectar si falta traduccin
       if (!card.titleEn || !card.descriptionEn) {
-        setTranslateMessage("Traduccin pendiente");
+        setTranslateMessage("Traducción pendiente");
         setTranslateError(true);
       } else {
         setTranslateMessage(null);
@@ -81,6 +83,7 @@ export default function useLandingCardsAdminLogic(props) {
     setFormLanguage("es");
     setSelectedFile(null);
     setIsEditing(true);
+    setSourceChanged(false);
   };
 
   const handleCloseEdit = () => {
@@ -88,6 +91,7 @@ export default function useLandingCardsAdminLogic(props) {
     setCurrentCard(null);
     setTranslateMessage(null);
     setTranslateError(false);
+    setSourceChanged(false);
   };
 
   const handleSidebarOpen = () => setShowSidebar(true);
@@ -98,8 +102,8 @@ export default function useLandingCardsAdminLogic(props) {
   const handleFormOrderChange = (e) => setFormData({ ...formData, orderIndex: e.target.value });
   const handleFormLinkChange = (e) => setFormData({ ...formData, link: e.target.value });
 
-  // Manejadores unificados segn idioma
   const handleFormTitleChange = (e) => {
+    setSourceChanged(true);
     if (formLanguage === 'es') {
       setFormData({ ...formData, title: e.target.value });
     } else {
@@ -108,6 +112,7 @@ export default function useLandingCardsAdminLogic(props) {
   };
 
   const handleFormDescriptionChange = (e) => {
+    setSourceChanged(true);
     if (formLanguage === 'es') {
       setFormData({ ...formData, description: e.target.value });
     } else {
@@ -131,7 +136,7 @@ export default function useLandingCardsAdminLogic(props) {
     const sourceDesc = formLanguage === 'es' ? formData.description : formData.descriptionEn;
     
     if (!sourceTitle || !sourceDesc) {
-      setTranslateMessage("Completa el ttulo y la descripcin primero.");
+      setTranslateMessage("Completa el título y la descripción primero.");
       setTranslateError(true);
       return;
     }
@@ -160,11 +165,12 @@ export default function useLandingCardsAdminLogic(props) {
           description: result.description
         }));
       }
-      setTranslateMessage("Traduccin generada correctamente");
+      setTranslateMessage("Traducción generada correctamente");
       setTranslateError(false);
+      setSourceChanged(false); // Reset since we just translated it!
     } catch (err) {
       console.error(err);
-      setTranslateMessage("No fue posible generar la traduccin. Puedes intentarlo nuevamente.");
+      setTranslateMessage("No fue posible generar la traducción. Puedes intentarlo nuevamente.");
       setTranslateError(true);
     } finally {
       setIsTranslating(false);
@@ -185,21 +191,24 @@ export default function useLandingCardsAdminLogic(props) {
       const sourceTitle = formLanguage === 'es' ? formData.title : formData.titleEn;
       const sourceDesc = formLanguage === 'es' ? formData.description : formData.descriptionEn;
 
-      // Si est creando y los datos de traduccin estn vacos, decirle al backend que traduzca
+      // Always send the source text and language
+      data.append("language", formLanguage);
+      data.append("title", sourceTitle);
+      data.append("description", sourceDesc);
+
       const isNew = !currentCard;
-      const needsTranslation = isNew && ((formLanguage === 'es' && !formData.titleEn) || (formLanguage === 'en' && !formData.title));
+      // If they changed the text OR it's new without translation, we ask backend to translate
+      const needsTranslation = isNew || sourceChanged || (formLanguage === 'es' && !formData.titleEn) || (formLanguage === 'en' && !formData.title);
       
       if (needsTranslation) {
         data.append("translate_now", "true");
-        data.append("language", formLanguage);
-        data.append("title", sourceTitle);
-        data.append("description", sourceDesc);
       } else {
-        // Enviar todo lo que tenemos (ya sea manual o por 'Actualizar traduccin')
-        data.append("title", formData.title);
-        data.append("description", formData.description);
+        // Send existing translations if we don't need to re-translate
         data.append("titleEn", formData.titleEn);
         data.append("descriptionEn", formData.descriptionEn);
+        // also send es if language is en
+        data.append("titleEs", formData.title);
+        data.append("descriptionEs", formData.description);
       }
 
       if (selectedFile) {
@@ -223,7 +232,7 @@ export default function useLandingCardsAdminLogic(props) {
 
   const handleDeleteCard = async (id, e) => {
     e.stopPropagation();
-    if (!window.confirm("Seguro que deseas eliminar esta tarjeta?")) return;
+    if (!window.confirm("¿Seguro que deseas eliminar esta tarjeta?")) return;
     try {
       setLoading(true);
       await landingService.deleteCard(id);

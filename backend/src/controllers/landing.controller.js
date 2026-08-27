@@ -1,4 +1,4 @@
-const landingService = require("../services/landing.service");
+﻿const landingService = require("../services/landing.service");
 const translationService = require("../services/translation.service");
 
 class LandingController {
@@ -16,7 +16,7 @@ class LandingController {
       const translated = await translationService.translateText(title, description, language);
       res.json(translated);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: "No se pudo generar la traducción. Inténtalo nuevamente." });
     }
   }
 
@@ -25,7 +25,7 @@ class LandingController {
     if (req.files && req.files.image && req.files.image[0]) {
       imagePath = req.files.image[0].path && req.files.image[0].path.startsWith('http') 
         ? req.files.image[0].path 
-        : /uploads/ + req.files.image[0].filename;
+        : '/uploads/' + req.files.image[0].filename;
     }
 
     const { language, title, description, layer, orderIndex, link } = req.body;
@@ -33,22 +33,32 @@ class LandingController {
     let finalTitleEn = req.body.titleEn;
     let finalDesc = description;
     let finalDescEn = req.body.descriptionEn;
+    
+    // El frontend ahora siempre manda language, title y description y esperamos que traduzca siempre
+    // Si viene translate_now=true, lo forzamos. Si no, pero viene de form, también.
     const translateNow = req.body.translate_now === 'true' || req.body.translate_now === true;
 
     if (translateNow && language && title && description) {
       try {
         const translated = await translationService.translateText(title, description, language);
         if (language === 'es') {
+          finalTitle = title;
+          finalDesc = description;
           finalTitleEn = translated.title;
           finalDescEn = translated.description;
         } else {
+          finalTitleEn = title;
+          finalDescEn = description;
           finalTitle = translated.title;
           finalDesc = translated.description;
         }
       } catch (err) {
         console.error("Translation error on create:", err);
-        return res.status(500).json({ error: "No fue posible generar la traducci�n autom�tica." });
+        return res.status(500).json({ error: "No se pudo generar la traducción. Inténtalo nuevamente." });
       }
+    } else if (language === 'en') {
+      finalTitleEn = title;
+      finalDescEn = description;
     }
 
     const data = {
@@ -80,16 +90,23 @@ class LandingController {
       try {
         const translated = await translationService.translateText(title, description, language);
         if (language === 'es') {
+          finalTitle = title;
+          finalDesc = description;
           finalTitleEn = translated.title;
           finalDescEn = translated.description;
         } else {
+          finalTitleEn = title;
+          finalDescEn = description;
           finalTitle = translated.title;
           finalDesc = translated.description;
         }
       } catch (err) {
         console.error("Translation error on update:", err);
-        return res.status(500).json({ error: "No fue posible generar la traducci�n autom�tica." });
+        return res.status(500).json({ error: "No se pudo generar la traducción. Inténtalo nuevamente." });
       }
+    } else if (language === 'en') {
+      finalTitleEn = title || req.body.titleEn;
+      finalDescEn = description || req.body.descriptionEn;
     }
 
     const data = {
@@ -105,7 +122,7 @@ class LandingController {
     if (req.files && req.files.image && req.files.image[0]) {
       data.imagePath = req.files.image[0].path && req.files.image[0].path.startsWith('http') 
         ? req.files.image[0].path 
-        : /uploads/ + req.files.image[0].filename;
+        : '/uploads/' + req.files.image[0].filename;
     }
 
     const updated = await landingService.updateCard(id, data);
