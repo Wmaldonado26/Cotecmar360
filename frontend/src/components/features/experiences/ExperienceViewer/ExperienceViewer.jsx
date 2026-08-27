@@ -18,6 +18,8 @@ export const ExperienceViewerTemplate = ({
   onBackToSelector,
   darkMode,
   onToggleDarkMode,
+  navigate,
+  projectId,
 }) => {
   const {
     project,
@@ -165,9 +167,23 @@ export const ExperienceViewerTemplate = ({
     return null;
   };
 
-  if (!project) return <div style={{ padding: 20 }}>Cargando proyecto...</div>;
+  if (!project || (project.id && projectId && project.id !== projectId)) return (
+    <div style={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="loading-screen">
+      <div className="flex flex-col items-center justify-center">
+        <div className="animate-spin rounded-full h-14 w-14 border-4 border-transparent border-t-[#2B5398] border-b-[#8fa7d6] mb-4"></div>
+        <p className="text-white text-lg">Cargando recorrido...</p>
+      </div>
+    </div>
+  );
   if (!sceneKeys.length) return <div style={{ padding: 20 }}>Este proyecto no tiene escenas configuradas.</div>;
-  if (!scene) return <div style={{ padding: 20 }}>Seleccionando escena...</div>;
+  if (!scene) return (
+    <div style={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="loading-screen">
+      <div className="flex flex-col items-center justify-center">
+        <div className="animate-spin rounded-full h-14 w-14 border-4 border-transparent border-t-[#2B5398] border-b-[#8fa7d6] mb-4"></div>
+        <p className="text-white text-lg">Cargando escena...</p>
+      </div>
+    </div>
+  );
   if (!scene.image || !String(scene.image).trim()) {
     return (
       <div style={{ padding: 24, color: '#003d82' }}>
@@ -358,13 +374,22 @@ export const ExperienceViewerTemplate = ({
                 label: p.name,
                 sublabel: p.vesselType || 'Visualización 360°',
                 image: p.thumbnail || p.image || '/images/default_image.png',
+                selected: project && p.id === project.id,
                 onClick: () => {
                   const isPublicTour = window.location.pathname.startsWith('/public-tour');
                   if (isPublicTour) {
                     const startScene = p.experiences?.[0]?.startScene || p.experiences?.[0]?.id || (p.scenes ? Object.keys(p.scenes)[0] : '');
-                    window.location.href = `/public-tour/${p.id}/${startScene}`;
+                    if (navigate) {
+                      navigate(`/public-tour/${p.id}/${startScene}`);
+                    } else {
+                      window.location.href = `/public-tour/${p.id}/${startScene}`;
+                    }
                   } else {
-                    window.location.href = `/project/${p.id}`;
+                    if (navigate) {
+                      navigate(`/project/${p.id}`);
+                    } else {
+                      window.location.href = `/project/${p.id}`;
+                    }
                   }
                 }
               }))

@@ -78,6 +78,9 @@ const ProjectViewerWrapper = () => {
 const ExperienceViewerWrapper = () => {
   const { projectId, experienceId } = useParams();
   const navigate = useNavigate();
+  const location = window.location.pathname;
+  const isPublicTour = location.startsWith('/public-tour');
+
   useEffect(() => {
     if (projectId) {
       projectService.setActiveProject(projectId);
@@ -86,7 +89,10 @@ const ExperienceViewerWrapper = () => {
 
   return (
     <Scene
+      projectId={projectId}
       selectedExperience={experienceId}
+      isPublicTour={isPublicTour}
+      navigate={navigate}
       onBackToSelector={() => navigate(`/project/${projectId}`)}
     />
   );

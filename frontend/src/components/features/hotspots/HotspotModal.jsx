@@ -79,7 +79,6 @@ function TreeNodeView({
                 FolderIcon={FolderIcon}
               />
             ))}
-
           {hasFiles &&
             node.files.map((att, idx) => {
               const FileIcon = getFileIcon(att);
@@ -92,7 +91,7 @@ function TreeNodeView({
                   key={`${att.url}_${idx}`}
                   style={{ paddingLeft: padFile }}
                 >
-                  <div
+                 <div
                     className={`hs-tree-file__icon ${isPdf ? "pdf" : ""}`}
                   >
                     <FileIcon />

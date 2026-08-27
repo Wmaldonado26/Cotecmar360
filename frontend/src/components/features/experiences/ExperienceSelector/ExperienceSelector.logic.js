@@ -60,7 +60,7 @@ export const useExperienceSelectorLogic = ({
 
   const handleClick = (exp) => {
     const target = exp.startScene || exp.id;
-    localStorage.setItem("lastSceneKey", target);
+    if (project?.id) localStorage.setItem(`lastSceneKey_${project.id}`, target);
     onExperienceSelect(target);
   };
 

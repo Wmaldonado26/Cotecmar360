@@ -86,7 +86,10 @@ const DynamicBreadcrumbsView = (props) => {
                           </div>
                         )}
                         <div className="dropdown-item-content">
-                          <div className="dropdown-item-title">{item.label}</div>
+                          <div className="dropdown-item-title flex items-center gap-2">
+                            {item.selected && <span className="text-[#3b82f6]">✓</span>}
+                            {item.label}
+                          </div>
                           {item.sublabel && <div className="dropdown-item-subtitle">{item.sublabel}</div>}
                         </div>
                       </div>

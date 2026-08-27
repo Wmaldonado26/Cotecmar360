@@ -48,7 +48,7 @@ const getOptimalImage = (baseUrl) => {
   }
 };
 
-export const useExperienceViewerLogic = ({ selectedExperience }) => {
+export const useExperienceViewerLogic = ({ selectedExperience, projectId, isPublicTour }) => {
   const [project, setProject] = useState(null);
   const [allProjects, setAllProjects] = useState([]);
   const [scene, setScene] = useState(null);
@@ -74,11 +74,27 @@ export const useExperienceViewerLogic = ({ selectedExperience }) => {
 
   useEffect(() => {
     (async () => {
-      const active = await projectService.getActiveProject();
+      let active = null;
+      if (projectId) {
+        active = await projectService.getProjectById(projectId);
+        if (active) {
+          projectService.setActiveProject(active);
+        }
+      }
+      
+      if (!active) {
+        active = await projectService.getActiveProject();
+      }
       setProject(active);
+      setScene(null); // Clear previous scene to avoid showing old project data
     })();
-    projectService.getAllProjects().then(setAllProjects).catch(console.error);
-  }, []);
+    
+    if (isPublicTour) {
+      projectService.getPublicProjects().then(setAllProjects).catch(console.error);
+    } else {
+      projectService.getAllProjects().then(setAllProjects).catch(console.error);
+    }
+  }, [projectId, isPublicTour]);
 
   const scenes = useMemo(() => project?.scenes || {}, [project]);
   const sceneKeys = useMemo(() => Object.keys(scenes), [scenes]);
@@ -96,7 +112,7 @@ export const useExperienceViewerLogic = ({ selectedExperience }) => {
       }
     }
 
-    const savedKey = localStorage.getItem("lastSceneKey");
+    const savedKey = localStorage.getItem(`lastSceneKey_${projectId || project?.id}`);
     if (savedKey && scenes[savedKey]) {
       return { ...scenes[savedKey], key: savedKey };
     }
@@ -118,15 +134,24 @@ export const useExperienceViewerLogic = ({ selectedExperience }) => {
         next.add(scene.key);
         return next;
       });
+      
+      // Update URL to match current scene (without reloading page)
+      if (project?.id && scene.key) {
+        const basePath = isPublicTour ? '/public-tour' : '/project';
+        const newUrl = `${basePath}/${project.id}/${isPublicTour ? scene.key : `experience/${scene.key}`}`;
+        if (window.location.pathname !== newUrl) {
+          window.history.replaceState(null, '', newUrl);
+        }
+      }
     }
-  }, [scene?.key]);
+  }, [scene?.key, project?.id, isPublicTour]);
 
   useEffect(() => {
-    if (!sceneKeys.length) return;
+    if (!sceneKeys.length || !project) return;
     const initial = getInitialScene(selectedExperience);
-    if (initial) {
+    if (initial && (!scene || scene.key !== initial.key || (scene && !scenes[scene.key]))) {
       setScene(initial);
-      localStorage.setItem("lastSceneKey", initial.key);
+      localStorage.setItem(`lastSceneKey_${project.id}`, initial.key);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedExperience, project, sceneKeys.length]);
@@ -234,7 +259,7 @@ export const useExperienceViewerLogic = ({ selectedExperience }) => {
 
     const newScene = { ...nextScene, key: nextKey, yaw: nextLocalYaw, pitch: pitchToKeep };
     setScene(newScene);
-    localStorage.setItem("lastSceneKey", nextKey);
+    localStorage.setItem(`lastSceneKey_${project?.id}`, nextKey);
   };
 
   const getNavPreview = (element) => {
@@ -369,8 +394,8 @@ export const useExperienceViewerLogic = ({ selectedExperience }) => {
       navigateToScenePreserveOrientation(target.firstSceneKey);
     }
     setActiveZoneId(String(zoneId));
-    if (target.firstSceneKey) localStorage.setItem("lastSceneKey", target.firstSceneKey);
-  }, [zonesNavigationList, scenes, navigateToScenePreserveOrientation]);
+    if (target.firstSceneKey && project?.id) localStorage.setItem(`lastSceneKey_${project.id}`, target.firstSceneKey);
+  }, [zonesNavigationList, scenes, navigateToScenePreserveOrientation, project]);
 
   const handlePrevious = () => {
     if (!zonesNavigationList.length || !activeZoneId) return;
