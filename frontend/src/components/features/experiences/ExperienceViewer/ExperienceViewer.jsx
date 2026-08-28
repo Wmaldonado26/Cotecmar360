@@ -405,6 +405,55 @@ export const ExperienceViewerTemplate = ({
           if (scenes[sceneKey]) navigateToScenePreserveOrientation(sceneKey);
         }}
       />
+
+      {/* Maps Button (Tab) */}
+      <div className="maps-tab-container" style={{
+        position: 'absolute',
+        top: '80px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 1005,
+        pointerEvents: 'auto',
+      }}>
+        <button 
+          onClick={() => setMapOverlayOpen(!mapOverlayOpen)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '10px',
+            background: 'rgba(255, 255, 255, 0.95)',
+            border: '1px solid #e2e8f0',
+            borderTop: 'none',
+            borderRadius: '0 0 20px 20px',
+            padding: '12px 70px 14px 70px',
+            color: '#263C81',
+            fontWeight: '700',
+            fontSize: '16px',
+            cursor: 'pointer',
+            boxShadow: '0 6px 16px rgba(0, 0, 0, 0.08)',
+            backdropFilter: 'blur(8px)',
+            transition: 'all 0.25s ease',
+            transform: mapOverlayOpen ? 'translateY(2px)' : 'translateY(0)',
+          }}
+          title={mapOverlayOpen ? "Cerrar mapas" : "Abrir mapas"}
+        >
+          <FaMapMarkedAlt style={{ fontSize: '20px' }} />
+          <span>Mapas</span>
+        </button>
+      </div>
+
+      {/* Top Map Overlay */}
+      {mapOverlayOpen && (
+        <TopMapOverlay
+          project={project}
+          currentSceneKey={scene?.key}
+          onHotspotClick={(sk) => navigateToScenePreserveOrientation(sk)}
+          onClose={() => setMapOverlayOpen(false)}
+          mapHeading={mapHeading}
+          currentHfov={currentHfov}
+        />
+      )}
     </>
   );
 };
