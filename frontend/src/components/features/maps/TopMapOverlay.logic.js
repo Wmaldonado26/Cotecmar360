@@ -355,8 +355,8 @@ export default function useTopMapOverlayLogic({
     if (!currentPoint) return null;
     if (!imageRect.width || !imageRect.height) return null;
 
-    const x = imageRect.left + (pct(currentPoint.top) / 100) * imageRect.width;
-    const y = imageRect.top + ((100 - pct(currentPoint.left)) / 100) * imageRect.height;
+    const x = imageRect.left + (pct(currentPoint.left) / 100) * imageRect.width;
+    const y = imageRect.top + (pct(currentPoint.top) / 100) * imageRect.height;
 
     return { x, y };
   }, [currentPoint, imageRect]);
@@ -414,6 +414,18 @@ export default function useTopMapOverlayLogic({
     setIsMinimized(false);
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        if (typeof onClose === "function") {
+          onClose();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   const toggleZone = (zName) => {
     setZoneOpen((prev) => ({ ...prev, [zName]: !prev[zName] }));
   };
@@ -424,8 +436,8 @@ export default function useTopMapOverlayLogic({
   };
 
   const computePinPosition = (p) => {
-    const leftPx = imageRect.left + (pct(p.top) / 100) * imageRect.width;
-    const topPx = imageRect.top + ((100 - pct(p.left)) / 100) * imageRect.height;
+    const leftPx = imageRect.left + (pct(p.left) / 100) * imageRect.width;
+    const topPx = imageRect.top + (pct(p.top) / 100) * imageRect.height;
     return { topPx, leftPx };
   };
 
