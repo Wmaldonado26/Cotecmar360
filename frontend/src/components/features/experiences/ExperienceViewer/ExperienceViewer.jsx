@@ -2,8 +2,10 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { FaArrowLeft, FaMapMarkedAlt, FaChevronLeft, FaChevronRight, FaTimes } from "react-icons/fa";
 import { Pannellum } from "pannellum-react";
+import { useTranslation } from "react-i18next";
 import CustomHotspot from "../../hotspots/CustomHotspot";
 import HotspotModal from "../../hotspots/HotspotModal";
+import InformationLabelHotspot from "../../hotspots/InformationLabelHotspot";
 import InfoSidebar from "../../../ui/InfoSidebar/InfoSidebar";
 import DynamicNavbar from "../../../layout/Navbar/DynamicNavbar";
 import DynamicBreadcrumbs from "../../../ui/DynamicBreadcrumbs/DynamicBreadcrumbs";
@@ -56,6 +58,7 @@ export const ExperienceViewerTemplate = ({
     mapHeading,
   } = logic;
   const hotspotRoots = useRef(new Map());
+  const { i18n } = useTranslation();
 
   // GESTIÓN DE MEMORIA: Limpiar los roots de React de los hotspots al cambiar de escena o desmontar
   useEffect(() => {
@@ -160,6 +163,36 @@ export const ExperienceViewerTemplate = ({
               thumbnail: element.thumbnail || null,
             });
             setModalOpen(true);
+          }}
+        />
+      );
+    }
+
+    if (css === "information-label") {
+      const currentLang = i18n?.language?.startsWith("en") ? "en" : "es";
+      let displayLabel = element.label || element.title;
+      if (currentLang === "en") {
+        displayLabel = element.label_en || element.title_en || displayLabel;
+      } else {
+        displayLabel = element.label_es || element.title_es || displayLabel;
+      }
+
+      return (
+        <Pannellum.Hotspot
+          key={i}
+          type="custom"
+          yaw={element.yaw}
+          pitch={element.pitch}
+          cssClass="information-label"
+          tooltip={(hotSpotDiv) => {
+            const root = ReactDOM.createRoot(hotSpotDiv);
+            hotspotRoots.current.set(hotSpotDiv, root);
+            root.render(
+              <InformationLabelHotspot text={displayLabel} />
+            );
+          }}
+          handleClick={() => {
+            // No action on click for information labels
           }}
         />
       );

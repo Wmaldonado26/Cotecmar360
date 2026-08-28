@@ -1114,6 +1114,7 @@ export default function useProjectEditorLogic({ projectId, onClose, onSave }) {
     { value: "moveScene", label: "Navegación (ir a escena)" },
     { value: "hotSpotElement", label: "Elemento (anexos)" },
     { value: "infoHotspot", label: "Info (texto)" },
+    { value: "information-label", label: "Etiqueta informativa" },
   ];
 
   const scenesCount = useMemo(
