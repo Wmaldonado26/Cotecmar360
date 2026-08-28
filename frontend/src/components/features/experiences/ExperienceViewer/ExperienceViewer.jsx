@@ -7,6 +7,7 @@ import HotspotModal from "../../hotspots/HotspotModal";
 import InfoSidebar from "../../../ui/InfoSidebar/InfoSidebar";
 import DynamicNavbar from "../../../layout/Navbar/DynamicNavbar";
 import DynamicBreadcrumbs from "../../../ui/DynamicBreadcrumbs/DynamicBreadcrumbs";
+import TopMapOverlay from "../../maps/TopMapOverlay";
 
 import "../../../../styles/index.css";
 import "./ExperienceViewer.css";
@@ -36,6 +37,7 @@ export const ExperienceViewerTemplate = ({
     showCarousel, setShowCarousel,
     currentHfov,
     mapOverlayOpen, setMapOverlayOpen,
+    forcedMapZoneId, setForcedMapZoneId,
     activeZoneId,
     setPannellumRef,
     carouselRef,
@@ -308,26 +310,44 @@ export const ExperienceViewerTemplate = ({
                   <ul className="zones-list-panel__list">
                     {zonesNavigationList.map(z => {
                       const zActive = String(activeZoneId) === String(z.id);
+                      const hasMap = !!project?.settings?.mapByZone?.[z.id];
                       return (
                         <li key={String(z.id)} role="listitem">
-                          <button
-                            type="button"
-                            className={`zones-list-item ${zActive ? 'active' : ''}`}
-                            onClick={() => changeZone(z.id)}
-                            title={z.name}
-                          >
-                            <span className="zones-list-item__thumb" aria-hidden="true">
-                              {z.image ? (
-                                <img src={z.image} alt="" draggable={false} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                              ) : (
-                                <span className="zones-list-item__noimg">{(z.name || "Z").toString().slice(0, 1).toUpperCase()}</span>
-                              )}
-                            </span>
-                            <span className="zones-list-item__meta">
-                              <span className="zones-list-item__name">{z.name}</span>
-                              {zActive ? <span className="zones-list-item__status">Actual</span> : null}
-                            </span>
-                          </button>
+                          <div className="zone-list-row">
+                            <button
+                              type="button"
+                              className={`zones-list-item ${zActive ? 'active' : ''}`}
+                              onClick={() => changeZone(z.id)}
+                              title={z.name}
+                            >
+                              <span className="zones-list-item__thumb" aria-hidden="true">
+                                {z.image ? (
+                                  <img src={z.image} alt="" draggable={false} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                                ) : (
+                                  <span className="zones-list-item__noimg">{(z.name || "Z").toString().slice(0, 1).toUpperCase()}</span>
+                                )}
+                              </span>
+                              <span className="zones-list-item__meta">
+                                <span className="zones-list-item__name">{z.name}</span>
+                                {zActive ? <span className="zones-list-item__status">Actual</span> : null}
+                              </span>
+                            </button>
+                            <button
+                              type="button"
+                              className={`zone-map-button ${hasMap ? '' : 'disabled'}`}
+                              disabled={!hasMap}
+                              title={hasMap ? `Ver mapa de ${z.name}` : "Esta zona no tiene mapa disponible"}
+                              aria-label={`Ver mapa de la zona ${z.name}`}
+                              onClick={() => {
+                                if (hasMap) {
+                                  setForcedMapZoneId(z.id);
+                                  setMapOverlayOpen(true);
+                                }
+                              }}
+                            >
+                              <FaMapMarkedAlt />
+                            </button>
+                          </div>
                         </li>
                       );
                     })}
@@ -404,6 +424,21 @@ export const ExperienceViewerTemplate = ({
           if (scenes[sceneKey]) navigateToScenePreserveOrientation(sceneKey);
         }}
       />
+
+      {mapOverlayOpen && (
+        <TopMapOverlay
+          project={project}
+          currentSceneKey={scene?.key}
+          forcedZoneId={forcedMapZoneId}
+          onHotspotClick={(sk) => navigateToScenePreserveOrientation(sk)}
+          onClose={() => {
+            setMapOverlayOpen(false);
+            setForcedMapZoneId(null);
+          }}
+          mapHeading={mapHeading}
+          currentHfov={currentHfov}
+        />
+      )}
     </>
   );
 };

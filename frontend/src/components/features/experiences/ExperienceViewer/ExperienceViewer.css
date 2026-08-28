@@ -362,6 +362,54 @@
   border-radius: 999px;
 }
 
+.zone-list-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.zone-list-row > .zones-list-item {
+  flex: 1;
+  min-width: 0; /* for truncation */
+}
+
+.zone-map-button {
+  appearance: none;
+  outline: none;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 160ms ease;
+}
+
+.zone-map-button:hover:not(:disabled) {
+  background: rgba(0, 87, 184, 0.15);
+  border-color: rgba(0, 87, 184, 0.38);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 87, 184, 0.2);
+}
+
+.zone-map-button.active {
+  background: rgba(0, 87, 184, 0.4);
+  color: #fff;
+  border-color: rgba(0, 87, 184, 0.6);
+}
+
+.zone-map-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 .zones-list-item {
   appearance: none;
   outline: none;

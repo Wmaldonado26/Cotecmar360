@@ -60,9 +60,12 @@ export const useExperienceViewerLogic = ({ selectedExperience, projectId, isPubl
   const [isPlaying, setIsPlaying] = useState(false);
   const [autoRotate, setAutoRotate] = useState(false);
   const [userInteracting, setUserInteracting] = useState(false);
-  const [showCarousel, setShowCarousel] = useState(true);
-  const [mapOverlayOpen, setMapOverlayOpen] = useState(false);
+
+  // States related to zones/maps
   const [showZonesList, setShowZonesList] = useState(true);
+  const [mapOverlayOpen, setMapOverlayOpen] = useState(false);
+  const [forcedMapZoneId, setForcedMapZoneId] = useState(null);
+  const [showCarousel, setShowCarousel] = useState(true);
   const [activeZoneId, setActiveZoneId] = useState(null);
   const [pannellumRef, setPannellumRef] = useState(null);
 
@@ -503,6 +506,7 @@ export const useExperienceViewerLogic = ({ selectedExperience, projectId, isPubl
     currentYaw: currentYawRef.current,
     currentPitch: currentPitchRef.current,
     mapOverlayOpen, setMapOverlayOpen,
+    forcedMapZoneId, setForcedMapZoneId,
     showZonesList, setShowZonesList,
     activeZoneId, setActiveZoneId,
     pannellumRef, setPannellumRef,

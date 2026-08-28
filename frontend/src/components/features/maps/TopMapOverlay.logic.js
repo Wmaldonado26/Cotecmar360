@@ -132,6 +132,7 @@ export default function useTopMapOverlayLogic({
   onClose,
   mapHeading = 0,
   currentHfov = 140,
+  forcedZoneId,
 }) {
   const safeProject = useMemo(
     () => project || { scenes: {}, settings: { map: {} } },
@@ -147,18 +148,26 @@ export default function useTopMapOverlayLogic({
 
   const allZones = useMemo(() => buildAllZones(safeProject, zonesTree), [safeProject, zonesTree]);
 
-  const [selectedZoneId, setSelectedZoneId] = useState(currentZoneId);
+  const [selectedZoneId, setSelectedZoneId] = useState(forcedZoneId || currentZoneId);
 
   useEffect(() => {
-    setSelectedZoneId(prev => {
-      if (prev && currentZoneId && prev !== currentZoneId) {
-        return currentZoneId;
-      }
-      if (!prev && currentZoneId) return currentZoneId;
-      if (!prev && allZones.length) return allZones[0].id;
-      return prev;
-    });
-  }, [currentZoneId, allZones]);
+    if (forcedZoneId) {
+      setSelectedZoneId(forcedZoneId);
+    }
+  }, [forcedZoneId]);
+
+  useEffect(() => {
+    if (!forcedZoneId) {
+      setSelectedZoneId(prev => {
+        if (prev && currentZoneId && prev !== currentZoneId) {
+          return currentZoneId;
+        }
+        if (!prev && currentZoneId) return currentZoneId;
+        if (!prev && allZones.length) return allZones[0].id;
+        return prev;
+      });
+    }
+  }, [currentZoneId, allZones, forcedZoneId]);
 
   const selectedZone = useMemo(() => {
     const direct = allZones.find(z => z.id === selectedZoneId);
