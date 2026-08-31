@@ -39,9 +39,26 @@ const normalizeProject = (p) => {
   const fixedScenes = {};
 
   Object.entries(scenes).forEach(([k, s]) => {
+    let normalizedMap = s?.map;
+    if (normalizedMap && normalizedMap.top !== undefined && normalizedMap.left !== undefined) {
+      if (!normalizedMap.normalizedCoords) {
+        // Convert old swapped coordinates to standard normalized format
+        const oldLeft = Number(normalizedMap.left);
+        const oldTop = Number(normalizedMap.top);
+
+        normalizedMap = {
+          ...normalizedMap,
+          left: Number(oldTop.toFixed(2)),
+          top: Number((100 - oldLeft).toFixed(2)),
+          normalizedCoords: true
+        };
+      }
+    }
+
     fixedScenes[k] = {
       ...s,
       image: normalizeUploadsUrl(s?.image),
+      map: normalizedMap
     };
   });
 

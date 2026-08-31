@@ -864,9 +864,8 @@ export default function ProjectEditorView({
                         const m = sc?.map;
                         if (!m || m.top === "" || m.left === undefined) return null;
                         const isSelected = mapSelectedSceneKey === sceneKey;
-                        
-                        const leftPx = mapImageRect.left + (Number(m.top) / 100) * mapImageRect.width;
-                        const topPx = mapImageRect.top + ((100 - Number(m.left)) / 100) * mapImageRect.height;
+                        const leftPx = mapImageRect.left + (Number(m.left) / 100) * mapImageRect.width;
+                        const topPx = mapImageRect.top + (Number(m.top) / 100) * mapImageRect.height;
 
                         return (
                           <div

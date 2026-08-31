@@ -817,13 +817,14 @@ export default function useProjectEditorLogic({ projectId, onClose, onSave }) {
     const xNorm = Math.max(0, Math.min(1, xVisual / imgRect.width));
     const yNorm = Math.max(0, Math.min(1, yVisual / imgRect.height));
 
-    const leftPct = Math.max(0, Math.min(100, (1 - yNorm) * 100));
-    const topPct = Math.max(0, Math.min(100, xNorm * 100));
+    const leftPct = Math.max(0, Math.min(100, xNorm * 100));
+    const topPct = Math.max(0, Math.min(100, yNorm * 100));
 
     handleUpdateSceneMap(sceneKey, {
       zoneId: mapZoneId,
       top: Number(topPct.toFixed(2)),
       left: Number(leftPct.toFixed(2)),
+      normalizedCoords: true,
     });
 
     const currentTitle = project?.scenes?.[sceneKey]?.map?.title || "";
