@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../../services/apiConfig";
 import projectService from "../../../services/ProjectService";
 import authService from "../../../services/AuthService";
+import landingService from "../../../services/LandingService";
 
 export default function useProjectEditorLogic({ projectId, onClose, onSave }) {
   const navigate = useNavigate();
@@ -887,6 +888,32 @@ export default function useProjectEditorLogic({ projectId, onClose, onSave }) {
     setHasChanges(true);
   };
 
+  const handleTranslateHotspot = async (sceneKey, hotspotKey) => {
+    const hs = project.scenes?.[sceneKey]?.hotSpots?.[hotspotKey];
+    if (!hs || !hs.label) return;
+    
+    // Only auto-translate if it's an information_bubble, or if we want to do it for all hotspots?
+    // The requirement says "La burbuja debe mostrar automáticamente el idioma correspondiente", so let's translate.
+    try {
+      const result = await landingService.translateContent({
+        title: hs.label
+      });
+      if (result && result.title_en && result.title_es) {
+        setProject((prev) => {
+          const newState = { ...prev };
+          if (newState.scenes?.[sceneKey]?.hotSpots?.[hotspotKey]) {
+            newState.scenes[sceneKey].hotSpots[hotspotKey].label_en = result.title_en;
+            newState.scenes[sceneKey].hotSpots[hotspotKey].label_es = result.title_es;
+          }
+          return newState;
+        });
+        showInfo("Traducción generada", "El nombre se ha traducido automáticamente a inglés y español.");
+      }
+    } catch (e) {
+      console.error("Auto-translate failed", e);
+    }
+  };
+
   const handleDeleteHotspot = (sceneKey, hotspotKey) => {
     const hotspotLabel =
       project.scenes?.[sceneKey]?.hotSpots?.[hotspotKey]?.label || hotspotKey;
@@ -1115,7 +1142,7 @@ export default function useProjectEditorLogic({ projectId, onClose, onSave }) {
     { value: "moveScene", label: "Navegación (ir a escena)" },
     { value: "hotSpotElement", label: "Elemento (anexos)" },
     { value: "infoHotspot", label: "Info (texto)" },
-    { value: "information-label", label: "Etiqueta informativa" },
+    { value: "information_bubble", label: "Burbuja de Información" },
   ];
 
   const scenesCount = useMemo(
@@ -1347,6 +1374,7 @@ export default function useProjectEditorLogic({ projectId, onClose, onSave }) {
     handlePlanClickPlaceScene,
     handleAddHotspot,
     handleUpdateHotspot,
+    handleTranslateHotspot,
     handleDeleteHotspot,
     handleHotspotAttachmentUpload,
     handleRemoveHotspotAttachment,

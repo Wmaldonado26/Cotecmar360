@@ -34,7 +34,7 @@ export default function ProjectEditorView({
   handleBulkDeleteScenes, handleImageUpload, handleMapUploadForZone,
   handleRemoveMapForZone, handleUpdateSceneMap, handleClearSceneMap,
   handleStartPlacing, handleStopPlacing, handlePlanClickPlaceScene,
-  handleAddHotspot, handleUpdateHotspot, handleDeleteHotspot,
+  handleAddHotspot, handleUpdateHotspot, handleTranslateHotspot, handleDeleteHotspot,
   handleHotspotAttachmentUpload, handleRemoveHotspotAttachment,
   handleUpdateHotspotAttachmentFolder, handleSaveProject, handleClose,
   handleDeleteProject, runFabPrimary, handleMultipleImagesUpload,
@@ -699,8 +699,17 @@ export default function ProjectEditorView({
                       
                       <div className="hotspot-card-body">
                         <div className="form-group-modern compact full-width">
-                          <label>Nombre / Etiqueta</label>
-                          <input type="text" value={hotspot.label || hotspot.title || hotspotKey} onChange={(e) => handleUpdateHotspot(selectedScene, hotspotKey, "label", e.target.value)} />
+                          <label>Nombre del espacio / Etiqueta</label>
+                          <input 
+                            type="text" 
+                            value={hotspot.label || hotspot.title || hotspotKey} 
+                            onChange={(e) => handleUpdateHotspot(selectedScene, hotspotKey, "label", e.target.value)} 
+                            onBlur={() => {
+                              if (hotspot.cssClass === "information_bubble" || hotspot.cssClass === "information-label") {
+                                handleTranslateHotspot(selectedScene, hotspotKey);
+                              }
+                            }}
+                          />
                         </div>
                         
                         <div className="hotspot-row">

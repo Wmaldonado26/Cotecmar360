@@ -5,7 +5,7 @@ import { Pannellum } from "pannellum-react";
 import { useTranslation } from "react-i18next";
 import CustomHotspot from "../../hotspots/CustomHotspot";
 import HotspotModal from "../../hotspots/HotspotModal";
-import InformationLabelHotspot from "../../hotspots/InformationLabelHotspot";
+import InformationBubbleHotspot from "../../hotspots/InformationBubbleHotspot";
 import InfoSidebar from "../../../ui/InfoSidebar/InfoSidebar";
 import DynamicNavbar from "../../../layout/Navbar/DynamicNavbar";
 import DynamicBreadcrumbs from "../../../ui/DynamicBreadcrumbs/DynamicBreadcrumbs";
@@ -168,7 +168,7 @@ export const ExperienceViewerTemplate = ({
       );
     }
 
-    if (css === "information-label") {
+    if (css === "information_bubble" || css === "information-label") {
       const currentLang = i18n?.language?.startsWith("en") ? "en" : "es";
       let displayLabel = element.label || element.title;
       if (currentLang === "en") {
@@ -183,12 +183,12 @@ export const ExperienceViewerTemplate = ({
           type="custom"
           yaw={element.yaw}
           pitch={element.pitch}
-          cssClass="information-label"
+          cssClass={css}
           tooltip={(hotSpotDiv) => {
             const root = ReactDOM.createRoot(hotSpotDiv);
             hotspotRoots.current.set(hotSpotDiv, root);
             root.render(
-              <InformationLabelHotspot text={displayLabel} />
+              <InformationBubbleHotspot text={displayLabel} />
             );
           }}
           handleClick={() => {
@@ -197,7 +197,6 @@ export const ExperienceViewerTemplate = ({
         />
       );
     }
-
     return null;
   };
 
