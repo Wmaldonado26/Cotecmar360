@@ -25,6 +25,7 @@ import {
 } from "react-icons/fa";
 import { API_BASE_URL } from "../../../services/apiConfig";
 import authService from "../../../services/AuthService";
+import landingService from "../../../services/LandingService";
 
 const HOTSPOT_TYPE_META = {
   moveScene: {
@@ -47,6 +48,13 @@ const HOTSPOT_TYPE_META = {
     accent: "#6366f1",
     soft: "#eef2ff",
     Icon: FaFolderOpen,
+  },
+  information_bubble: {
+    label: "Burbuja de Información",
+    hint: "Etiqueta flotante con el nombre del espacio",
+    accent: "#f59e0b",
+    soft: "#fffbeb",
+    Icon: FaMapPin,
   },
 };
 
@@ -433,6 +441,28 @@ export default function useHotspotVisualEditorLogic(props) {
     }));
   };
 
+  const handleTranslateHotspot = async (key) => {
+    const hs = hotspots[key];
+    if (!hs || !hs.label) return;
+    try {
+      const result = await landingService.translateContent({
+        title: hs.label
+      });
+      if (result && result.title_en && result.title_es) {
+        setHotspots((prev) => ({
+          ...prev,
+          [key]: {
+            ...prev[key],
+            label_en: result.title_en,
+            label_es: result.title_es
+          }
+        }));
+      }
+    } catch (e) {
+      console.error("Auto-translate failed in Visual Editor", e);
+    }
+  };
+
   const handleSave = () => {
     const finalImage = String(sceneImageUrl || scene.image || "").trim();
     const updatedScene = {
@@ -620,6 +650,7 @@ export default function useHotspotVisualEditorLogic(props) {
     handleSelectHotspot,
     handleDeleteHotspot,
     handleUpdateHotspot,
+    handleTranslateHotspot,
     handleSave,
     handleResetView,
     handleZoom,

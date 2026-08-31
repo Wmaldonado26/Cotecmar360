@@ -28,6 +28,7 @@ export default function HotspotVisualEditorView(props) {
     handleSelectHotspot,
     handleDeleteHotspot,
     handleUpdateHotspot,
+    handleTranslateHotspot,
     handleSave,
     handleResetView,
     handleZoom,
@@ -263,6 +264,7 @@ export default function HotspotVisualEditorView(props) {
                 const isNav = hotspot.cssClass === "moveScene";
                 const isInfo = hotspot.cssClass === "infoHotspot";
                 const isElement = hotspot.cssClass === "hotSpotElement";
+                const isInfoBubble = hotspot.cssClass === "information_bubble" || hotspot.cssClass === "information-label";
                 const attachments = Array.isArray(hotspot.attachments)
                   ? hotspot.attachments
                   : [];
@@ -385,14 +387,23 @@ export default function HotspotVisualEditorView(props) {
 
 
 
-                          {(isInfo || isElement) && (
+                          {(isInfo || isElement || isInfoBubble) && (
                             <div className="form-group">
-                              <label>Título principal (Dentro del panel)</label>
+                              <label>{isInfoBubble ? "Nombre del espacio" : "Título principal (Dentro del panel)"}</label>
                               <input
                                 type="text"
-                                value={hotspot.title || ""}
-                                onChange={(e) => handleUpdateHotspot(key, "title", e.target.value)}
-                                placeholder="Ej: Motor Principal"
+                                value={hotspot.title || hotspot.label || ""}
+                                onChange={(e) => {
+                                  // For bubble, we use label for display, but keep title in sync just in case
+                                  handleUpdateHotspot(key, "label", e.target.value);
+                                  handleUpdateHotspot(key, "title", e.target.value);
+                                }}
+                                onBlur={() => {
+                                  if (isInfoBubble && typeof handleTranslateHotspot === 'function') {
+                                    handleTranslateHotspot(key);
+                                  }
+                                }}
+                                placeholder={isInfoBubble ? "Ej: Cuarto de Máquinas" : "Ej: Motor Principal"}
                               />
                             </div>
                           )}
