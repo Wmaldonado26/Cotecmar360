@@ -210,23 +210,6 @@ const Widget = ({
 
     ctx.restore();
 
-    /* ===== HFOV (DEBAJO DEL PUNTO) ===== */
-    const hfovRad = (hfov * Math.PI) / 180;
-    const half = hfovRad / 2;
-    const hfovRadius = Math.min(70, 120 / zoom);
-
-    ctx.save();
-    ctx.translate(center, center);
-    ctx.rotate(-Math.PI / 2);
-
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.arc(0, 0, hfovRadius, -half, half);
-    ctx.closePath();
-    ctx.fillStyle = "rgba(255,60,60,0.25)";
-    ctx.fill();
-
-    ctx.restore();
 
     /* ===== PUNTO (SIEMPRE ARRIBA) ===== */
     const pointRadius = Math.max(4, 9 / zoom);

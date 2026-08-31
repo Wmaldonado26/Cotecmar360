@@ -361,30 +361,6 @@ export default function useTopMapOverlayLogic({
     return { x, y };
   }, [currentPoint, imageRect]);
 
-  const cone = useMemo(() => {
-    if (!currentPx) return null;
-
-    const hfov = Number(currentHfov) || 140;
-    const fovRad = (hfov * Math.PI) / 180;
-    const halfFov = fovRad / 2;
-
-    const base = Math.min(imageRect.width, imageRect.height);
-    const radius = Math.max(60, Math.min(210, base * 0.25));
-
-    const upAngle = -Math.PI / 2;
-    const rot = ((Number(mapHeading) || 0) * Math.PI) / 180;
-
-    const angL = upAngle - halfFov + rot;
-    const angR = upAngle + halfFov + rot;
-    const angC = upAngle + rot;
-
-    const p0 = { x: currentPx.x, y: currentPx.y };
-    const pL = { x: p0.x + Math.cos(angL) * radius, y: p0.y + Math.sin(angL) * radius };
-    const pR = { x: p0.x + Math.cos(angR) * radius, y: p0.y + Math.sin(angR) * radius };
-    const pC = { x: p0.x + Math.cos(angC) * radius, y: p0.y + Math.sin(angC) * radius };
-
-    return { p0, pL, pR, pC };
-  }, [currentPx, currentHfov, mapHeading, imageRect.width, imageRect.height]);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -478,7 +454,6 @@ export default function useTopMapOverlayLogic({
     mapPoints,
     currentPoint,
     currentPx,
-    cone,
     toggleZone,
     openDockAndTab,
     computePinPosition,

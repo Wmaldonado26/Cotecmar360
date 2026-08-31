@@ -104,7 +104,6 @@ const TopMapOverlayView = ({
   wrapperSize,
   updateRects,
   mapPoints,
-  cone,
   computePinPosition,
   hasProject,
 }) => {
@@ -159,40 +158,6 @@ const TopMapOverlayView = ({
                   <FaTimes />
                 </button>
               </div>
-            )}
-            {cone && (
-              <svg
-                className="tm-hfov"
-                width="100%"
-                height="100%"
-                viewBox={`0 0 ${wrapperSize.w} ${wrapperSize.h}`}
-                preserveAspectRatio="none"
-                aria-hidden="true"
-              >
-                <path
-                  d={`M ${cone.p0.x} ${cone.p0.y} L ${cone.pL.x} ${cone.pL.y} L ${cone.pR.x} ${cone.pR.y} Z`}
-                  fill="rgba(59, 130, 246, 0.14)"
-                  stroke="rgba(59, 130, 246, 0.85)"
-                  strokeWidth="2"
-                />
-                <line
-                  x1={cone.p0.x}
-                  y1={cone.p0.y}
-                  x2={cone.pC.x}
-                  y2={cone.pC.y}
-                  stroke="rgba(59, 130, 246, 0.45)"
-                  strokeWidth="2"
-                  strokeDasharray="6 6"
-                />
-                <circle
-                  cx={cone.p0.x}
-                  cy={cone.p0.y}
-                  r="6"
-                  fill="#f97316"
-                  stroke="#ffffff"
-                  strokeWidth="3"
-                />
-              </svg>
             )}
             {mapPoints.map((p) => {
               const { topPx, leftPx } = computePinPosition(p);
