@@ -726,4 +726,35 @@
   display: none !important;
 }
 
+/* ========== IDENTIFICADOR DE ESCENA (INFERIOR IZQUIERDO) ========== */
+.scene-name-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: #ffffff;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 14px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 0; /* Sin bordes redondeados según especificación */
+  z-index: 1000;
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  pointer-events: none; /* Para no interferir con la interacción si no es necesario */
+}
+
+@media (max-width: 768px) {
+  .scene-name-indicator {
+    bottom: 0;
+    left: 0;
+    max-width: calc(50vw - 60px); /* Garantizar que no superponga los controles centrales en móviles */
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}
 

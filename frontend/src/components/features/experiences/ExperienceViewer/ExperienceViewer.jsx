@@ -328,6 +328,11 @@ export const ExperienceViewerTemplate = ({
           </button>
         </div>
 
+        {/* Nombre de la escena actual en la esquina inferior izquierda */}
+        <div className="scene-name-indicator" title={scene?.title || scene?.name || "Escena"}>
+          {scene?.title || scene?.name || "Escena"}
+        </div>
+
         {/* Right Side Stack (Zones Navigation) */}
         {showZoneButton && (
           <div className="nav-action-stack right-stack">
