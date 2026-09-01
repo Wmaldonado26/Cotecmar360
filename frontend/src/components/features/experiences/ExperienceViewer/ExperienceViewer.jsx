@@ -13,6 +13,7 @@ import TopMapOverlay from "../../maps/TopMapOverlay";
 
 import "../../../../styles/index.css";
 import "./ExperienceViewer.css";
+import xrlabLogo from "../../../../assets/images/Xrlab.webp";
 
 export const ExperienceViewerTemplate = ({
   logic,
@@ -460,7 +461,9 @@ export const ExperienceViewerTemplate = ({
         onSceneSelect={(sceneKey) => {
           if (scenes[sceneKey]) navigateToScenePreserveOrientation(sceneKey);
         }}
-      />
+      >
+        <img src={xrlabLogo} alt="XRLab" className="xrlab-header-logo" />
+      </DynamicNavbar>
 
       {mapOverlayOpen && (
         <TopMapOverlay

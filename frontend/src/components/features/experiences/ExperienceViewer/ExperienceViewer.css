@@ -758,3 +758,23 @@
   }
 }
 
+/* ========== XRLAB HEADER LOGO ========== */
+.xrlab-header-logo {
+  width: 40px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 1024px) {
+  .xrlab-header-logo {
+    width: 55px;
+  }
+}
+
+@media (max-width: 768px) {
+  .xrlab-header-logo {
+    width: 45px;
+  }
+}
+

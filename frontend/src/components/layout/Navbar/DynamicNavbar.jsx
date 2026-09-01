@@ -5,7 +5,7 @@ import PasswordSettings from "../../features/auth/PasswordSettings";
 import ProfileSettings from "../../features/auth/ProfileSettings";
 import SceneCalibrationTool from "../../features/experiences/SceneCalibrationTool";
 import DynamicBreadcrumbs from "../../ui/DynamicBreadcrumbs/DynamicBreadcrumbs";
-import cotecmarLogoColored from "../../../assets/images/cotecmar-logo.png";
+import cotecmarLogoColored from "../../../assets/images/cotecmar.png";
 import "./DynamicNavbar.css";
 
 const DynamicNavbarView = (props) => {
