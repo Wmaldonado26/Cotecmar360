@@ -462,7 +462,13 @@ export const ExperienceViewerTemplate = ({
           if (scenes[sceneKey]) navigateToScenePreserveOrientation(sceneKey);
         }}
       >
-        <img src={xrlabLogo} alt="XRLab" className="xrlab-header-logo" />
+      {/* 
+      
+       logo de Xrlab que esta en el header 
+      
+      <img src={xrlabLogo} alt="XRLab" className="xrlab-header-logo" />
+      
+      */}
       </DynamicNavbar>
 
       {mapOverlayOpen && (
