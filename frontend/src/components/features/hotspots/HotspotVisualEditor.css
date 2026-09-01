@@ -576,7 +576,7 @@
   background: var(--c-surface); color: var(--c-text-main);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-md);
-  overflow: hidden;
+  overflow: visible;
   transition: var(--transition-normal);
   box-shadow: var(--shadow-sm);
 }
@@ -706,26 +706,6 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-height: 65vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-gutter: stable;
-}
-
-/* Custom scrollbar para el editor interno */
-.hotspot-editor::-webkit-scrollbar {
-  width: 8px;
-}
-.hotspot-editor::-webkit-scrollbar-track {
-  background: transparent;
-}
-.hotspot-editor::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.35);
-  border-radius: 999px;
-}
-.hotspot-editor::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.6);
 }
 
 .editor-grid {
