@@ -25,7 +25,7 @@
   bottom: 14px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(15, 23, 42, 0.75);
+  background: rgba(49, 74, 159, 0.85);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: #ffffff;
@@ -42,7 +42,7 @@
 }
 
 .information-bubble-container:hover .information-bubble-tooltip {
-  background: rgba(15, 23, 42, 0.95);
+  background: rgba(49, 74, 159, 1);
   border-color: rgba(255, 255, 255, 0.4);
   transform: translateX(-50%) translateY(-2px) scale(1.02);
 }
