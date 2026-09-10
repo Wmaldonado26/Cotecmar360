@@ -826,10 +826,10 @@
    NO afecta ExperienceViewer ni otras páginas
 ------------------------------------------------- */
 .landing-page .breadcrumb-dropdown-menu {
-  top: calc(100% + 18px);
+  top: calc(100% + 24px);
 }
 
 body.dark-mode.landing-page .breadcrumb-dropdown-menu,
 body.dark-mode .landing-page .breadcrumb-dropdown-menu {
-  top: calc(100% + 18px);
+  top: calc(100% + 24px);
 }
