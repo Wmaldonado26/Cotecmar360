@@ -1,5 +1,5 @@
 import { useState } from "react";
-import cotecmarLogo from "../../assets/images/logo.png";
+import cotecmarLogo from "../../assets/images/cotecmar.png";
 import xrlabLogo from "../../assets/images/cotecmar1.svg";
 import fondoVideo from "../../assets/images/planta.mp4";
 import img360Card from "../../assets/images/CARD.webp";
@@ -32,9 +32,6 @@ export const LandingPageTemplate = ({
             alt={t("brandAlt")}
             className="landing-brand-logo transition-all duration-50" 
           />
-          <div className="landing-brand-copy">
-            <span>{t("brand")}</span>
-          </div>
         </div>
 
         <div className="flex items-center relative gap-4">
