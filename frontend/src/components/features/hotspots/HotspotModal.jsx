@@ -333,6 +333,15 @@ export default function HotspotModalView({
                 </h2>
               </div>
 
+              {description && (
+                <div className="pt-1">
+                  <p className="hs-info-modal__desc text-[11.5px] leading-relaxed text-slate-600 whitespace-pre-wrap
+                                border-l-[3px] border-blue-400/70 pl-2.5 py-0.5">
+                    {description}
+                  </p>
+                </div>
+              )}
+
               {hasStats && (
                 <div className="grid grid-cols-2 gap-1.5">
                   {validStats.map((stat, idx) => (
@@ -355,15 +364,6 @@ export default function HotspotModalView({
                       </div>
                     </div>
                   ))}
-                </div>
-              )}
-
-              {description && (
-                <div className="pt-1">
-                  <p className="hs-info-modal__desc text-[11.5px] leading-relaxed text-slate-600 whitespace-pre-wrap
-                                border-l-[3px] border-blue-400/70 pl-2.5 py-0.5">
-                    {description}
-                  </p>
                 </div>
               )}
             </div>
