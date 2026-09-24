@@ -82,7 +82,7 @@ export const ExperienceViewerTemplate = ({
       return (
         <Pannellum.Hotspot
           key={i}
-          type={element.type || "custom"}
+          type="custom"
           yaw={element.yaw}
           pitch={element.pitch}
           cssClass="moveScene"
@@ -105,7 +105,7 @@ export const ExperienceViewerTemplate = ({
       return (
         <Pannellum.Hotspot
           key={i}
-          type={element.type || "custom"}
+          type="custom"
           yaw={element.yaw}
           pitch={element.pitch}
           cssClass="hotSpotElement"
