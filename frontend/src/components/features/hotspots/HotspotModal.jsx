@@ -251,7 +251,7 @@ export default function HotspotModalView({
                 }}
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-black/50"></div>
+
 
               {/* Traffic lights — orden: 🟢 → 🟡 → 🔴 */}
               <div className="absolute top-3.5 right-3.5 z-20">
