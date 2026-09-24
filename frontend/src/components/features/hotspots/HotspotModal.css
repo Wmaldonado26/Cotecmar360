@@ -349,3 +349,77 @@
   background-color: #dbeafe;
   color: #1d4ed8;
 }
+/* LIGHTBOX */
+.hs-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  background-color: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: hsFadeIn 0.2s ease-out forwards;
+}
+
+@media (min-width: 640px) {
+  .hs-lightbox {
+    padding: 2rem;
+  }
+}
+
+.hs-lightbox__img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  animation: hsZoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hs-lightbox__close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.hs-lightbox__close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.hs-lightbox__close:active {
+  transform: scale(0.95);
+}
+
+@keyframes hsFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes hsZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
