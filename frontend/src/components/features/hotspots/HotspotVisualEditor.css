@@ -3,6 +3,41 @@
    Estilo: Profesional, Moderno, Limpio, CinematogrÃ¡fico, Premium
    ============================================================ */
 
+   .hotspot-stat-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 0.8fr auto;
+  gap: 6px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.hotspot-stat-row input {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 6px;
+  background: #fff;
+  color: #0f172a;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.hotspot-stat-row input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.hotspot-stat-row .btn-card-action {
+  height: 30px;
+  width: 30px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
 .hotspot-visual-editor {
   /* Variables de Identidad COTECMAR */
   --c-brand: #040E79;
@@ -1263,4 +1298,23 @@
 .custom-scene-select__option.disabled:hover {
   background: #FFFFFF !important;
   color: #94A3B8 !important;
+}
+
+
+.marker-dot {
+  cursor: grab !important;
+  user-select: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.marker-dot:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+}
+
+.marker-dot.is-dragging {
+  cursor: grabbing !important;
+  transform: scale(1.12);
+  box-shadow: 0 12px 32px rgba(43, 83, 152, 0.5) !important;
+  z-index: 9999 !important;
 }

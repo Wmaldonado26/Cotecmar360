@@ -72,6 +72,7 @@ export default function useHotspotVisualEditorLogic(props) {
   const viewerRef = useRef(null);
   const pannellumRef = useRef(null);
   const coordsTickRef = useRef(null);
+  const draggingHotspotRef = useRef(null);
 
   const [hotspots, setHotspots] = useState(scene.hotSpots || {});
   const [selectedHotspot, setSelectedHotspot] = useState(null);
@@ -293,6 +294,15 @@ export default function useHotspotVisualEditorLogic(props) {
               dot.style.boxShadow = "0 6px 16px rgba(0,0,0,0.3)";
               dot.style.cursor = "pointer";
               dot.style.transition = "all .18s ease";
+              dot.onmousedown = (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                draggingHotspotRef.current = key;
+                document.body.style.cursor = "grabbing";
+                dot.classList.add("is-dragging");
+                handleSelectHotspot(key);
+              };
+              dot.onmouseenter = () => { dot.style.cursor = "grab"; };
               dot.style.zIndex = "2";
               dot.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M12 2C7.6 2 4 5.6 4 10c0 5.3 7 12 8 12s8-6.7 8-12c0-4.4-3.6-8-8-8zm0 10.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/></svg>`;
               container.appendChild(dot);
@@ -430,6 +440,33 @@ export default function useHotspotVisualEditorLogic(props) {
       setEditingHotspot(null);
     }
   };
+
+  useEffect(() => {
+    const onMouseMove = (e) => {
+      if (!draggingHotspotRef.current || !pannellumRef.current) return;
+      try {
+        const coords = pannellumRef.current.mouseEventToCoords(e);
+        if (coords) {
+          handleUpdateHotspot(draggingHotspotRef.current, "pitch", Number(coords[0].toFixed(3)));
+          handleUpdateHotspot(draggingHotspotRef.current, "yaw", Number(coords[1].toFixed(3)));
+        }
+      } catch (err) {}
+    };
+
+    const onMouseUp = () => {
+      if (draggingHotspotRef.current) {
+        draggingHotspotRef.current = null;
+        document.body.style.cursor = "";
+      }
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+  }, []);
 
   const handleUpdateHotspot = (key, field, value) => {
     setHotspots((prev) => ({
