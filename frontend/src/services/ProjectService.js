@@ -55,10 +55,22 @@ const normalizeProject = (p) => {
       }
     }
 
+    let fixedHotSpots = s?.hotSpots;
+    if (fixedHotSpots) {
+      fixedHotSpots = { ...s.hotSpots };
+      Object.entries(fixedHotSpots).forEach(([hk, h]) => {
+        fixedHotSpots[hk] = {
+          ...h,
+          stats: Array.isArray(h.stats) ? h.stats : [],
+        };
+      });
+    }
+
     fixedScenes[k] = {
       ...s,
       image: normalizeUploadsUrl(s?.image),
-      map: normalizedMap
+      map: normalizedMap,
+      hotSpots: fixedHotSpots
     };
   });
 

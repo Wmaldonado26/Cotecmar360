@@ -56,7 +56,7 @@ export default function SceneCalibrationToolView({
 
           <div className="calibration-hint">
             1) Pon el viewer mirando “arriba del plano”. 2) Ajusta el offset
-            hasta que el minimapa quede alineado.
+            hasta que el mapa quede alineado.
           </div>
 
           <div className="calibration-metrics">

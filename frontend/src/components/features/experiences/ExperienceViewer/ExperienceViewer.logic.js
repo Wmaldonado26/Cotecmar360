@@ -321,7 +321,7 @@ export const useExperienceViewerLogic = ({ selectedExperience, projectId, isPubl
     return full;
   };
 
-  const handleMiniMapClick = (sceneKey) => navigateToScenePreserveOrientation(sceneKey);
+
 
   const handleFullScreen = () => {
     const elem = document.documentElement;
@@ -515,7 +515,7 @@ export const useExperienceViewerLogic = ({ selectedExperience, projectId, isPubl
     navigateToScenePreserveOrientation,
     getNavPreview,
     getThumbnailFor,
-    handleMiniMapClick,
+
     handleFullScreen,
     handlePlayPause,
     handleZoomIn,

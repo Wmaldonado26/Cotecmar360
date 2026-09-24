@@ -11,6 +11,7 @@ import DynamicNavbar from "../../../layout/Navbar/DynamicNavbar";
 import DynamicBreadcrumbs from "../../../ui/DynamicBreadcrumbs/DynamicBreadcrumbs";
 import TopMapOverlay from "../../maps/TopMapOverlay";
 
+
 import "../../../../styles/index.css";
 import "./ExperienceViewer.css";
 import xrlabLogo from "../../../../assets/images/Xrlab.webp";
@@ -55,7 +56,7 @@ export const ExperienceViewerTemplate = ({
     handleMouseMove,
     zonesNavigationList,
     changeZone,
-    handleMiniMapClick,
+
     mapHeading,
   } = logic;
   const hotspotRoots = useRef(new Map());
@@ -89,7 +90,7 @@ export const ExperienceViewerTemplate = ({
             const root = ReactDOM.createRoot(hotSpotDiv);
             hotspotRoots.current.set(hotSpotDiv, root);
             root.render(
-              <CustomHotspot previewImage={navPreview} label={element.label} type="nav" />
+              <CustomHotspot previewImage={navPreview} label={element.label} type="nav" rotation={element.rotation} />
             );
           }}
           tooltipArg={element}
@@ -162,6 +163,7 @@ export const ExperienceViewerTemplate = ({
               image: element.image || null,
               previewImage: element.previewImage || null,
               thumbnail: element.thumbnail || null,
+              stats: Array.isArray(element.stats) ? element.stats : [],
             });
             setModalOpen(true);
           }}
@@ -228,7 +230,7 @@ export const ExperienceViewerTemplate = ({
   }
   const safeSceneImage = String(scene.image).trim();
   const safePreviewImage = [scene.previewImage, scene.thumbnail].filter(x => x && typeof x === 'string' && x.trim()).map(x => String(x).trim())[0] || null;
-  const safePitch = typeof scene.pitch === 'number' ? scene.pitch : 0;
+  const safePitch = typeof scene.pitch === 'number' ? scene.pitch : -25;
   const safeYaw = typeof scene.yaw === 'number' ? scene.yaw : 0;
 
   return (
@@ -485,6 +487,8 @@ export const ExperienceViewerTemplate = ({
           currentHfov={currentHfov}
         />
       )}
+
+
     </>
   );
 };

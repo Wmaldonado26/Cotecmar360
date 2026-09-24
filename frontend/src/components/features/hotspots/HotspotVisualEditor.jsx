@@ -28,7 +28,6 @@ export default function HotspotVisualEditorView(props) {
     handleSelectHotspot,
     handleDeleteHotspot,
     handleUpdateHotspot,
-    handleTranslateHotspot,
     handleSave,
     handleResetView,
     handleZoom,
@@ -64,7 +63,7 @@ export default function HotspotVisualEditorView(props) {
     FaAngleLeft,
     FaAngleRight,
   } = props;
-  
+
   const [sceneSearch, setSceneSearch] = React.useState("");
   const [isSceneDropdownOpen, setIsSceneDropdownOpen] = React.useState(false);
 
@@ -264,7 +263,6 @@ export default function HotspotVisualEditorView(props) {
                 const isNav = hotspot.cssClass === "moveScene";
                 const isInfo = hotspot.cssClass === "infoHotspot";
                 const isElement = hotspot.cssClass === "hotSpotElement";
-                const isInfoBubble = hotspot.cssClass === "information_bubble" || hotspot.cssClass === "information-label";
                 const attachments = Array.isArray(hotspot.attachments)
                   ? hotspot.attachments
                   : [];
@@ -385,25 +383,14 @@ export default function HotspotVisualEditorView(props) {
                             </div>
                           </div>
 
-
-
-                          {(isInfo || isElement || isInfoBubble) && (
+                          {(isInfo || isElement) && (
                             <div className="form-group">
-                              <label>{isInfoBubble ? "Nombre del espacio" : "Título principal (Dentro del panel)"}</label>
+                              <label>Título principal (Dentro del panel)</label>
                               <input
                                 type="text"
-                                value={hotspot.title || hotspot.label || ""}
-                                onChange={(e) => {
-                                  // For bubble, we use label for display, but keep title in sync just in case
-                                  handleUpdateHotspot(key, "label", e.target.value);
-                                  handleUpdateHotspot(key, "title", e.target.value);
-                                }}
-                                onBlur={() => {
-                                  if (isInfoBubble && typeof handleTranslateHotspot === 'function') {
-                                    handleTranslateHotspot(key);
-                                  }
-                                }}
-                                placeholder={isInfoBubble ? "Ej: Cuarto de Máquinas" : "Ej: Motor Principal"}
+                                value={hotspot.title || ""}
+                                onChange={(e) => handleUpdateHotspot(key, "title", e.target.value)}
+                                placeholder="Ej: Motor Principal"
                               />
                             </div>
                           )}
@@ -415,24 +402,24 @@ export default function HotspotVisualEditorView(props) {
                             <div className="form-group">
                               <label>Escena destino</label>
                               <div className="custom-scene-select">
-                                <div 
-                                  className="custom-scene-select__header" 
+                                <div
+                                  className="custom-scene-select__header"
                                   onClick={() => setIsSceneDropdownOpen(!isSceneDropdownOpen)}
                                 >
-                                  {hotspot.scene && sceneEntries.find(([sk]) => sk === hotspot.scene) 
-                                    ? formatSceneName(sceneEntries.find(([sk]) => sk === hotspot.scene)[1].title, hotspot.scene) 
+                                  {hotspot.scene && sceneEntries.find(([sk]) => sk === hotspot.scene)
+                                    ? formatSceneName(sceneEntries.find(([sk]) => sk === hotspot.scene)[1].title, hotspot.scene)
                                     : "Seleccionar escena destino..."}
                                   <span className={`custom-scene-select__icon ${isSceneDropdownOpen ? 'open' : ''}`}>▼</span>
                                 </div>
                                 {isSceneDropdownOpen && (
                                   <div className="custom-scene-select__dropdown">
                                     <div className="scene-search-wrapper">
-                                      <input 
-                                        type="text" 
-                                        placeholder="🔍 Buscar escena..." 
-                                        value={sceneSearch} 
-                                        onChange={(e) => setSceneSearch(e.target.value)} 
-                                        className="scene-search-input" 
+                                      <input
+                                        type="text"
+                                        placeholder="🔍 Buscar escena..."
+                                        value={sceneSearch}
+                                        onChange={(e) => setSceneSearch(e.target.value)}
+                                        className="scene-search-input"
                                         autoFocus
                                       />
                                     </div>
@@ -440,8 +427,8 @@ export default function HotspotVisualEditorView(props) {
                                       {sceneEntries
                                         .filter(([sk, sc]) => formatSceneName(sc.title, sk).toLowerCase().includes(sceneSearch.toLowerCase()))
                                         .map(([sk, sc]) => (
-                                          <div 
-                                            key={sk} 
+                                          <div
+                                            key={sk}
                                             className={`custom-scene-select__option ${hotspot.scene === sk ? 'selected' : ''}`}
                                             onClick={() => {
                                               handleUpdateHotspot(key, "scene", sk);
@@ -520,6 +507,86 @@ export default function HotspotVisualEditorView(props) {
                                   )}
                                 </div>
                               )}
+                            </div>
+
+                            {/*  SECCIÓN: Datos / Especificaciones */}
+                            <div className="form-group">
+                              <div className="cover-action-row">
+                                <label className="cover-action-row__label">
+                                  Datos / Especificaciones
+                                </label>
+                                <button
+                                  type="button"
+                                  className="btn-secondary btn-secondary--sm"
+                                  onClick={() => {
+                                    const current = Array.isArray(hotspot.stats) ? hotspot.stats : [];
+                                    const next = [
+                                      ...current,
+                                      { label: "", value: "", unit: "" },
+                                    ];
+                                    handleUpdateHotspot(key, "stats", next);
+                                  }}
+                                >
+                                  <FaPlus /> Agregar
+                                </button>
+                              </div>
+
+
+
+                              {(!Array.isArray(hotspot.stats) || hotspot.stats.length === 0) && (
+                                <div className="hotspot-cover-empty">
+                                  <p className="hotspot-cover-empty__text">
+                                    Sin datos. Agrega especificaciones como peso, dimensiones o capacidad
+                                    para que aparezcan en la tarjeta informativa.
+                                  </p>
+                                </div>
+                              )}
+
+                              {(Array.isArray(hotspot.stats) ? hotspot.stats : []).map((stat, idx) => (
+                                <div key={idx} className="hotspot-stat-row">
+                                  <input
+                                    type="text"
+                                    placeholder="Etiqueta (ej: Peso)"
+                                    value={stat.label || ""}
+                                    onChange={(e) => {
+                                      const next = [...hotspot.stats];
+                                      next[idx] = { ...next[idx], label: e.target.value };
+                                      handleUpdateHotspot(key, "stats", next);
+                                    }}
+                                  />
+                                  <input
+                                    type="text"
+                                    placeholder="Valor"
+                                    value={stat.value || ""}
+                                    onChange={(e) => {
+                                      const next = [...hotspot.stats];
+                                      next[idx] = { ...next[idx], value: e.target.value };
+                                      handleUpdateHotspot(key, "stats", next);
+                                    }}
+                                  />
+                                  <input
+                                    type="text"
+                                    placeholder="Unidad"
+                                    value={stat.unit || ""}
+                                    onChange={(e) => {
+                                      const next = [...hotspot.stats];
+                                      next[idx] = { ...next[idx], unit: e.target.value };
+                                      handleUpdateHotspot(key, "stats", next);
+                                    }}
+                                  />
+                                  <button
+                                    type="button"
+                                    className="btn-card-action btn-card-action--danger"
+                                    onClick={() => {
+                                      const next = hotspot.stats.filter((_, i) => i !== idx);
+                                      handleUpdateHotspot(key, "stats", next);
+                                    }}
+                                    title="Eliminar"
+                                  >
+                                    <FaTrash size={11} />
+                                  </button>
+                                </div>
+                              ))}
                             </div>
                           </div>
                         )}

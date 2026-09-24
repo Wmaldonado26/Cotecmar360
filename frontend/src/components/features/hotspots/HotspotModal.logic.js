@@ -112,6 +112,7 @@ export default function useHotspotModalLogic(props) {
     isInfo,
     title,
     description,
+    stats: content?.stats || [],
     attachments,
     coverImageUrl,
     tree,
