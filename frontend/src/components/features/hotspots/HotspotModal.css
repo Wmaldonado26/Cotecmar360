@@ -379,34 +379,6 @@
   animation: hsZoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.hs-lightbox__close {
-  position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 9999px;
-  background-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.2s;
-  cursor: pointer;
-  z-index: 10;
-}
-
-.hs-lightbox__close:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  transform: scale(1.1);
-}
-
-.hs-lightbox__close:active {
-  transform: scale(0.95);
-}
 
 @keyframes hsFadeIn {
   from { opacity: 0; }
@@ -422,4 +394,52 @@
     opacity: 1;
     transform: scale(1);
   }
+}
+
+/* 🔴 Botón de cerrar del lightbox — punto rojo estilo macOS */
+.hs-lightbox__close-dot {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Gradiente rojo estilo Apple */
+  background: linear-gradient(to bottom, #f87171 0%, #ef4444 100%);
+  border: none;
+  color: #7f1d1d;
+
+  /* Sombra interior + exterior tipo traffic light */
+  box-shadow:
+    inset 0 -1px 1px rgba(0, 0, 0, 0.25),
+    0 1px 1px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.35);
+
+  cursor: pointer;
+  transition: all 0.15s ease;
+  z-index: 10;
+}
+
+.hs-lightbox__close-dot:hover {
+  background: linear-gradient(to bottom, #ef4444 0%, #dc2626 100%);
+}
+
+.hs-lightbox__close-dot:active {
+  transform: scale(0.9);
+}
+
+/* Ícono × interno — oculto por defecto, visible al hover */
+.hs-lightbox__close-dot-icon {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.hs-lightbox__close-dot:hover .hs-lightbox__close-dot-icon {
+  opacity: 1;
 }

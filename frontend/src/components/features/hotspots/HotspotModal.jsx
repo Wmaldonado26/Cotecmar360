@@ -205,6 +205,7 @@ export default function HotspotModalView({
             className="hs-lightbox__img"
           />
 
+          {/* 🔴 Punto rojo para cerrar (estilo macOS) */}
           <button
             type="button"
             onClick={(e) => {
@@ -212,9 +213,13 @@ export default function HotspotModalView({
               setImageExpanded(false);
             }}
             aria-label="Cerrar imagen ampliada"
-            className="hs-lightbox__close"
+            className="hs-lightbox__close-dot"
           >
-            <FaTimes size={18} />
+            <FaTimes
+              size={9}
+              strokeWidth={3}
+              className="hs-lightbox__close-dot-icon"
+            />
           </button>
         </div>,
         document.body
