@@ -251,3 +251,61 @@
   color: #061433;
   box-shadow: 0 4px 12px rgba(6, 20, 51, 0.08);
 }
+
+
+/* =========================================
+   ESTILOS DE LA FLECHA 3D EN EL SUELO
+========================================= */
+
+.nav-hotspot-container {
+  position: relative;
+  width: 140px;
+  height: 100px;
+  cursor: pointer;
+  margin-top: 50px;
+  margin-left: -70px;
+}
+
+.arrow-3d {
+  width: 100%;
+  height: 100%;
+  /* Truco 2D para simular el piso en 360 sin dañar el punto de fuga: rotamos y luego aplastamos verticalmente */
+  transform: scaleY(0.45) rotateZ(var(--arrow-rotation, 0deg));
+  transform-origin: center center;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  filter: drop-shadow(0px 25px 10px rgba(0, 0, 0, 0.7));
+}
+
+.arrow-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.nav-hotspot-container:hover .arrow-3d,
+.nav-hotspot-container.active .arrow-3d {
+  transform: scaleY(0.45) rotateZ(var(--arrow-rotation, 0deg)) translateY(-15px);
+  filter: drop-shadow(0px 35px 15px rgba(0, 0, 0, 0.8)) brightness(1.1);
+}
+
+.nav-hotspot-container .hs-preview {
+  bottom: 80px; /* Adjust preview position for the new shape */
+}
+
+.nav-hotspot-container:hover .hs-preview,
+.nav-hotspot-container.active .hs-preview {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
+  bottom: 84px;
+}
+
+.nav-hotspot-container .hs-label {
+  bottom: -20px; /* Adjust label position */
+}
+
+.nav-hotspot-container:hover .hs-label,
+.nav-hotspot-container.active .hs-label {
+  opacity: 1;
+  visibility: visible;
+  bottom: -24px;
+}
