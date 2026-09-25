@@ -157,12 +157,6 @@ export default function HotspotModalView({
                 />
               </button>
             </div>
-
-            <div className="absolute -bottom-[1px] inset-x-0 overflow-hidden leading-none pointer-events-none z-10">
-              <svg viewBox="0 0 500 80" preserveAspectRatio="none" className="w-full h-14 text-white fill-current">
-                <path d="M 0,2 C 140,8 300,68 500,74 L 500,80 L 0,80 Z"></path>
-              </svg>
-            </div>
           </div>
 
           <div className="hs-info-modal__body bg-white px-3.5 pt-0.5 pb-3 space-y-2 relative z-20 h-[215px] overflow-y-auto">
