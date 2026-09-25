@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { FaTimes, FaExternalLinkAlt, FaPaperclip } from "react-icons/fa";
 import "./HotspotModal.css";
 
@@ -225,11 +226,12 @@ export default function HotspotModalView({
         </aside>
       )}
 
-      {imageExpanded && (
+      {imageExpanded && createPortal(
         <div className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-[fadeIn_.2s_ease-out]" onClick={(e) => { e.stopPropagation(); setImageExpanded(false); }} role="dialog" aria-modal="true" aria-label="Imagen ampliada">
           <img src={imgSrc} alt={title || "Imagen ampliada"} onClick={(e) => e.stopPropagation()} className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl ring-1 ring-white/10 animate-[zoomIn_.25s_cubic-bezier(0.16,1,0.3,1)]" />
           <button type="button" onClick={(e) => { e.stopPropagation(); setImageExpanded(false); }} aria-label="Cerrar imagen ampliada" className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center border border-white/20 transition-all duration-200 hover:scale-110 active:scale-95"><FaTimes size={16} /></button>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
