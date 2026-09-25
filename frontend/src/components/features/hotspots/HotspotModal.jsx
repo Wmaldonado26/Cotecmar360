@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
+import React from "react";
 import { FaTimes, FaExternalLinkAlt, FaPaperclip } from "react-icons/fa";
 import "./HotspotModal.css";
 
@@ -68,24 +67,6 @@ export default function HotspotModalView({
   isOpen, visible, isInfo, coverImageUrl, title, description, stats, attachments, tree,
   handleClose, handleOverlayClick, handleModalClick, toggleNode, isNodeOpen, getFileIcon, ChevronIcon, FolderIcon,
 }) {
-  const [imageExpanded, setImageExpanded] = useState(false);
-
-  useEffect(() => {
-    if (!imageExpanded) return;
-    const onKey = (e) => e.key === "Escape" && setImageExpanded(false);
-    document.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
-    };
-  }, [imageExpanded]);
-
-  useEffect(() => {
-    if (!isOpen) setImageExpanded(false);
-  }, [isOpen]);
-
   if (!isOpen) return null;
 
   const imgSrc = coverImageUrl || "https://images.unsplash.com/photo-1505705694340-019e1e335916?auto=format&fit=crop&w=900&q=80";
@@ -108,35 +89,6 @@ export default function HotspotModalView({
             <img src={imgSrc} alt={title || "Naval Vessel"} className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-108" onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=900&q=80"; }} />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-black/50"></div>
             
-            {/* 🟢 Verde — esquina superior IZQUIERDA (ampliar imagen) */}
-            <div className="absolute top-3.5 left-3.5 z-20">
-              <button
-                type="button"
-                onClick={() => setImageExpanded(true)}
-                aria-label="Ampliar imagen"
-                className="group/dot relative w-5 h-5 rounded-full
-                           bg-gradient-to-b from-emerald-400 to-emerald-500
-                           shadow-[inset_0_-1px_1px_rgba(0,0,0,0.25),0_1px_1px_rgba(0,0,0,0.15),0_4px_12px_rgba(0,0,0,0.3)]
-                           hover:from-emerald-500 hover:to-emerald-600
-                           flex items-center justify-center
-                           transition-all duration-150 active:scale-90"
-              >
-                <svg
-                  width="11"
-                  height="11"
-                  viewBox="0 0 8 8"
-                  className="text-emerald-950 opacity-0 group-hover/dot:opacity-100 transition-opacity duration-150"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M2.5 1 L1 1 L1 2.5 M5.5 1 L7 1 L7 2.5 M2.5 7 L1 7 L1 5.5 M5.5 7 L7 7 L7 5.5" />
-                </svg>
-              </button>
-            </div>
-
             {/* 🔴 Rojo — esquina superior DERECHA (cerrar modal) */}
             <div className="absolute top-3.5 right-3.5 z-20">
               <button
@@ -218,14 +170,6 @@ export default function HotspotModalView({
             )}
           </section>
         </aside>
-      )}
-
-      {imageExpanded && createPortal(
-        <div className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-[fadeIn_.2s_ease-out]" onClick={(e) => { e.stopPropagation(); setImageExpanded(false); }} role="dialog" aria-modal="true" aria-label="Imagen ampliada">
-          <img src={imgSrc} alt={title || "Imagen ampliada"} onClick={(e) => e.stopPropagation()} className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl ring-1 ring-white/10 animate-[zoomIn_.25s_cubic-bezier(0.16,1,0.3,1)]" />
-          <button type="button" onClick={(e) => { e.stopPropagation(); setImageExpanded(false); }} aria-label="Cerrar imagen ampliada" className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center border border-white/20 transition-all duration-200 hover:scale-110 active:scale-95"><FaTimes size={16} /></button>
-        </div>,
-        document.body
       )}
     </div>
   );
