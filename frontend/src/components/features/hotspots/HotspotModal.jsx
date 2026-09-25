@@ -89,21 +89,21 @@ export default function HotspotModalView({
             <img src={imgSrc} alt={title || "Naval Vessel"} className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-108" onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=900&q=80"; }} />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-black/50"></div>
             
-            {/* 🔴 Rojo — esquina superior DERECHA (cerrar modal) */}
+            {/* 🔴 Cerrar — esquina superior DERECHA (más grande y fácil de tocar) */}
             <div className="absolute top-3.5 right-3.5 z-20">
               <button
                 type="button"
                 onClick={handleClose}
                 aria-label="Cerrar"
-                className="group/dot relative w-5 h-5 rounded-full
+                className="hs-close-btn group/dot relative w-8 h-8 rounded-full
                            bg-gradient-to-b from-red-400 to-red-500
-                           shadow-[inset_0_-1px_1px_rgba(0,0,0,0.25),0_1px_1px_rgba(0,0,0,0.15),0_4px_12px_rgba(0,0,0,0.3)]
+                           shadow-[inset_0_-1px_1px_rgba(0,0,0,0.25),0_1px_1px_rgba(0,0,0,0.15),0_4px_14px_rgba(0,0,0,0.4)]
                            hover:from-red-500 hover:to-red-600
                            flex items-center justify-center
                            transition-all duration-150 active:scale-90"
               >
                 <FaTimes
-                  size={11}
+                  size={14}
                   strokeWidth={3}
                   className="text-red-950 opacity-0 group-hover/dot:opacity-100 transition-opacity duration-150"
                 />
